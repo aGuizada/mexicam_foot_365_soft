@@ -38,8 +38,8 @@ class CreateUsersTable extends Migration
 
             DB::table('users')->insert(array(
                 'id' => '1',
-                'usuario' => 'admin',
-                'password' => '$2y$12$fQVExSFUFZCNs.9xClllau9VAWQGMJZq7KNTQ14DgpO2djOIiEeVi',
+                'usuario' => 'root',
+                'password' => '544',
                 'idrol' => '1',
                 'idsucursal' => '1',
                 'idpuntoventa' => '1',
