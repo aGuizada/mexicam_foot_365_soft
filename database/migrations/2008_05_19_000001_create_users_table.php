@@ -37,14 +37,14 @@ class CreateUsersTable extends Migration
             });
 
             DB::table('users')->insert(array(
-                'id' => '1',
-                'usuario' => 'root',
-                'password' => '544',
-                'idrol' => '1',
-                'idsucursal' => '1',
-                'idpuntoventa' => '1',
-                'remember_token' => 'vEHmcelujGXofHcFYAFCumGPd25mQ6Uw1ma5VHlO1dWbx8tHQMndvnaQZnjI'
-            ));
+            'id' => '1',
+            'usuario' => 'root',
+            'password' => bcrypt('544'), 
+            'idrol' => '1',
+            'idsucursal' => '1',
+            'idpuntoventa' => '1',
+            'remember_token' => ''
+        ));
 
             DB::commit();
         } catch (\Exception $e) {
