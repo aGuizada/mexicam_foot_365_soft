@@ -1,3 +1,4 @@
+
 <template>
     <main class="main">
         <!-- Breadcrumb -->
@@ -110,12 +111,13 @@
                                         <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownComidas" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             Comidas
                                         </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownComidas">
-                                            <button v-for="subcategoria in arrayBuscador" :key="subcategoria.id" @click="listarArticulo('', subcategoria.id)" :class="{ 'btn-primary': criterioA === subcategoria.id }" class="dropdown-item">{{ subcategoria.nombre }}</button>
-
-                                            <!-- Agrega más botones para otras subcategorías de comidas aquí -->
-                                        </div>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownComidas">
+                                                                                  <button v-for="subcategoria in arrayBuscador" :key="subcategoria.id" @click="listarArticulo('', subcategoria.id)" :class="{ 'btn-primary': criterioA === subcategoria.id }" class="dropdown-item">{{ subcategoria.nombre }}</button>
+                                      
+                                                                                  <!-- Agrega más botones para otras subcategorías de comidas aquí -->
+                                                                              </div>
                                     </div>
+                                    
 
                                 </div>
                                 </div>
@@ -405,6 +407,7 @@ import vSelect from 'vue-select';
 export default {
     data() {
         return {
+        arrayBuscador:[],
             venta_id: 0,
             idcliente: 0,
             usuarioAutenticado: null,
@@ -430,7 +433,6 @@ export default {
             arrayCliente: [],
             arrayDetalle: [],
             arrayProductos: [],
-            arrayBuscador: [],
             mostrarTipoComprobante: false,
             listado: 1,
             modal: 0,
@@ -649,6 +651,18 @@ export default {
                     console.log(error);
                 });
         },
+        listarLinea(page, buscar, criterio) {
+                    let me = this;
+                    var url = '/categoria?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+                    axios.get(url).then(function (response) {
+                        var respuesta = response.data;
+                        me.arrayBuscador = respuesta.categorias.data;
+                        me.pagination = respuesta.pagination;
+                    })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
 
        imprimirTicket(id) {
             axios.get('/venta/imprimir/'+id, { responseType: 'blob' })
@@ -908,18 +922,6 @@ export default {
             me.idAlmacen = 1;
             console.log(me.idAlmacen);
         },
-        listarLinea(page, buscar, criterio) {
-            let me = this;
-            var url = '/categoria?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
-            axios.get(url).then(function (response) {
-                var respuesta = response.data;
-                me.arrayBuscador = respuesta.categorias.data;
-                me.pagination = respuesta.pagination;
-            })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        },
         validarVenta() {
             let me = this;
             me.errorVenta = 0;
@@ -1100,7 +1102,7 @@ export default {
                 me.num_comprobante = arrayVentaT[0]['num_comprobante'];
                 me.impuesto = arrayVentaT[0]['impuesto'];
                 me.total = arrayVentaT[0]['total'];
-                me.mesa = arrayVentaT[0]['mesa'];
+                me.mesa = (arrayVentaT[0]['mesa']!=null)?  arrayVentaT[0]['mesa']: 'SIN MESA';
                 me.observacion = (arrayVentaT[0]['observacion'] == null ) ? 'SIN OBSERVACION' :arrayVentaT[0]['observacion'] ;
             })
                 .catch(function (error) {
@@ -1214,7 +1216,7 @@ export default {
         window.addEventListener('keydown', this.atajoButton);
         this.obtenerDatosUsuario();
         this.listarArticulo(1, this.buscar, this.criterio);
-        this.listarArticulo('', '1')
+        this.listarArticulo('', '3')
         this.listarLinea('1','','nombreLinea')
         
     }

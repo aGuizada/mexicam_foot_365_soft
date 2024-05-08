@@ -14,7 +14,7 @@
                 <div class="form-group row">
                     <div class="col-md-6">
                         <input type="date" v-model="fecha" class="form-control" />
-                        <select v-model="idcategoria" class="form-control">
+                        <select v-model="idcategoria" class="form-control" value="hola">
                             <option value="0" disabled>Seleccione</option>
                             <option value="all">Todas las categorías</option>
                             <option v-for="categoria in arrayCategoria" :key="categoria.id" :value="categoria.id"
@@ -88,7 +88,7 @@ data (){
         nombre : '',
         descripcion : '',
         fecha: '',
-        idcategoria: null,
+        idcategoria: 'all',
         arrayVentas: [],
         arrayCategoria: [],
         modal : 0,

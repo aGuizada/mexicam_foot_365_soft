@@ -32,61 +32,58 @@
                             </div>
                         </div>
                     </div>
-                    <div style="overflow-x: auto;">
-                        <table class="table table-bordered table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Opciones</th>
-                                    <th>Código</th>
-                                    <th>Nombre</th>
-                                    <!-- <th>Presio1</th> -->
-                                    
-                                    
-                                    <!-- <th v-if="rolUsuario === 1">Presio venta</th> -->
-                                    <th v-if="rolUsuario === 1">Precio venta</th>
-
-                                    <th>Categorìa</th>
-                                    <th>Descripción</th>
-                                    <th>Foto</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="articulo in arrayArticulo" :key="articulo.id">
-                                    <button type="button" @click="abrirModal('articulo', 'actualizar', articulo)"
-                                            class="btn btn-warning btn-sm">
-                                            <i class="icon-pencil"></i>
-                                        </button> &nbsp;
-                                        <template v-if="articulo.condicion">
-                                            <button type="button" class="btn btn-danger btn-sm"
-                                                @click="desactivarArticulo(articulo.id)">
-                                                <i class="icon-trash"></i>
-                                            </button>
-                                        </template>
-                                        <template v-else>
-                                            <button type="button" class="btn btn-info btn-sm"
-                                                @click="activarArticulo(articulo.id)">
-                                                <i class="icon-check"></i>
-                                            </button>
-                                        </template>
-                                    <td v-text="articulo.id"></td>
-                                    <td v-text="articulo.nombre"></td>
-
-                                    <!-- <td v-if="rolUsuario === 1" v-text="articulo.precio_venta"></td> -->
-                                    <td v-if="rolUsuario === 1" v-text="articulo.precio_venta"></td>
-
-                                    <td v-text="articulo.nombre_categoria"></td>
-
-                                    <td v-text="articulo.descripcion"></td>
-                                    <td class="text-center">
-                                        <img :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()"
-                                            width="50" height="50" v-if="articulo.fotografia" ref="imagen">
-                                        <img :src="'img/articulo/' + 'defecto.jpg'" width="50" height="50" v-else
-                                            ref="imagen">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div style="overflow-x: auto;">
+ <table class="table table-bordered table-striped table-sm">
+  <thead>
+    <tr>
+      <th>Opciones</th>
+      <th>Precio</th>
+      <th>Nombre</th>
+      <th v-for="precio in precios" :key="precio.id">{{ precio.nombre_precio }}</th>
+      <th v-if="rolUsuario === 1 && mostrarCostos === 1">Precio venta</th>
+      <th>Categorìa</th>
+      <th>Descripción</th>
+      <th>Foto</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="articulo in arrayArticulo" :key="articulo.id">
+      <td>
+        <button type="button" @click="abrirModal('articulo', 'actualizar', articulo)" class="btn btn-warning btn-sm">
+          <i class="icon-pencil"></i> Editar
+        </button>
+        <br>
+        <template v-if="articulo.condicion">
+          <button type="button" class="btn btn-danger btn-sm" @click="desactivarArticulo(articulo.id)">
+            <i class="icon-trash"></i> Eliminar
+          </button>
+        </template>
+        <template v-else>
+          <button type="button" class="btn btn-info btn-sm" @click="activarArticulo(articulo.id)">
+            <i class="icon-check"></i> Activar
+          </button>
+        </template>
+      </td>
+      <td v-text="articulo.precio_venta"></td>
+      <td v-text="articulo.nombre"></td>
+      <td v-for="(precio, index) in precios" :key="precio.id">
+        <!-- Mostrar el precio correspondiente según el índice -->
+        <span v-if="index === 0">{{ articulo.precio_uno }}</span>
+        <span v-if="index === 1">{{ articulo.precio_dos }}</span>
+        <span v-if="index === 2">{{ articulo.precio_tres }}</span>
+        <span v-if="index === 3">{{ articulo.precio_cuatro }}</span>
+      </td>
+      <td v-if="rolUsuario === 1 && mostrarCostos === 1" v-text="articulo.precio_venta"></td>
+      <td v-text="articulo.nombre_categoria"></td>
+      <td v-text="articulo.descripcion"></td>
+      <td class="text-center">
+        <b-img :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()" fluid-grow class="img-thumbnail" v-if="articulo.fotografia" ref="imagen"></b-img>
+        <b-img :src="'img/articulo/' + 'defecto.jpg'" fluid-grow class="img-thumbnail" v-else ref="imagen"></b-img>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
                     <nav>
                         <ul class="pagination">
                             <li class="page-item" v-if="pagination.current_page > 1">
@@ -237,7 +234,7 @@
                             </div>
                            
                                                         
-                            <div style="display: none;" v-for="(precio, index) in precios" :key="precio.id" class="form-group row">
+                            <div v-for="(precio, index) in precios" :key="precio.id" class="form-group row">
                                 <label class="col-md-3 form-control-label" for="text-input" style="color: blue;">{{ precio.nombre_precio }}</label>
                                 <div class="col-md-4">
                                     <input v-if="index === 0" type="text" class="form-control" placeholder="Precio" v-model="precio_uno">
@@ -2458,37 +2455,144 @@ export default {
     }
 }
 </script>
-<style>    .modal-content {
-        width: 100% !important;
-        position: absolute !important;
-    }
+<style>
+  /* Estilos para la tabla */
+  .table {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
 
-    .mostrar {
-        overflow-y: scroll;
+  .table thead th {
+    background-color: #343a40;
+    color: #fff;
+    border-color: #454d55;
+    text-align: center;
+  }
 
-        display: list-item !important;
-        opacity: 1 !important;
-        position: absolute !important;
-        background-color: #3c29297a !important;
-    }
+  .table td,
+  .table th {
+    vertical-align: middle;
+    text-align: center;
+  }
 
-    .div-error {
-        display: flex;
-        justify-content: center;
-    }
+  /* Estilos para los botones */
+  .btn {
+    transition: all 0.3s ease;
+  }
 
-    .text-error {
-        color: red !important;
-        font-weight: bold;
-    }
+  .btn-warning {
+    color: #212529;
+    background-color: #ffc107;
+    border-color: #ffc107;
+  }
 
-    .sticky-column {
-        position: sticky;
-        left: 0;
-        z-index: 1;
-        background-color: white;
-    }
-    .border-red {
-        border-color: red !important;
-    }
+  .btn-warning:hover {
+    color: #212529;
+    background-color: #e0a800;
+    border-color: #d39e00;
+  }
+
+  .btn-danger {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+
+  .btn-danger:hover {
+    color: #fff;
+    background-color: #c82333;
+    border-color: #bd2130;
+  }
+
+  .btn-info {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+  }
+
+  .btn-info:hover {
+    color: #fff;
+    background-color: #138496;
+    border-color: #117a8b;
+  }
+
+  /* Estilos para las imágenes */
+  .img-thumbnail {
+    max-width: 150px;
+    height: auto;
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .img-thumbnail:hover {
+    transform: scale(1.1);
+  }
+  .align-middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.form-control {
+    border-radius: 0.25rem;
+  }
+
+  .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
+  }
+
+  .btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+  }
+
+  .btn-outline-secondary:hover {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+  }
+
+  /* Estilos para el modal */
+  .modal-content {
+    border-radius: 0.5rem;
+  }
+
+  .modal-header {
+    background-color: #343a40;
+    color: #fff;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
+
+  .modal-title {
+    font-weight: bold;
+  }
+
+  .modal-footer {
+    background-color: #f8f9fa;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+  }
+
+  .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+  }
+
+  .btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+  }
 </style>

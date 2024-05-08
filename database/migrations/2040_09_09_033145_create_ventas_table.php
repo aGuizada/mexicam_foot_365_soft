@@ -16,7 +16,8 @@ class CreateVentasTable extends Migration
         Schema::create('ventas', function (Blueprint $table) {
             $table->increments('id');
            // $table->integer('idcliente')->unsigned();
-            $table->integer('mesa');
+           $table->string('cliente')->nullable();
+            $table->integer('mesa')->nullable();
             $table->string('observacion', 255);
            // $table->foreign('idcliente')->references('id')->on('personas');
             $table->integer('idusuario')->unsigned();
