@@ -9,7 +9,7 @@
             <!-- Ejemplo de tabla Listado -->
             <div class="card">
                 <div class="card-header">
-                    <i class="fa fa-align-justify"></i> Ventas Fuera de Línea
+                    <i class="fa fa-align-justify"></i> Ventas 
                     <button type="button" @click="mostrarDetalle()" class="btn btn-secondary">
                         <i class="icon-plus"></i>&nbsp;Nueva Venta 
                     </button>
@@ -267,11 +267,7 @@
                                             <td colspan="3" align="right"><strong>Sub Total: Bs.</strong></td>
                                             <td id="subTotal">{{ totalParcial=(calcularSubTotal).toFixed(2) }}</td>
                                         </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="3" align="right"><strong>Descuento Adicional: Bs.</strong></td>
-                                            <input id="descuentoAdicional" v-model="descuentoAdicional" type="number"
-                                                class="form-control">
-                                        </tr>
+                                       
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="3" align="right"><strong>Total Neto: Bs.</strong></td>
                                             <td id="montoTotal">{{ total=(calcularTotal).toFixed(2) }}</td>
@@ -302,92 +298,83 @@
                 <!--Ver ingreso-->
                 <template v-else-if="listado == 2">
                     <div class="card-body">
-                        <div class="form-group row border">
-                            <div class="col-md-4">
-                                <strong><label for="">Categoria</label></strong>
-                                <strong><p v-text="categoria" style="color: red;"></p></strong>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <strong><label for="">Cliente</label></strong>
-                                    <p v-text="cliente"></p>
+                            <div class="row border rounded mx-auto my-4 p-3" style="max-width: 800px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                              <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                  <label class="font-weight-bold text-uppercase text-muted mb-1"><strong>Categoría</strong></label>
+                                  <p class="text-danger font-weight-bold mb-0" style="text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);" v-text="categoria"></p>
                                 </div>
-                            </div>
-                            
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <strong><label>Tipo Comprobante</label></strong>
-                                    <p v-text="tipo_comprobante"></p>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                  <label class="font-weight-bold text-uppercase text-muted mb-1"><strong>Cliente</strong></label>
+                                  <p class="mb-0" v-text="cliente"></p>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <strong><label>Número Comprobante</label></strong>
-                                    <p v-text="num_comprobante"></p>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                  <label class="font-weight-bold text-uppercase text-muted mb-1"><strong>Tipo Comprobante</strong></label>
+                                  <p class="mb-0" v-text="tipo_comprobante"></p>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <strong><label>Numero Mesa</label></strong>
-                                    <p v-text="mesa"></p>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                  <label class="font-weight-bold text-uppercase text-muted mb-1"><strong>Número Comprobante</strong></label>
+                                  <p class="mb-0" v-text="num_comprobante"></p>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <strong><label>Observaciones</label></strong>
-                                    <p v-text="observacion"></p>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                  <label class="font-weight-bold text-uppercase text-muted mb-1"><strong>Número Mesa</strong></label>
+                                  <p class="mb-0" v-text="mesa"></p>
                                 </div>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                  <label class="font-weight-bold text-uppercase text-muted mb-1"><strong>Observaciones</strong></label>
+                                  <p class="mb-0" v-text="observacion"></p>
+                                </div>
+                              </div>
                             </div>
-                        </div>
-                        <div class="form-group row border">
-                            <div class="table-responsive col-md-12">
-                                <table class="table table-bordered table-striped table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Artículo</th>
-                                            <th>Precio</th>
-                                            <th>Cantidad</th>
-                                            <th>Descuento</th>
-                                            <th>Subtotal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody v-if="arrayDetalle.length">
-                                        <tr v-for="detalle in arrayDetalle" :key="detalle.id">
-                                            <td v-text="detalle.articulo">
-                                            </td>
-                                            <td v-text="detalle.precio">
-                                            </td>
-                                            <td v-text="detalle.cantidad">
-                                            </td>
-                                            <td v-text="detalle.descuento">
-                                            </td>
-                                            <td>
-                                                {{ detalle.precio * detalle.cantidad - detalle.descuento }}
-                                            </td>
-                                        </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
-                                            <td>$ {{ totalParcial=(total - totalImpuesto).toFixed(2) }}</td>
-                                        </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="4" align="right"><strong>Total Impuesto:</strong></td>
-                                            <td>$ {{ totalImpuesto=(total * impuesto).toFixed(2) }}</td>
-                                        </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="4" align="right"><strong>Total Neto:</strong></td>
-                                            <td>$ {{ total }}</td>
-                                        </tr>
-                                    </tbody>
-                                    <tbody v-else>
-                                        <tr>
-                                            <td colspan="5">
-                                                No hay articulos agregados
-                                            </td>
-                                        </tr>
-                                    </tbody>
+                            <div class="row border rounded mx-auto my-4 p-3" style="max-width: 900px;">
+                              <div class="table-responsive col-md-12">
+                                <table class="table table-borderless table-hover">
+                                  <thead class="bg-primary text-white">
+                                    <tr>
+                                      <th>Artículo</th>
+                                      <th>Precio</th>
+                                      <th>Cantidad</th>
+                                      <th>Subtotal</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody v-if="arrayDetalle.length">
+                                    <tr v-for="detalle in arrayDetalle" :key="detalle.id">
+                                      <td v-text="detalle.articulo"></td>
+                                      <td v-text="detalle.precio"></td>
+                                      <td v-text="detalle.cantidad"></td>
+                                      <td>{{ detalle.precio * detalle.cantidad }}</td>
+                                    </tr>
+                                    <tr class="bg-light font-weight-bold">
+                                      <td colspan="3" class="text-right">Total Parcial:</td>
+                                      <td>$ {{ totalParcial = (total - totalImpuesto).toFixed(2) }}</td>
+                                    </tr>
+                                    <tr class="bg-light font-weight-bold">
+                                      <td colspan="3" class="text-right">Total Impuesto:</td>
+                                      <td>$ {{ totalImpuesto = (total * impuesto).toFixed(2) }}</td>
+                                    </tr>
+                                    <tr class="bg-success text-white font-weight-bold">
+                                      <td colspan="3" class="text-right">Total Neto:</td>
+                                      <td>$ {{ total }}</td>
+                                    </tr>
+                                  </tbody>
+                                  <tbody v-else>
+                                    <tr>
+                                      <td colspan="4" class="text-center">No hay artículos agregados</td>
+                                    </tr>
+                                  </tbody>
                                 </table>
+                              </div>
                             </div>
-                        </div>
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
@@ -1268,5 +1255,4 @@ export default {
         
         
     }
-    
     </style>

@@ -18,7 +18,7 @@ class CreateVentasTable extends Migration
            // $table->integer('idcliente')->unsigned();
            $table->string('cliente')->nullable();
             $table->integer('mesa')->nullable();
-            $table->string('observacion', 255);
+            $table->string('observacion', 255)->nullable();
            // $table->foreign('idcliente')->references('id')->on('personas');
             $table->integer('idusuario')->unsigned();
             $table->foreign('idusuario')->references('id')->on('users');
