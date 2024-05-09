@@ -60,8 +60,7 @@ class CategoriaController extends Controller
         $categoria = new Categoria();
         $categoria->nombre = $request->nombre;
         $categoria->descripcion = $request->descripcion;
-        $categoria->codigoProductoSin = $request->codigoProductoSin;
-        $categoria->condicion = $request->condicion ? '1' : '0';
+         $categoria->condicion = $request->condicion ? '1' : '0';
         //$categoria->condicion = '1';
         $categoria->save();
     }
@@ -80,8 +79,7 @@ class CategoriaController extends Controller
         $categoria = Categoria::findOrFail($request->id);
         $categoria->nombre = $request->nombre;
         $categoria->descripcion = $request->descripcion;
-        $categoria->codigoProductoSin = $request->codigoProductoSin;
-        $categoria->condicion = $request->condicion ? '1' : '0';
+          $categoria->condicion = $request->condicion ? '1' : '0';
         //$categoria->condicion = '1';
         $categoria->save();
     }

@@ -182,9 +182,9 @@
                                     </label>
                                 </div>
                             </div>
-                            <input type="hidden" id="nombreCliente" class="form-control" readonly value="Sin Nombre">
-                            <input type="hidden" id="idcliente" class="form-control" readonly value="7">
-                            <input type="hidden" id="tipo_documento" class="form-control" readonly value="1">
+                            <input type="hidden" id="nombreCliente" class="form-control" readonly >
+                            <input type="hidden" id="idcliente" class="form-control" readonly >
+                            <input type="hidden" id="tipo_documento" class="form-control" readonly >
                             <input type="hidden" id="complemento_id" class="form-control" v-model="complemento_id"
                                 ref="complementoIdRef" readonly>
                             <input type="hidden" id="usuarioAutenticado" class="form-control" v-model="usuarioAutenticado"
@@ -354,16 +354,9 @@
                                       <td v-text="detalle.cantidad"></td>
                                       <td>{{ detalle.precio * detalle.cantidad }}</td>
                                     </tr>
-                                    <tr class="bg-light font-weight-bold">
-                                      <td colspan="3" class="text-right">Total Parcial:</td>
-                                      <td>$ {{ totalParcial = (total - totalImpuesto).toFixed(2) }}</td>
-                                    </tr>
-                                    <tr class="bg-light font-weight-bold">
-                                      <td colspan="3" class="text-right">Total Impuesto:</td>
-                                      <td>$ {{ totalImpuesto = (total * impuesto).toFixed(2) }}</td>
-                                    </tr>
+                                    
                                     <tr class="bg-success text-white font-weight-bold">
-                                      <td colspan="3" class="text-right">Total Neto:</td>
+                                      <td colspan="3" class="text-right">Total</td>
                                       <td>$ {{ total }}</td>
                                     </tr>
                                   </tbody>

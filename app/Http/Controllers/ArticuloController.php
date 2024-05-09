@@ -33,7 +33,7 @@ class ArticuloController extends Controller
                     'articulos.id',
                     'articulos.idcategoria',
 
-                    'articulos.codigo',
+                   
                     'articulos.nombre',
                     'articulos.nombre_generico',
                     'articulos.costo_compra',
@@ -134,7 +134,6 @@ class ArticuloController extends Controller
 
         return ['articulos' => $articulos];
     }
-
     public function listarArticuloVenta(Request $request)
     {
         if (!$request->ajax())
@@ -182,39 +181,35 @@ class ArticuloController extends Controller
 
         return ['articulos' => $articulos];
     }
+   
     public function buscarArticuloVenta(Request $request)
-    {
-        if (!$request->ajax())
-            return redirect('/');
-
-        $filtro = $request->filtro;
-
-        $articulos = Articulo::join('medidas', 'articulos.idmedida', '=', 'medidas.id')
-            ->join('categorias', 'articulos.idcategoria', '=', 'categorias.id')
-            ->join('inventarios', 'inventarios.idarticulo', '=', 'articulos.id')
-            ->select('articulos.id', 'articulos.nombre','articulos.stock','articulos.precio_costo_unid', 'articulos.precio_costo_paq', 'medidas.descripcion_medida as medida','articulos.precio_venta','categorias.codigoProductoSin', 'articulos.codigo',
-                    'articulos.precio_uno',
-                    'articulos.precio_dos',
-                    'articulos.precio_tres',
-                    'articulos.precio_cuatro',
-                    'articulos.fotografia',
-                    'articulos.condicion',
-                    'categorias.nombre as nombre_categoria',
-                    'unidad_envase',
-                    'inventarios.fecha_vencimiento',
-                    DB::raw('(SELECT SUM(inventarios.saldo_stock) FROM inventarios WHERE inventarios.idarticulo = articulos.id AND inventarios.fecha_vencimiento > NOW()) as saldo_stock')
-
-            )
-            ->where('articulos.codigo', '=', $filtro)
-            // ->where('inventarios.saldo_stock', '>', 0)
-            ->orderBy('articulos.nombre', 'asc')->take(1)->get();
-
-        Log::info('ARTICULO:', [
-            'DATA' => $articulos,
-        ]);
-
-        return ['articulos' => $articulos];
+{
+    if (!$request->ajax()) {
+        return redirect('/');
     }
+
+    $filtro = $request->filtro;
+    $idUsuario = $request->idusuario; // Agregamos el parámetro para el ID del usuario
+
+    $ventas = Venta::join('usuarios', 'ventas.id_usuario', '=', 'usuarios.id')
+        ->join('articulos', 'ventas.id_articulo', '=', 'articulos.id')
+        ->select(
+            'ventas.id',
+            'ventas.fecha_venta',
+            'usuarios.nombre as nombre_usuario',
+            'articulos.nombre as nombre_articulo',
+            'articulos.precio_venta',
+            'ventas.cantidad',
+            'ventas.total'
+        )
+        ->where('usuarios.id', '=', $idusuario)
+        ->where('articulos.codigo', '=', $filtro)
+        ->orderBy('ventas.fecha_venta', 'desc')
+        ->get();
+
+    return ['ventas' => $ventas];
+}
+
     public function store(Request $request)
     {
         if (!$request->ajax())

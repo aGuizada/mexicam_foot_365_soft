@@ -724,20 +724,6 @@
                     </div>
                     <div v-if="tituloModal2 !== 'Proveedors'" class="modal-body">
                         <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                            <div v-if="tituloModal2 !== 'Grupos' && tituloModal2 !== 'Lineas'" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="nombre" class="form-control1"
-                                        :placeholder="placeholderInput()">
-                                </div>
-                            </div>
-                            <div v-else-if="tituloModal2 == 'Grupos'" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Nombre Grupo</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="nombre_grupo" class="form-control"
-                                        :placeholder="placeholderInput()">
-                                </div>
-                            </div>
                             <div v-if="tituloModal2 == 'Lineas'" class="form-group row">
                                 <label class="col-md-3 form-control-label" for="text-input">Nombre Linea</label>
                                 <div class="col-md-9">
@@ -749,11 +735,7 @@
                                     <input type="text" v-model="descripcion" class="form-control1"
                                         :placeholder="placeholderInput('descripcion')">
                                 </div>
-                                <label class="col-md-3 form-control-label" for="text-input">Codigo</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="codigoProductoSin" class="form-control1"
-                                        :placeholder="placeholderInput('codigoProductoSin')">
-                                </div>
+                               
                             </div>
                             <!-- prueba de habilitar  -->
                             <div v-if="tituloModal2 == 'Industrias'" class="form-group row">
@@ -963,7 +945,7 @@ export default {
             idindustria: 0,
             idproveedor: 0,
             idgrupo: 0,
-            codigoProductoSin: 0,
+
             idmedida: 0,
             nombreLinea:'',
             nombre_categoria: '',
@@ -1879,7 +1861,7 @@ export default {
                 'nombre': this.nombreLinea,
                 'condicion': this.condicion,
                 'descripcion':this.descripcion,
-                'codigoProductoSin':this.codigoProductoSin
+           
             }).then(function (response) {
                 me.cerrarModal3();
                 //me.modal3=0;
@@ -1900,7 +1882,7 @@ export default {
                 'nombre': this.nombreLinea,
                 'condicion': this.condicion,
                 'descripcion': this.descripcion,
-                'codigoProductoSin': this.codigoProductoSin,
+              
                 'id': this.linea_id
             }).then(function (response) {
                 me.cerrarModal3();
@@ -2202,8 +2184,7 @@ export default {
             } else if (this.tituloModal2 === 'Lineas') {
                 if (!this.nombreLinea) this.errorMostrarMsjIndustria.push("El nombre de Linea no puede estar vacío.");
                 if (!this.descripcion) this.errorMostrarMsjIndustria.push("La descripcion de Linea no puede estar vacío.");
-                if (!this.codigoProductoSin) this.errorMostrarMsjIndustria.push("El codigo de Linea no puede estar vacío.");
-            }
+                 }
 
             //if (!this.nombre) this.errorMostrarMsjIndustria.push("El nombre de Industria no puede estar vacío.");
             if (this.errorMostrarMsjIndustria.length) this.errorIndustria = 1;
@@ -2237,9 +2218,7 @@ export default {
                 } else if (inputType === 'descripcion') {
                     return 'Descripcion de Linea';
                 }
-                else if (inputType === 'codigoProductoSin') {
-                    return 'Codigo de Linea';
-                }
+               
             } 
         },
         //############hasta aqui-#########
@@ -2305,7 +2284,7 @@ export default {
                                     this.tituloModal3 = 'Registrar Linea';
                                     this.nombreLinea = '';
                                     this.descripcion = '';
-                                    this.codigoProductoSin = 0;
+                                  
                                     this.condicion = '';
                                     this.tipoAccion2 = 7;
                                     break;
@@ -2319,7 +2298,7 @@ export default {
                                     this.linea_id = data['id'];
                                     this.nombreLinea = data['nombre'];
                                     this.descripcion = data['descripcion'];
-                                    this.codigoProductoSin = data['codigoProductoSin'];
+                                    
                                     this.condicion = data['condicion'];
                                     break;
                                 }

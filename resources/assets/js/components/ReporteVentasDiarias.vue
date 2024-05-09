@@ -38,7 +38,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="venta in arrayVentas" :key="venta.id">
-                            <td v-text="venta.cliente"></td>
+                            <td v-text="venta.cliente ? venta.cliente : 'Sin Nombre'"></td>
                             <td v-text="venta.articulo"></td>
                             <td v-text="venta.cantidad"></td>
                             <td v-text="venta.precio"></td>
