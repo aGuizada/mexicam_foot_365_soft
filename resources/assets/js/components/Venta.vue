@@ -1,14 +1,10 @@
 <template>
     <main class="main">
-        <!-- Breadcrumb -->
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-        </ol>
         <div class="container-fluid">
             <!-- Ejemplo de tabla Listado -->
             <div class="card">
                 <div class="card-header">
-                    <i class="fa fa-align-justify"></i> Ventas
+                    <i class="fa fa-align-justify"></i> Armin
                     <button type="button" @click="ejecutarFunciones" class="btn btn-secondary">
                         <i class="icon-plus"></i>&nbsp;Nuevo
                     </button>
@@ -339,17 +335,9 @@
                                                 {{ ((detalle.precioseleccionado * detalle.cantidad) - (detalle.precioseleccionado * detalle.cantidad * detalle.descuento / 100)).toFixed(2) }}
                                             </td>
                                         </tr>
+                                       
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="9" align="right"><strong>Sub Total: Bs.</strong></td>
-                                            <td id="subTotal">{{ totalParcial=(calcularSubTotal).toFixed(2) }}</td>
-                                        </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="9" align="right"><strong>Descuento Adicional: Bs.</strong></td>
-                                            <input id="descuentoAdicional" v-model="descuentoAdicional" type="number"
-                                                class="form-control">
-                                        </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="9" align="right"><strong>Total Neto: Bs.</strong></td>
+                                            <td colspan="9" align="right"><strong>Total: Bs.</strong></td>
                                             <td id="montoTotal">{{ total=(calcularTotal).toFixed(2) }}</td>
                                         </tr>
                                     </tbody>
@@ -441,16 +429,9 @@
                                                 {{ detalle.precio * detalle.cantidad - detalle.descuento }}
                                             </td>
                                         </tr>
+                                        
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
-                                            <td>$ {{ totalParcial=(total - totalImpuesto).toFixed(2) }}</td>
-                                        </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="4" align="right"><strong>Total Impuesto:</strong></td>
-                                            <td>$ {{ totalImpuesto=(total * impuesto).toFixed(2) }}</td>
-                                        </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="4" align="right"><strong>Total Neto:</strong></td>
+                                            <td colspan="4" align="right"><strong>Total:</strong></td>
                                             <td>$ {{ total }}</td>
                                         </tr>
                                     </tbody>

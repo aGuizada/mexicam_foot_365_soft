@@ -621,4 +621,42 @@ class VentaController extends Controller
 
         return response()->download($pdfPath);
     }
+    public function reporteVentasDiarias(Request $request)
+    {
+        // Validar la presencia de la fecha en la solicitud
+        $request->validate([
+            'fecha' => 'required|date',
+        ]);
+
+        // Obtener las ventas para la fecha dada
+        $query = DetalleVenta::join('ventas', 'detalle_ventas.idventa', '=', 'ventas.id')
+            ->join('articulos', 'detalle_ventas.idarticulo', '=', 'articulos.id')
+            ->select(
+                'articulos.nombre as articulo',
+                'ventas.cliente as cliente',
+                'detalle_ventas.cantidad',
+                'detalle_ventas.precio',
+                'detalle_ventas.descuento',
+                'ventas.num_comprobante'
+            )
+            ->whereDate('ventas.created_at', $request->input('fecha'));
+
+        if ($request->has('idCategoria') && $request->input('idCategoria') !== 'all') {
+            $query->where('articulos.idcategoria', $request->input('idCategoria'));
+        }
+
+        $ventas = $query->get();
+
+        if ($ventas->isEmpty()) {
+            return response()->json(['mensaje' => 'Ninguna Venta Realizada en la Fecha Indicada']);
+        }
+
+        //$totalGanado = $ventas->sum('total');
+
+        // Devolver las ventas como JSON
+        return response()->json([
+            'ventas' => $ventas
+            //'totalGanado' => $totalGanado
+        ]);
+    }
 }

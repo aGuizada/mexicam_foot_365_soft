@@ -1,15 +1,11 @@
 
 <template>
     <main class="main">
-        <!-- Breadcrumb -->
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Ventas</a></li>
-        </ol>
         <div class="container-fluid">
             <!-- Ejemplo de tabla Listado -->
             <div class="card">
                 <div class="card-header">
-                    <i class="fa fa-align-justify"></i> Ventas 
+                    <i class="fa fa-align-justify"></i> Ventas
                     <button type="button" @click="mostrarDetalle()" class="btn btn-secondary">
                         <i class="icon-plus"></i>&nbsp;Nueva Venta 
                     </button>
@@ -18,20 +14,19 @@
                 <template v-if="listado == 1">
                     <div class="card-body">
                         <div class="form-group row">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <select class="form-control col-md-3" v-model="criterio">
-                                        <option value="tipo_comprobante">Tipo Comprobante</option>
-                                        <option value="num_comprobante">Número Comprobante</option>
-                                        <option value="fecha_hora">Fecha-Hora</option>
-                                    </select>
-                                    <input type="text" v-model="buscar" @keyup="listarVenta(1, buscar, criterio)"
-                                        class="form-control" placeholder="Texto a buscar">
-                                    <!--button type="submit" @click="listarVenta(1, buscar, criterio)" class="btn btn-primary"><i
-                                            class="fa fa-search"></i> Buscar</button-->
-                                </div>
-                            </div>
-                        </div>
+    <div class="col-md-6">
+        <div class="input-group">
+            <select class="form-control col-md-3" v-model="criterio">
+                <option value="" disabled selected>Seleccione</option>
+                <option value="tipo_comprobante">Tipo Comprobante</option>
+                <option value="num_comprobante">Número Comprobante</option>
+                <option value="fecha_hora">Fecha-Hora</option>
+            </select>
+            <input type="text" v-model="buscar" @keyup="listarVenta(1, buscar, criterio)" class="form-control" placeholder="Texto a buscar">
+            <!--button type="submit" @click="listarVenta(1, buscar, criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button-->
+        </div>
+    </div>
+</div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-sm">
                                 <thead>
@@ -263,13 +258,10 @@
                                                 {{ (detalle.precio * detalle.cantidad - detalle.descuento).toFixed(2) }}
                                             </td>
                                         </tr>
+                                    
+                       
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="3" align="right"><strong>Sub Total: Bs.</strong></td>
-                                            <td id="subTotal">{{ totalParcial=(calcularSubTotal).toFixed(2) }}</td>
-                                        </tr>
-                                       
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="3" align="right"><strong>Total Neto: Bs.</strong></td>
+                                            <td colspan="3" align="right"><strong>Total: Bs.</strong></td>
                                             <td id="montoTotal">{{ total=(calcularTotal).toFixed(2) }}</td>
                                         </tr>
                                     </tbody>
