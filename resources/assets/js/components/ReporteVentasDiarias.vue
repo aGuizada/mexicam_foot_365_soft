@@ -42,9 +42,7 @@
                             <td v-text="venta.articulo"></td>
                             <td v-text="venta.cantidad"></td>
                             <td v-text="venta.precio"></td>
-                            <td>
-                            {{ (venta.precio * venta.cantidad).toFixed(2) }}
-                            </td>
+                            <td v-text="venta.total"></td>
                             <td v-text="venta.num_comprobante"></td>
                         </tr>
                     </tbody>

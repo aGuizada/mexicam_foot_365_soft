@@ -14,80 +14,76 @@
                 <template v-if="listado == 1">
                     <div class="card-body">
                         <div class="form-group row">
-    <div class="col-md-6">
-        <div class="input-group">
-            <select class="form-control col-md-3" v-model="criterio">
-                <option value="" disabled selected>Seleccione</option>
-                <option value="tipo_comprobante">Tipo Comprobante</option>
-                <option value="num_comprobante">Número Comprobante</option>
-                <option value="fecha_hora">Fecha-Hora</option>
-            </select>
-            <input type="text" v-model="buscar" @keyup="listarVenta(1, buscar, criterio)" class="form-control" placeholder="Texto a buscar">
-            <!--button type="submit" @click="listarVenta(1, buscar, criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button-->
-        </div>
-    </div>
-</div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>Opciones</th>
-                                        <th>Usuario</th>
-                                        <th>Cliente</th>
-                                        <th>Tipo Comprobante</th>
-                                        <th>Número Comprobante</th>
-                                        <th>Fecha Hora</th>
-                                        <th>Total</th>
-                                        <th>Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="(venta) in arrayVenta" :key="venta.id">
-                                    <td>
-                                    <button type="button" @click="verVenta(venta.id)" class="btn btn-success btn-sm">
-                                        <i class="icon-eye"></i>
-                                    </button> &nbsp;
-
-                                    <template v-if="venta.estado == 'Registrado'">
-                                        <button type="button" class="btn btn-danger btn-sm" @click="desactivarVenta(venta.id)">
-                                        <i class="icon-trash"></i>
-                                        </button> &nbsp;
-                                    </template>
-
-                                    <button type="button" @click="imprimirTicket(venta.id)" class="btn btn-info btn-sm" >
-                                        Imprimir Ticket
-                                    </button>
-
-                                    </td>
-                                    <td v-text="venta.usuario"></td>
-                                    <td v-text="venta.cliente"></td>
-                                    <td v-text="venta.tipo_comprobante"></td>
-                                    <td v-text="venta.num_comprobante"></td>
-                                    <td v-text="venta.fecha_hora"></td>
-                                    <td v-text="venta.total"></td>
-                                    <td v-text="venta.estado"></td>
-                                </tr>
-                                </tbody>
-
-                            </table>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <select class="form-control col-md-3" v-model="criterio">
+                                        <option value="" disabled selected>Seleccione</option>
+                                        <option value="tipo_comprobante">Tipo Comprobante</option>
+                                        <option value="num_comprobante">Número Comprobante</option>
+                                        <option value="fecha_hora">Fecha-Hora</option>
+                                        <option value="usuario">Usuario</option>
+                                    </select>
+                                    <input type="text" v-model="buscar" @keyup="listarVenta(1, buscar, criterio)" class="form-control" placeholder="Texto a buscar">
+                                    <!--button type="submit" @click="listarVenta(1, buscar, criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button-->
+                                </div>
+                            </div>
                         </div>
-                        <nav>
-                            <ul class="pagination">
-                                <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#"
-                                        @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
-                                </li>
-                                <li class="page-item" v-for="page in pagesNumber" :key="page"
-                                    :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)"
-                                        v-text="page"></a>
-                                </li>
-                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#"
-                                        @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
-                                </li>
-                            </ul>
-                        </nav>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-sm custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Opciones</th>
+                                            <th>Usuario</th>
+                                            <th>Cliente</th>
+                                            <th>Tipo Comprobante</th>
+                                            <th>Número Comprobante</th>
+                                            <th>Fecha Hora</th>
+                                            <th>Total</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="(venta) in arrayVenta" :key="venta.id">
+                                        <td>
+                                        <button type="button" @click="verVenta(venta.id)" class="btn btn-success btn-sm">
+                                            <i class="icon-eye"></i>
+                                        </button> &nbsp;
+
+                                        <template v-if="venta.estado == 'Registrado'">
+                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarVenta(venta.id)">
+                                            <i class="icon-trash"></i>
+                                            </button> &nbsp;
+                                        </template>
+
+                                        <button type="button" @click="imprimirTicket(venta.id)" class="btn btn-info btn-sm" >
+                                            Imprimir Ticket
+                                        </button>
+
+                                        </td>
+                                        <td v-text="venta.usuario"></td>
+                                        <td v-text="venta.cliente"></td>
+                                        <td v-text="venta.tipo_comprobante"></td>
+                                        <td v-text="venta.num_comprobante"></td>
+                                        <td v-text="venta.fecha_hora"></td>
+                                        <td v-text="venta.total"></td>
+                                        <td v-text="venta.estado"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+     <nav>                      
+    <ul class="pagination">
+        <li class="page-item" v-if="pagination.current_page > 1">
+            <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
+        </li>
+        <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
+            <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)" v-text="page"></a>
+        </li>
+        <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+            <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
+        </li>
+    </ul>
+</nav>
                     </div>
                 </template>
                 <!--Fin Listado-->
@@ -463,28 +459,27 @@ export default {
 
         //Calcula los elementos de la paginación
         pagesNumber: function () {
-            if (!this.pagination.to) {
-                return [];
-            }
+    if (!this.pagination.to) {
+        return [];
+    }
 
-            var from = this.pagination.current_page - this.offset;
-            if (from < 1) {
-                from = 1;
-            }
+    var from = this.pagination.current_page - this.offset;
+    if (from < 1) {
+        from = 1;
+    }
 
-            var to = from + (this.offset * 2);
-            if (to >= this.pagination.last_page) {
-                to = this.pagination.last_page;
-            }
+    var to = from + (this.offset * 2);
+    if (to >= this.pagination.last_page) {
+        to = this.pagination.last_page;
+    }
 
-            var pagesArray = [];
-            while (from <= to) {
-                pagesArray.push(from);
-                from++;
-            }
-            return pagesArray;
-        },
-
+    var pagesArray = [];
+    while (from <= to) {
+        pagesArray.push(from);
+        from++;
+    }
+    return pagesArray;
+},
         calcularTotal: function () {
             var resultado = 0.0;
             for (var i = 0; i < this.arrayDetalle.length; i++) {
@@ -546,28 +541,26 @@ export default {
         },
 
 
-        listarVenta(page, buscar, criterio) {
-            let me = this;
-            var url = '/venta?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
-            axios.get(url).then(function (response) {
-                var respuesta = response.data;
-                me.arrayVenta = respuesta.ventas.data;
-                me.pagination = respuesta.pagination;
-                me.arrayVenta = me.arrayVenta.map(item => {
+        listarVenta(page, buscar, criterio, per_page = 10) {
+    let me = this;
+    var url = '/venta?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio + '&per_page=' + per_page;
+    axios.get(url)
+        .then(function (response) {
+            var respuesta = response.data;
+            me.arrayVenta = respuesta.ventas.data;
+            me.pagination = respuesta.pagination;
+            me.arrayVenta = me.arrayVenta.map(item => {
                 if (item.cliente === null) {
                     return { ...item, cliente: 'Sin Nombre' };
                 } else {
-                    
                     return item;
                 }
             });
-            })
-                .catch(function (error) {
-                    console.log(error);
-            });
-            
-            
-        },
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+},
         selectCliente(search, loading) {
             let me = this;
             loading(true)
@@ -656,13 +649,7 @@ export default {
             //Envia la petición para visualizar la data de esa página
             me.listarVenta(page, buscar, criterio);
         },
-        cambiarPaginaA(page, buscar, criterio) {
-            let me = this;
-            //Actualiza la página actual
-            me.pagination.current_page = page;
-            //Envia la petición para visualizar la data de esa página
-            me.listarArticulo(page, buscar, criterio);
-        },
+       
         encuentra(id) {
             var sw = 0;
             for (var i = 0; i < this.arrayDetalle.length; i++) {
@@ -1182,16 +1169,14 @@ export default {
         });
     },
 
-
     mounted() {
-        this.listarVenta(1, this.buscar, this.criterio);
-        window.addEventListener('keydown', this.atajoButton);
-        this.obtenerDatosUsuario();
-        this.listarArticulo(1, this.buscar, this.criterio);
-        this.listarArticulo('', '3')
-        this.listarLinea('1','','nombreLinea')
-        
-    }
+    this.listarVenta(1, this.buscar, this.criterio, 10);
+    window.addEventListener('keydown', this.atajoButton);
+    this.obtenerDatosUsuario();
+    this.listarArticulo(1, this.buscar, this.criterio);
+    this.listarArticulo('', '3')
+    this.listarLinea('1','','nombreLinea')
+}
 }
 </script>
 <style>    
@@ -1240,4 +1225,9 @@ export default {
         
         
     }
+    .custom-table {
+  width: 100%; /* Ajusta el ancho al 100% del contenedor */
+  margin-bottom: 400px;
+}
+
     </style>

@@ -72,7 +72,7 @@ class VentaController extends Controller
                     'ventas.estado',
                     'users.usuario'
                 )
-                ->orderBy('ventas.id', 'desc')->paginate(3);
+                ->orderBy('ventas.id', 'desc')->paginate(10);
         } else {
             $ventas = Venta::join('users', 'ventas.idusuario', '=', 'users.id')
                 ->select(
@@ -88,7 +88,7 @@ class VentaController extends Controller
                     'users.usuario'
                 )
                 ->where('ventas.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('ventas.id', 'desc')->paginate(3);
+                ->orderBy('ventas.id', 'desc')->paginate(10);
         }
 
         return [
@@ -109,7 +109,7 @@ class VentaController extends Controller
         if (!$request->ajax()) {
             return redirect('/');
         }
-
+    
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         $usuario = \Auth::user();
@@ -119,12 +119,12 @@ class VentaController extends Controller
         $fechaFin = $request->fechaFin;
         $idRoles = ($idRoles == 0) ? null : $idRoles;
         $idAlmacen = ($idAlmacen == 0) ? null : $idAlmacen;
-
+    
         if ($buscar == '') {
             $ventas = Venta::join('personas', 'ventas.idcliente', '=', 'personas.id')
                 ->join('users', 'ventas.idusuario', '=', 'users.id')
                 ->join('detalle_ventas', 'ventas.id', '=', 'detalle_ventas.idventa')
-                ->join('articulos', 'detalle_ventas.idarticulo', '=', 'articulos.id') 
+                ->join('articulos', 'detalle_ventas.idarticulo', '=', 'articulos.id')
                 ->join('inventarios', 'articulos.id', '=', 'inventarios.idarticulo')
                 ->select(
                     'ventas.id',
@@ -141,63 +141,82 @@ class VentaController extends Controller
                     'detalle_ventas.idarticulo'
                 )
                 ->distinct()
-                ->where(function($query) use ($idRoles) {
+                ->where(function ($query) use ($idRoles) {
                     if ($idRoles !== null) {
                         $query->where('users.idrol', $idRoles);
                     }
                 })
-                ->where(function($query) use ($idAlmacen) {
+                ->where(function ($query) use ($idAlmacen) {
                     if ($idAlmacen !== null) {
                         $query->where('inventarios.idalmacen', $idAlmacen);
                     }
                 });
-
-                // Filtrar por fechas solo si se proporcionan fechas distintas de la actual
-                if ($fechaInicio !== now()->toDateString() || $fechaFin !== now()->addDay()->toDateString()) {
-                    $ventas->whereBetween('ventas.fecha_hora', [$fechaInicio, $fechaFin]);
-                }
-
-            $ventas = $ventas->orderBy('ventas.id', 'desc')->paginate(3);
-        } else {
-            $ventas = Venta::join('personas', 'ventas.idcliente', '=', 'personas.id')
-                ->join('users', 'ventas.idusuario', '=', 'users.id')
-                ->join('detalle_ventas', 'ventas.id', '=', 'detalle_ventas.idventa')
-                ->join('articulos', 'detalle_ventas.idarticulo', '=', 'articulos.id') 
-                ->join('inventarios', 'articulos.id', '=', 'inventarios.idarticulo')
-                ->select(
-                    'ventas.id',
-                    'ventas.tipo_comprobante',
-                    'ventas.serie_comprobante',
-                    'ventas.num_comprobante',
-                    'ventas.fecha_hora',
-                    'ventas.impuesto',
-                    'ventas.total',
-                    'ventas.estado',
-                    'personas.nombre',
-                    'users.usuario',
-                    'users.idrol',
-                    'detalle_ventas.idarticulo'
-                )
-                ->distinct()
-                ->where(function($query) use ($idRoles) {
-                    if ($idRoles !== null) {
-                        $query->where('users.idrol', $idRoles);
-                    }
-                })
-                ->where(function($query) use ($idAlmacen) {
-                    if ($idAlmacen !== null) {
-                        $query->where('inventarios.idalmacen', $idAlmacen);
-                    }
-                })
-                ->where('personas.' . $criterio, 'like', '%' . $buscar . '%');
-
-            // Filtrar por fechas
+    
+            // Filtrar por fechas solo si se proporcionan fechas distintas de la actual
             if ($fechaInicio !== now()->toDateString() || $fechaFin !== now()->addDay()->toDateString()) {
                 $ventas->whereBetween('ventas.fecha_hora', [$fechaInicio, $fechaFin]);
             }
-
+    
             $ventas = $ventas->orderBy('ventas.id', 'desc')->paginate(3);
+        } else {
+            if ($criterio === 'usuario') { // Buscar por usuario
+                $ventas = Venta::join('users', 'ventas.idusuario', '=', 'users.id')
+                    ->select(
+                        'ventas.id',
+                        'ventas.tipo_comprobante',
+                        'ventas.serie_comprobante',
+                        'ventas.num_comprobante',
+                        'ventas.fecha_hora',
+                        'ventas.impuesto',
+                        'ventas.total',
+                        'ventas.estado',
+                        'users.usuario'
+                    )
+                    ->where('users.usuario', 'like', '%' . $buscar . '%')
+                    ->orderBy('ventas.id', 'desc')
+                    ->paginate(3);
+            } else {
+                $ventas = Venta::join('personas', 'ventas.idcliente', '=', 'personas.id')
+                    ->join('users', 'ventas.idusuario', '=', 'users.id')
+                    ->join('detalle_ventas', 'ventas.id', '=', 'detalle_ventas.idventa')
+                    ->join('articulos', 'detalle_ventas.idarticulo', '=', 'articulos.id')
+                    ->join('inventarios', 'articulos.id', '=', 'inventarios.idarticulo')
+                    ->select(
+                        'ventas.id',
+                        'ventas.tipo_comprobante',
+                        'ventas.serie_comprobante',
+                        'ventas.num_comprobante',
+                        'ventas.fecha_hora',
+                        'ventas.impuesto',
+                        'ventas.total',
+                        'ventas.estado',
+                        'personas.nombre',
+                        'users.usuario',
+                        'users.idrol',
+                        'detalle_ventas.idarticulo'
+                    )
+                    ->distinct()
+                    ->where(function ($query) use ($idRoles) {
+                        if ($idRoles !== null) {
+                            $query->where('users.idrol', $idRoles);
+                        }
+                    })
+                    ->where(function ($query) use ($idAlmacen) {
+                        if ($idAlmacen !== null) {
+                            $query->where('inventarios.idalmacen', $idAlmacen);
+                        }
+                    })
+                    ->where('personas.' . $criterio, 'like', '%' . $buscar . '%');
+    
+                // Filtrar por fechas
+                if ($fechaInicio !== now()->toDateString() || $fechaFin !== now()->addDay()->toDateString()) {
+                    $ventas->whereBetween('ventas.fecha_hora', [$fechaInicio, $fechaFin]);
+                }
+    
+                $ventas = $ventas->orderBy('ventas.id', 'desc')->paginate(3);
+            }
         }
+    
         return [
             'pagination' => [
                 'total' => $ventas->total(),
@@ -627,36 +646,34 @@ class VentaController extends Controller
         $request->validate([
             'fecha' => 'required|date',
         ]);
-
+    
         // Obtener las ventas para la fecha dada
         $query = DetalleVenta::join('ventas', 'detalle_ventas.idventa', '=', 'ventas.id')
             ->join('articulos', 'detalle_ventas.idarticulo', '=', 'articulos.id')
             ->select(
-                'articulos.nombre as articulo',
-                'ventas.cliente as cliente',
-                'detalle_ventas.cantidad',
-                'detalle_ventas.precio',
-                'detalle_ventas.descuento',
-                'ventas.num_comprobante'
+                'ventas.cliente',
+                'ventas.num_comprobante',
+                DB::raw('GROUP_CONCAT(DISTINCT articulos.nombre SEPARATOR ", ") as articulo'),
+                DB::raw('SUM(detalle_ventas.cantidad) as cantidad'),
+                DB::raw('SUM(detalle_ventas.precio * detalle_ventas.cantidad) as total'),
+                DB::raw('MAX(detalle_ventas.precio) as precio')
             )
-            ->whereDate('ventas.created_at', $request->input('fecha'));
-
+            ->whereDate('ventas.created_at', $request->input('fecha'))
+            ->groupBy('ventas.id', 'ventas.cliente', 'ventas.num_comprobante');
+    
         if ($request->has('idCategoria') && $request->input('idCategoria') !== 'all') {
             $query->where('articulos.idcategoria', $request->input('idCategoria'));
         }
-
+    
         $ventas = $query->get();
-
+    
         if ($ventas->isEmpty()) {
             return response()->json(['mensaje' => 'Ninguna Venta Realizada en la Fecha Indicada']);
         }
-
-        //$totalGanado = $ventas->sum('total');
-
+    
         // Devolver las ventas como JSON
         return response()->json([
             'ventas' => $ventas
-            //'totalGanado' => $totalGanado
         ]);
     }
 }

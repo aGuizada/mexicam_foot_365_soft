@@ -77,7 +77,7 @@
       <td v-text="articulo.nombre_categoria"></td>
       <td v-text="articulo.descripcion"></td>
       <td class="text-center">
-        <b-img :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()" fluid-grow class="img-thumbnail" v-if="articulo.fotografia" ref="imagen"></b-img>
+        <b-img :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()" fluid-grow class="img-thumbnail" v-if="articulo.fotografia" ref="imagen" style="width: 100px; height: 100px; object-fit: contain;"></b-img>
         <b-img :src="'img/articulo/' + 'defecto.jpg'" fluid-grow class="img-thumbnail" v-else ref="imagen"></b-img>
       </td>
     </tr>
