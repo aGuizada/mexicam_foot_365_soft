@@ -77,7 +77,6 @@
 
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import * as XLSX from 'xlsx';
 
 export default {
 data (){
@@ -111,6 +110,7 @@ computed:{
     },
 
     totalGanado() {
+    this.arrayVentas.reverse();
       // Calcular la suma de los totales de todas las ventas
       return this.arrayVentas.reduce(
         (total, venta) => total + venta.precio * venta.cantidad,
