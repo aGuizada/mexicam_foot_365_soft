@@ -71,19 +71,19 @@
                                     </tbody>
                                 </table>
                             </div>
-     <nav>                      
-    <ul class="pagination">
-        <li class="page-item" v-if="pagination.current_page > 1">
-            <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
-        </li>
-        <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
-            <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)" v-text="page"></a>
-        </li>
-        <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-            <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
-        </li>
-    </ul>
-</nav>
+                        <nav>                      
+                            <ul class="pagination">
+                                <li class="page-item" v-if="pagination.current_page > 1">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
+                                </li>
+                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)" v-text="page"></a>
+                                </li>
+                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </template>
                 <!--Fin Listado-->
@@ -116,19 +116,30 @@
                         
                             <h3>Productos</h3>
                             <div class="row">
-                                
-                                <div class="col-md-4 mb-3 " v-for="articulo in arrayArticulo" :key="articulo.id " >
-                                    <button class="btn btn-block btn-ligth border texto-largo" @click="agregarDetalleModal(articulo)">
-                                        
-                                            <img :src="'img/articulo/'+ articulo.fotografia" width="150" height="150" class="card-img-top">
-                                            <div class="card-body d-flex flex-column justify-content-center align-items-center texto-largo"  style="padding-top: 8px; padding-bottom: 4px; ">
-                                                <h5 class="card-tittle texto-largo">{{ articulo.nombre }}</h5>
-                                                <p class="card-text texto-largo" >{{ articulo.medida }}</p>
-                                                    <p class="card-text texto-largo">Bs.{{ articulo.precio_venta }}</p>
-                                            </div>
-                                    </button>    
-                                </div>
-                            </div>    
+    <div class="col-md-4 mb-3" v-for="articulo in arrayArticulo" :key="articulo.id">
+        <div class="card h-100 border-0 shadow">
+            <button class="btn btn-block p-0 position-relative" @click="agregarDetalleModal(articulo)">
+                <div class="position-relative overflow-hidden">
+                    <b-img v-if="articulo.fotografia" :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()" fluid-grow class="card-img-top rounded-lg object-fit-cover" style="max-width: 150px;">
+                        <div class="img-overlay position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center text-white" @mouseover="zoomImage = true" @mouseleave="zoomImage = false" :class="{ 'd-none': !zoomImage }">
+                            <span class="fa fa-search-plus"></span>
+                        </div>
+                    </b-img>
+                </div>
+                <div class="card-body text-center pt-3">
+                    <h5 class="card-title mb-2">{{ articulo.nombre }}</h5>
+                    <p class="card-text mb-1">{{ articulo.medida }}</p>
+                    <p class="card-text font-weight-bold mb-0">Bs. {{ articulo.precio_venta }}</p>
+                </div>
+                <div class="card-hover-effect position-absolute top-0 start-0 w-100 h-100"></div>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+   
                         </div>
                     </div>
                     
@@ -1229,5 +1240,11 @@ export default {
   width: 100%; /* Ajusta el ancho al 100% del contenedor */
   margin-bottom: 400px;
 }
+
+    .object-fit-cover {
+        object-fit: cover;
+    }
+
+
 
     </style>
