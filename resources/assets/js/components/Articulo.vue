@@ -1,9 +1,6 @@
 <template>
     <main class="main">
-        <!-- Breadcrumb -->
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-        </ol>
+
         <div class="container-fluid">
             <!-- Ejemplo de tabla Listado -->
             <div class="card">
@@ -33,57 +30,57 @@
                         </div>
                     </div>
                 <div style="overflow-x: auto;">
- <table class="table table-bordered table-striped table-sm">
-  <thead>
-    <tr>
-      <th>Opciones</th>
-      <th>Precio</th>
-      <th>Nombre</th>
-      <th v-for="precio in precios" :key="precio.id">{{ precio.nombre_precio }}</th>
-      <th v-if="rolUsuario === 1 && mostrarCostos === 1">Precio venta</th>
-      <th>Categorìa</th>
-      <th>Descripción</th>
-      <th>Foto</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr v-for="articulo in arrayArticulo" :key="articulo.id">
-      <td>
-        <button type="button" @click="abrirModal('articulo', 'actualizar', articulo)" class="btn btn-warning btn-sm">
-          <i class="icon-pencil"></i> Editar
-        </button>
-        <br>
-        <template v-if="articulo.condicion">
-          <button type="button" class="btn btn-danger btn-sm" @click="desactivarArticulo(articulo.id)">
-            <i class="icon-trash"></i> Eliminar
-          </button>
-        </template>
-        <template v-else>
-          <button type="button" class="btn btn-info btn-sm" @click="activarArticulo(articulo.id)">
-            <i class="icon-check"></i> Activar
-          </button>
-        </template>
-      </td>
-      <td v-text="articulo.precio_venta"></td>
-      <td v-text="articulo.nombre"></td>
-      <td v-for="(precio, index) in precios" :key="precio.id">
-        <!-- Mostrar el precio correspondiente según el índice -->
-        <span v-if="index === 0">{{ articulo.precio_uno }}</span>
-        <span v-if="index === 1">{{ articulo.precio_dos }}</span>
-        <span v-if="index === 2">{{ articulo.precio_tres }}</span>
-        <span v-if="index === 3">{{ articulo.precio_cuatro }}</span>
-      </td>
-      <td v-if="rolUsuario === 1 && mostrarCostos === 1" v-text="articulo.precio_venta"></td>
-      <td v-text="articulo.nombre_categoria"></td>
-      <td v-text="articulo.descripcion"></td>
-      <td class="text-center">
-        <b-img :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()" fluid-grow class="img-thumbnail" v-if="articulo.fotografia" ref="imagen" style="width: 100px; height: 100px; object-fit: contain;"></b-img>
-        <b-img :src="'img/articulo/' + 'defecto.jpg'" fluid-grow class="img-thumbnail" v-else ref="imagen"></b-img>
-      </td>
-    </tr>
-  </tbody>
-</table>
-</div>
+                <table class="table table-bordered table-striped table-sm">
+                <thead>
+                    <tr>
+                    <th>Opciones</th>
+                    <th>Precio</th>
+                    <th>Nombre</th>
+                    <th v-for="precio in precios" :key="precio.id">{{ precio.nombre_precio }}</th>
+                    <th v-if="rolUsuario === 1 && mostrarCostos === 1">Precio venta</th>
+                    <th>Categorìa</th>
+                    <th>Descripción</th>
+                    <th>Foto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="articulo in arrayArticulo" :key="articulo.id">
+                    <td>
+                        <button type="button" @click="abrirModal('articulo', 'actualizar', articulo)" class="btn btn-warning btn-sm">
+                        <i class="icon-pencil"></i> Editar
+                        </button>
+                        <br>
+                        <template v-if="articulo.condicion">
+                        <button type="button" class="btn btn-danger btn-sm" @click="desactivarArticulo(articulo.id)">
+                            <i class="icon-trash"></i> Eliminar
+                        </button>
+                        </template>
+                        <template v-else>
+                        <button type="button" class="btn btn-info btn-sm" @click="activarArticulo(articulo.id)">
+                            <i class="icon-check"></i> Activar
+                        </button>
+                        </template>
+                    </td>
+                    <td v-text="articulo.precio_venta"></td>
+                    <td v-text="articulo.nombre"></td>
+                    <td v-for="(precio, index) in precios" :key="precio.id">
+                        <!-- Mostrar el precio correspondiente según el índice -->
+                        <span v-if="index === 0">{{ articulo.precio_uno }}</span>
+                        <span v-if="index === 1">{{ articulo.precio_dos }}</span>
+                        <span v-if="index === 2">{{ articulo.precio_tres }}</span>
+                        <span v-if="index === 3">{{ articulo.precio_cuatro }}</span>
+                    </td>
+                    <td v-if="rolUsuario === 1 && mostrarCostos === 1" v-text="articulo.precio_venta"></td>
+                    <td v-text="articulo.nombre_categoria"></td>
+                    <td v-text="articulo.descripcion"></td>
+                    <td class="text-center">
+                        <b-img :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()" fluid-grow class="img-thumbnail" v-if="articulo.fotografia" ref="imagen" style="width: 100px; height: 100px; object-fit: contain;"></b-img>
+                        <b-img :src="'img/articulo/' + 'defecto.jpg'" fluid-grow class="img-thumbnail" v-else ref="imagen"></b-img>
+                    </td>
+                    </tr>
+                </tbody>
+                </table>
+                </div>
                     <nav>
                         <ul class="pagination">
                             <li class="page-item" v-if="pagination.current_page > 1">
@@ -444,23 +441,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        <nav>
-                            <ul class="pagination">
-                                <li class="page-item" v-if="paginationMedida.current_page > 1">
-                                    <a class="page-link" href="#"
-                                        @click.prevent="cambiarPaginaMedida(paginationMedida.current_page - 2, buscar, criterio)">Ant</a>
-                                </li>
-                                <li class="page-item" v-for="page in pagesNumberMedida" :key="page"
-                                    :class="[page == isActivedM ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaMedida(page, buscar, criterio)"
-                                        v-text="page"></a>
-                                </li>
-                                <li class="page-item" v-if="paginationMedida.current_page < paginationMedida.last_page">
-                                    <a class="page-link" href="#"
-                                        @click.prevent="cambiarPaginaMedida(paginationMedida.current_page + 1, buscar, criterio)">Sig</a>
-                                </li>
-                            </ul>
-                        </nav>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" @click="modal6 = false">Cerrar</button>
@@ -636,72 +616,7 @@
                             </table>
                             <!--##################################################################3-->
                         </div>
-                        <nav v-if="tituloModal2 == 'Marcas'">
-                            <ul class="pagination">
-                                <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaMarca(pagination.current_page - 1,buscar,criterio)">Ant</a>
-                                </li>
-                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaMarca(page,buscar,criterio)" v-text="page"></a>
-                                </li>
-                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaMarca(pagination.current_page + 1,buscar,criterio)">Sig</a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <nav v-else-if="tituloModal2 == 'Lineas'">
-                            <ul class="pagination">
-                                <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaLinea(pagination.current_page - 1,buscar,criterio)">Ant</a>
-                                </li>
-                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaLinea(page,buscar,criterio)" v-text="page"></a>
-                                </li>
-                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaLinea(pagination.current_page + 1,buscar,criterio)">Sig</a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <nav v-else-if="tituloModal2 == 'Industrias'">
-                            <ul class="pagination">
-                                <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaIndustria(pagination.current_page - 1,buscar,criterio)">Ant</a>
-                                </li>
-                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActivedMar ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaIndustria(page,buscar,criterio)" v-text="page"></a>
-                                </li>
-                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaIndustria(pagination.current_page + 1,buscar,criterio)">Sig</a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <nav v-else-if="tituloModal2 == 'Proveedors'">
-                            <ul class="pagination">
-                                <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaProveedor(pagination.current_page - 1,buscar,criterio)">Ant</a>
-                                </li>
-                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActivedMar ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaProveedor(page,buscar,criterio)" v-text="page"></a>
-                                </li>
-                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaProveedor(pagination.current_page + 1,buscar,criterio)">Sig</a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <nav v-else-if="tituloModal2 == 'Grupos'">
-                            <ul class="pagination">
-                                <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaGrupo(pagination.current_page - 1,buscar,criterio)">Ant</a>
-                                </li>
-                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActivedMar ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaGrupo(page,buscar,criterio)" v-text="page"></a>
-                                </li>
-                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaGrupo(pagination.current_page + 1,buscar,criterio)">Sig</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+                          </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" @click="modal2 = false">Cerrar</button>
                     </div>
@@ -1076,30 +991,6 @@ export default {
         isActivedMar:function () {
             return this.pagination.current_page;
         },
-        //Calcula los elementos de la paginación
-        // pagesNumber: function () {
-        //     if (!this.pagination.to) {
-        //         return [];
-        //     }
-
-        //     var from = this.pagination.current_page - this.offset;
-        //     if (from < 1) {
-        //         from = 1;
-        //     }
-
-        //     var to = from + (this.offset * 2);
-        //     if (to >= this.pagination.last_page) {
-        //         to = this.pagination.last_page;
-        //     }
-
-        //     var pagesArray = [];
-        //     while (from <= to) {
-        //         pagesArray.push(from);
-        //         from++;
-        //     }
-        //     return pagesArray;
-
-        // },
         pagesNumber: function () {
             return this.calculatePages(this.pagination, this.offset.pagination);
         },
@@ -1482,48 +1373,7 @@ export default {
             //Envia la petición para visualizar la data de esa página
             me.listarArticulo(page, buscar, criterio);
         },
-        cambiarPaginaMedida(page, buscar, criterio) {
-            let me = this;
-            //Actualiza la página actual
-            me.paginationMedida.current_page = page;
-            me.listarMedida(page, buscar, criterio);
-            //Envia la petición para visualizar la data de esa página
-        },
-        cambiarPaginaMarca(page, buscar, criterio) {
-            let me = this;
-            //Actualiza la página actual
-            me.pagination.current_page = page;
-            me.listarMarca(page, buscar, criterio);
-            //Envia la petición para visualizar la data de esa página
-        },
-        cambiarPaginaLinea(page, buscar, criterio) {
-            let me = this;
-            //Actualiza la página actual
-            me.pagination.current_page = page;
-            me.listarLinea(page, buscar, criterio);
-            //Envia la petición para visualizar la data de esa página
-        },
-        cambiarPaginaIndustria(page, buscar, criterio) {
-            let me = this;
-            //Actualiza la página actual
-            me.pagination.current_page = page;
-            me.listarIndustria(page, buscar, criterio);
-            //Envia la petición para visualizar la data de esa página
-        },
-        cambiarPaginaProveedor(page, buscar, criterio) {
-            let me = this;
-            //Actualiza la página actual
-            me.pagination.current_page = page;
-            me.listarproveedor(page, buscar, criterio);
-            //Envia la petición para visualizar la data de esa página
-        },
-        cambiarPaginaGrupo(page, buscar, criterio) {
-            let me = this;
-            //Actualiza la página actual
-            me.pagination.current_page = page;
-            me.listargrupo(page, buscar, criterio);
-            //Envia la petición para visualizar la data de esa página
-        },
+        
         //mostrar foto de articulo
         obtenerFotografia(event) {
 

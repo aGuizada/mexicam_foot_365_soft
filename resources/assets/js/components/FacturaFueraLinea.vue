@@ -71,19 +71,25 @@
                                     </tbody>
                                 </table>
                             </div>
-                        <nav>                      
-                            <ul class="pagination">
-                                <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
-                                </li>
-                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)" v-text="page"></a>
-                                </li>
-                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
-                                </li>
-                            </ul>
-                        </nav>
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item" :class="{ disabled: pagination.current_page === 1 }">
+                        <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Anterior</span>
+                        </a>
+                    </li>
+                    <li class="page-item" v-for="page in pagesNumber" :key="page" :class="{ active: page === isActived }">
+                        <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)" v-text="page"></a>
+                    </li>
+                    <li class="page-item" :class="{ disabled: pagination.current_page === pagination.last_page }">
+                        <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)" aria-label="Siguiente">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Siguiente</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
                     </div>
                 </template>
                 <!--Fin Listado-->
@@ -116,7 +122,7 @@
                         
                             <h3>Productos</h3>
                             <div class="row">
-    <div class="col-md-4 mb-3" v-for="articulo in arrayArticulo" :key="articulo.id">
+                                <div class="col-md-4 mb-3" v-for="articulo in arrayArticulo" :key="articulo.id">
         <div class="card h-100 border-0 shadow">
             <button class="btn btn-block p-0 position-relative" @click="agregarDetalleModal(articulo)">
                 <div class="position-relative overflow-hidden">
@@ -127,8 +133,8 @@
                     </b-img>
                 </div>
                 <div class="card-body text-center pt-3">
-                    <h5 class="card-title mb-2">{{ articulo.nombre }}</h5>
-                    <p class="card-text mb-1">{{ articulo.medida }}</p>
+                    <h5 class="card-title mb-2"> {{ articulo.nombre }}</h5>
+                    <p class="card-text mb-1">{{ articulo.descripcion }}</p>
                     <p class="card-text font-weight-bold mb-0">Bs. {{ articulo.precio_venta }}</p>
                 </div>
                 <div class="card-hover-effect position-absolute top-0 start-0 w-100 h-100"></div>
@@ -141,26 +147,6 @@
 
    
                         </div>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <nav>
-                            <ul class="pagination">
-                                <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#"
-                                        @click.prevent="cambiarPaginaA(pagination.current_page - 1,buscar,criterio)">Ant</a>
-                                </li>
-                                <li class="page-item" v-for="page in pagesNumber" :key="page"
-                                    :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPaginaA(page,buscar,f)"
-                                        v-text="page"></a>
-                                </li>
-                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#"
-                                        @click.prevent="cambiarPaginaA(pagination.current_page + 1,buscar,criterio)">Sig</a>
-                                </li>
-                            </ul>
-                        </nav>
                     </div>
                         </div>
 
@@ -633,7 +619,7 @@ export default {
                     axios.get(url).then(function (response) {
                         var respuesta = response.data;
                         me.arrayBuscador = respuesta.categorias.data;
-                        me.pagination = respuesta.pagination;
+                        
                     })
                         .catch(function (error) {
                             console.log(error);
@@ -772,9 +758,9 @@ export default {
             var url = '/articulo/listarArticuloVenta?page=' + page + '&criterio='+ criterioA + '&idAlmacen='+ this.idAlmacen;
             axios.get(url).then(function (response) {
                 var respuesta = response.data;
-                console.log(respuesta);
+                console.log('Respuesta ',respuesta);
                 me.arrayArticulo = respuesta.articulos.data;
-                me.pagination = respuesta.pagination;
+                
             })
                 .catch(function (error) {
                     console.log(error);
@@ -1028,7 +1014,7 @@ export default {
             let me = this;
             me.selectAlmacen();
             me.listado = 0;
-            
+            me.listarArticulo('', '3');
             me.nombreCliente = '';
             me.idcliente = 0;
             me.tipo_documento = '';
@@ -1185,8 +1171,9 @@ export default {
     window.addEventListener('keydown', this.atajoButton);
     this.obtenerDatosUsuario();
     this.listarArticulo(1, this.buscar, this.criterio);
-    this.listarArticulo('', '3')
-    this.listarLinea('1','','nombreLinea')
+    this.listarArticulo('', '1');
+    this.listarLinea('1','','nombreLinea');
+    
 }
 }
 </script>

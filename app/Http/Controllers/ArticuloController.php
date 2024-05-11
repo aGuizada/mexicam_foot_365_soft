@@ -139,20 +139,20 @@ class ArticuloController extends Controller
         if (!$request->ajax())
             return redirect('/');
 
-        $criterio = $request->input('criterio', '0');
+        $criterio = $request->input('criterio');
 
         if ($criterio == '0') {
             $articulos = Articulo::join('medidas', 'articulos.idmedida', '=', 'medidas.id')
                 ->join('categorias', 'articulos.idcategoria', '=', 'categorias.id')
                 ->select('articulos.id', 'articulos.idcategoria', 'articulos.codigo', 'articulos.nombre','articulos.fotografia', 'categorias.nombre as nombre_categoria', 'articulos.precio_venta', 'articulos.stock', 'articulos.descripcion', 'articulos.condicion', 'medidas.descripcion_medida as medida')
                 ->where('articulos.stock', '>', '0')
-                ->orderBy('articulos.id', 'asc')->paginate(10);
+                ->orderBy('articulos.id', 'asc')->paginate(100);
         } else {
             $articulos = Articulo::join('categorias', 'articulos.idcategoria', '=', 'categorias.id')
                 ->select('articulos.id', 'articulos.idcategoria', 'articulos.codigo', 'articulos.nombre', 'articulos.fotografia','categorias.nombre as nombre_categoria', 'articulos.precio_venta', 'articulos.stock', 'articulos.descripcion', 'articulos.condicion')
                 ->where('articulos.idcategoria', '=', $criterio)
                 ->where('articulos.stock', '>', '0')
-                ->orderBy('articulos.id', 'asc')->paginate(10);
+                ->orderBy('articulos.id', 'asc')->paginate(100);
         }
         return [
             'pagination' => [
