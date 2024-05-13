@@ -1266,6 +1266,106 @@ export default {
 }
 </script>
 <style>
+/* Fuentes */
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #6d6d6d;
+  color: #000000;
+}
+
+/* Colores */
+.bg-dark {
+  background-color: #181818 !important;
+}
+
+.text-primary {
+  color: #7e57c2 !important;
+}
+
+.btn-primary {
+  background-color: #7e57c2;
+  border-color: #7e57c2;
+}
+
+.btn-primary:hover {
+  background-color: #6d4cac;
+  border-color: #6d4cac;
+}
+
+/* Efectos */
+.card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn {
+  border-radius: 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Tablas */
+.table {
+  background-color: #242424;
+  color: #e0e0e0;
+}
+
+.table th,
+.table td {
+  border-color: #333333;
+}
+
+.table thead th {
+  border-bottom: 2px solid #7e57c2;
+}
+
+/* Inputs */
+.form-control {
+  background-color: #ffffff;
+  /* Cambio: Fondo blanco para inputs */
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  color: #000000;
+  /* Cambio: Texto negro para inputs */
+}
+
+.form-control:focus {
+  background-color: #ffffff;
+  box-shadow: 0 0 0 0.2rem rgba(126, 87, 194, 0.25);
+}
+
+/* Dropdown */
+.dropdown-menu {
+  background-color: hsl(0, 0%, 100%);
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-item {
+  color: #0e0d0d;
+  transition: all 0.3s ease-in-out;
+}
+
+.dropdown-item:hover {
+  background-color: #7e57c2;
+  color: #ffffff;
+}
+
+/*hasta aqui */
 .modal-content {
   width: 100% !important;
   position: absolute !important;
