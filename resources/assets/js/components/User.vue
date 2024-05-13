@@ -30,63 +30,64 @@
                             </div>
                         </div>
                     </div>
-                <div class="table-responsive">
+                    <div class="table-responsive">
 
-                    <table class="table table-bordered table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>Foto</th>
-                                <th>Nombre</th>
-                                <th>Tipo Documento</th>
-                                <th>Número</th>
-                                <th>Dirección</th>
-                                <th>Teléfono</th>
-                                <th>Email</th>
-                                <th>Usuario</th>
-                                <th>Rol</th>
-                                <th>Sucursal</th>
-                                <th>Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="persona in arrayPersona" :key="persona.id">
-                                <td class="text-center">
-                                    <img :src="'img/usuarios/' + persona.fotografia + '?t=' + new Date().getTime()" width="50" height="50"
-                                        v-if="persona.fotografia" ref="imagen">
-                                    <!--img :src="'img/usuarios/' + persona.fotografia" width="50" height="50"
+                        <table class="table table-bordered table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Foto</th>
+                                    <th>Nombre</th>
+                                    <th>Tipo Documento</th>
+                                    <th>Número</th>
+                                    <th>Dirección</th>
+                                    <th>Teléfono</th>
+                                    <th>Email</th>
+                                    <th>Usuario</th>
+                                    <th>Rol</th>
+                                    <th>Sucursal</th>
+                                    <th>Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="persona in arrayPersona" :key="persona.id">
+                                    <td class="text-center">
+                                        <img :src="'img/usuarios/' + persona.fotografia + '?t=' + new Date().getTime()"
+                                            width="50" height="50" v-if="persona.fotografia" ref="imagen">
+                                        <!--img :src="'img/usuarios/' + persona.fotografia" width="50" height="50"
                                         v-if="persona.fotografia" ref="imagen"-->
-                                    <img :src="'img/usuarios/' + 'defecto.jpg'" width="50" height="50" v-else ref="imagen">
-                                </td>
-                                <td v-text="persona.nombre"></td>
-                                <td v-text="persona.tipo_documento"></td>
-                                <td v-text="persona.num_documento"></td>
-                                <td v-text="persona.direccion"></td>
-                                <td v-text="persona.telefono"></td>
-                                <td v-text="persona.email"></td>
-                                <td v-text="persona.usuario"></td>
-                                <td v-text="persona.rol"></td>
-                                <td v-text="persona.sucursal"></td>
-                                <td>
-                                    <button type="button" @click="abrirModal('persona', 'actualizar', persona)"
-                                        class="btn btn-warning btn-sm">
-                                        <i class="icon-pencil"></i>
-                                    </button> &nbsp;
-                                    <template v-if="persona.condicion">
-                                        <button type="button" class="btn btn-danger btn-sm"
-                                            @click="desactivarUsuario(persona.id)">
-                                            <i class="icon-trash"></i>
-                                        </button>
-                                    </template>
-                                    <template v-else>
-                                        <button type="button" class="btn btn-info btn-sm"
-                                            @click="activarUsuario(persona.id)">
-                                            <i class="icon-check"></i>
-                                        </button>
-                                    </template>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                        <img :src="'img/usuarios/' + 'defecto.jpg'" width="50" height="50" v-else
+                                            ref="imagen">
+                                    </td>
+                                    <td v-text="persona.nombre"></td>
+                                    <td v-text="persona.tipo_documento"></td>
+                                    <td v-text="persona.num_documento"></td>
+                                    <td v-text="persona.direccion"></td>
+                                    <td v-text="persona.telefono"></td>
+                                    <td v-text="persona.email"></td>
+                                    <td v-text="persona.usuario"></td>
+                                    <td v-text="persona.rol"></td>
+                                    <td v-text="persona.sucursal"></td>
+                                    <td>
+                                        <button type="button" @click="abrirModal('persona', 'actualizar', persona)"
+                                            class="btn btn-warning btn-sm">
+                                            <i class="icon-pencil"></i>
+                                        </button> &nbsp;
+                                        <template v-if="persona.condicion">
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                @click="desactivarUsuario(persona.id)">
+                                                <i class="icon-trash"></i>
+                                            </button>
+                                        </template>
+                                        <template v-else>
+                                            <button type="button" class="btn btn-info btn-sm"
+                                                @click="activarUsuario(persona.id)">
+                                                <i class="icon-check"></i>
+                                            </button>
+                                        </template>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <nav>
                         <ul class="pagination">
@@ -111,105 +112,114 @@
         </div>
         <!--Inicio del modal agregar/actualizar-->
         <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal }" role="dialog" aria-labelledby="myModalLabel"
-     style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-primary modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" v-text="tituloModal"></h4>
-                <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <!-- Columna izquierda -->
-                            <div class="form-group">
-                                <label class="form-control-label" for="text-input">Nombre(*)</label>
-                                <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de la persona">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-control-label" for="text-input">Tipo documento</label>
-                                <select v-model="tipo_documento" class="form-control">
-                                    <option value="CEDULA">CEDULA</option>
-                                    <option value="PASAPORTE">PASAPORTE</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-control-label" for="email-input">Teléfono</label>
-                                <input type="email" v-model="telefono" class="form-control" placeholder="Teléfono">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-control-label" for="email-input">Rol</label>
-                                <select v-model="idrol" class="form-control">
-                                    <option value="0" disabled>Seleccione</option>
-                                    <option v-for="role in arrayRol" :key="role.id" :value="role.id"
-                                        v-text="role.nombre"></option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-control-label" for="email-input">Usuario</label>
-                                <input type="text" v-model="usuario" class="form-control" placeholder="Nombre del usuario">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <!-- Columna derecha -->
-                            <div class="form-group">
-                                <label class="form-control-label" for="email-input">Dirección</label>
-                                <input type="email" v-model="direccion" class="form-control" placeholder="Dirección">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-control-label" for="email-input">Número documento</label>
-                                <input type="email" v-model="num_documento" class="form-control" placeholder="Número de documento">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-control-label" for="email-input">Email</label>
-                                <input type="email" v-model="email" class="form-control" placeholder="Email">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-control-label" for="email-input">Sucursal</label>
-                                <select v-model="idsucursal" class="form-control">
-                                    <option value="0" disabled>Seleccione</option>
-                                    <option v-for="sucursal in arraySucursal" :key="sucursal.id" :value="sucursal.id"
-                                        v-text="sucursal.nombre"></option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-control-label" for="email-input">Clave</label>
-                                <input type="password" v-model="password" class="form-control" placeholder="Clave del usuario">
-                            </div>
-                        </div>
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-primary modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" v-text="tituloModal"></h4>
+                        <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
                     </div>
+                    <div class="modal-body">
+                        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Columna izquierda -->
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="text-input">Nombre(*)</label>
+                                        <input type="text" v-model="nombre" class="form-control"
+                                            placeholder="Nombre de la persona">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="text-input">Tipo documento</label>
+                                        <select v-model="tipo_documento" class="form-control">
+                                            <option value="CEDULA">CEDULA</option>
+                                            <option value="PASAPORTE">PASAPORTE</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="email-input">Teléfono</label>
+                                        <input type="email" v-model="telefono" class="form-control"
+                                            placeholder="Teléfono">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="email-input">Rol</label>
+                                        <select v-model="idrol" class="form-control">
+                                            <option value="0" disabled>Seleccione</option>
+                                            <option v-for="role in arrayRol" :key="role.id" :value="role.id"
+                                                v-text="role.nombre"></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="email-input">Usuario</label>
+                                        <input type="text" v-model="usuario" class="form-control"
+                                            placeholder="Nombre del usuario">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <!-- Columna derecha -->
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="email-input">Dirección</label>
+                                        <input type="email" v-model="direccion" class="form-control"
+                                            placeholder="Dirección">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="email-input">Número documento</label>
+                                        <input type="email" v-model="num_documento" class="form-control"
+                                            placeholder="Número de documento">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="email-input">Email</label>
+                                        <input type="email" v-model="email" class="form-control" placeholder="Email">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="email-input">Sucursal</label>
+                                        <select v-model="idsucursal" class="form-control">
+                                            <option value="0" disabled>Seleccione</option>
+                                            <option v-for="sucursal in arraySucursal" :key="sucursal.id"
+                                                :value="sucursal.id" v-text="sucursal.nombre"></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="email-input">Clave</label>
+                                        <input type="password" v-model="password" class="form-control"
+                                            placeholder="Clave del usuario">
+                                    </div>
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <label class="form-control-label" for="email-input">Fotografia</label>
-                        <div class="row">
-                            <div class="col-md-5">
-                                <input type="file" @change="obtenerFotografia" class="form-control" placeholder="fotografia usuario" ref="fotografiaInput">
+                            <div class="form-group">
+                                <label class="form-control-label" for="email-input">Fotografia</label>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <input type="file" @change="obtenerFotografia" class="form-control"
+                                            placeholder="fotografia usuario" ref="fotografiaInput">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <figure>
+                                            <img :src="imagen" width="50" height="50" alt="Foto usuario">
+                                        </figure>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <figure>
-                                    <img :src="imagen" width="50" height="50" alt="Foto usuario">
-                                </figure>
+                            <div v-show="errorPersona" class="form-group div-error">
+                                <div class="text-center text-error">
+                                    <div v-for="error in errorMostrarMsjPersona" :key="error" v-text="error"></div>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
-                    <div v-show="errorPersona" class="form-group div-error">
-                        <div class="text-center text-error">
-                            <div v-for="error in errorMostrarMsjPersona" :key="error" v-text="error"></div>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
+                        <button type="button" v-if="tipoAccion == 1" class="btn btn-primary"
+                            @click="registrarPersona()">Guardar</button>
+                        <button type="button" v-if="tipoAccion == 2" class="btn btn-primary"
+                            @click="actualizarPersona()">Actualizar</button>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                <button type="button" v-if="tipoAccion == 1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
-                <button type="button" v-if="tipoAccion == 2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
         <!--Fin del modal-->
     </main>
@@ -311,7 +321,7 @@ export default {
                     console.log(error);
                 });
         },
-        
+
         selectSucursal() {
             let me = this;
             var url = '/sucursal/selectSucursal';
@@ -337,11 +347,11 @@ export default {
             let file = event.target.files[0];
 
             let fileType = file.type;
-                // Validar si el archivo es una imagen en formato PNG o JPG
-                if (fileType !== 'image/png' && fileType !== 'image/jpeg') {
-                    alert('Por favor, seleccione una imagen en formato PNG o JPG.');
-                    return;
-                }
+            // Validar si el archivo es una imagen en formato PNG o JPG
+            if (fileType !== 'image/png' && fileType !== 'image/jpeg') {
+                alert('Por favor, seleccione una imagen en formato PNG o JPG.');
+                return;
+            }
             this.fotografia = file;
             this.mostrarFoto(file);
 
@@ -587,8 +597,7 @@ export default {
                 }
             })
         },
-        cargarReporteUsuariosExcel()
-        {
+        cargarReporteUsuariosExcel() {
             window.open('/user/listarReporteUsuariosExcel', '_blank');
         }
     },
@@ -597,7 +606,8 @@ export default {
     }
 }
 </script>
-<style>    .modal-content {
+<style>
+    .modal-content {
         width: 100% !important;
         position: absolute !important;
     }
