@@ -122,31 +122,32 @@
                         </div>
                       </div>
                     </div>
-
-                    <h3>Productos</h3>
+                    <h3 class="text-primary mb-4">Productos</h3>
                     <div class="row">
                       <!-- Tarjetas de Artículos -->
                       <div class="col-md-4 mb-3" v-for="articulo in arrayArticulo" :key="articulo.id">
-                        <div class="card h-100 border-0 shadow">
+                        <div class="card h-100 border-0 shadow-lg">
                           <button class="btn btn-block p-0 position-relative" @click="agregarDetalleModal(articulo)">
                             <div class="position-relative overflow-hidden">
                               <b-img v-if="articulo.fotografia"
                                 :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()" fluid-grow
-                                class="card-img-top rounded-lg object-fit-cover" style="max-width: 150px;">
+                                class="card-img-top rounded-lg object-fit-cover"
+                                style="max-width: 150px; max-height: 150px;">
                                 <div
-                                  class="img-overlay position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center text-white"
+                                  class="img-overlay position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center text-white bg-dark bg-opacity-50"
                                   @mouseover="zoomImage = true" @mouseleave="zoomImage = false"
                                   :class="{ 'd-none': !zoomImage }">
-                                  <span class="fa fa-search-plus"></span>
+                                  <span class="fa fa-search-plus fa-2x"></span>
                                 </div>
                               </b-img>
                             </div>
                             <div class="card-body text-center pt-3">
-                              <h5 class="card-title mb-2"> {{ articulo.nombre }}</h5>
-                              <p class="card-text mb-1">{{ articulo.descripcion }}</p>
-                              <p class="card-text font-weight-bold mb-0">Bs. {{ articulo.precio_venta }}</p>
+                              <h5 class="card-title mb-2 fw-bold">{{ articulo.nombre }}</h5>
+                              <p class="card-text mb-0 text-primary">Bs. {{ articulo.precio_venta }}</p>
                             </div>
-                            <div class="card-hover-effect position-absolute top-0 start-0 w-100 h-100"></div>
+                            <div class="card-hover-effect position-absolute top-0 start-0 w-100 h-100 rounded-lg"
+                              style="background-color: rgba(255, 255, 255, 0.2); opacity: 0; transition: opacity 0.3s ease;">
+                            </div>
                           </button>
                         </div>
                       </div>
@@ -157,74 +158,72 @@
 
               <!-- Columna de Detalles de Venta -->
               <div class="col-md-4">
-                <div class="form-group row border">
-                  <div class="col-md-4">
-                    <div v-show="paraLlevar" class="form-group">
-                      <label for="cliente">Cliente(*)</label>
-                      <input type="text" id="cliente" class="form-control" placeholder="Nombre del Cliente"
-                        v-model="cliente" ref="cliente">
-                    </div>
-                    <div v-show="!paraLlevar" class="form-group">
-                      <label for="mesero">Mesero(*)</label>
-                      <input type="text" id="mesero" class="form-control" placeholder="Nombre del Mesero"
-                        v-model="usuario_autenticado" ref="mesero" readonly>
-                    </div>
-                    <div class="form-group">
-                      <label for="paraLlevar" class="font-weight-bold">Para llevar:
-                        <span class="text-danger">*</span>
-                        <input type="checkbox" id="paraLlevar" aria-label="Checkbox for following text input"
-                          v-model="paraLlevar">
-                      </label>
-                    </div>
-                  </div>
-
-                  <!-- Otros campos ocultos -->
-                  <input type="hidden" id="nombreCliente" class="form-control" readonly>
-                  <input type="hidden" id="idcliente" class="form-control" readonly>
-                  <input type="hidden" id="tipo_documento" class="form-control" readonly>
-                  <input type="hidden" id="complemento_id" class="form-control" v-model="complemento_id"
-                    ref="complementoIdRef" readonly>
-                  <input type="hidden" id="usuarioAutenticado" class="form-control" v-model="usuarioAutenticado"
-                    readonly>
-                  <input type="hidden" id="documento" class="form-control" readonly value="0000">
-                  <input type="hidden" id="email" class="form-control" readonly value="sinnombre@gmail.com">
-                  <input type="hidden" id="idAlmacen" class="form-control" readonly value="1">
-
-                  <div v-show="!paraLlevar" class="col-md-5">
-                    <div class="form-group">
-                      <label for="mesa">Num Mesa(*)</label>
-                      <input type="number" id="mesa" class="form-control" v-model="mesa">
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label for="num_comprobante">Número Ticket</label>
-                      <input type="text" id="num_comprobante" class="form-control" v-model="num_comprob"
-                        ref="numeroComprobanteRef" readonly>
-                    </div>
-                  </div>
-                  <!-- Otros campos según la lógica de tu aplicación -->
-
-                  <!-- Observaciones -->
-                  <div class="col-md-12">
-                    <div class="form-group row border">
-                      <div class="col-md-12">
+                <div class="card bg-dark text-white rounded-lg shadow-lg">
+                  <div class="card-body">
+                    <div class="form-group row">
+                      <div class="col-md-4">
+                        <div v-show="paraLlevar" class="form-group">
+                          <label for="cliente" class="form-label fw-bold text-uppercase">Cliente(*)</label>
+                          <input type="text" id="cliente" class="form-control form-control-lg rounded-pill"
+                            placeholder="Nombre del Cliente" v-model="cliente" ref="cliente">
+                        </div>
+                        <div v-show="!paraLlevar" class="form-group">
+                          <label for="mesero" class="form-label fw-bold text-uppercase">Mesero(*)</label>
+                          <input type="text" id="mesero" class="form-control form-control-lg rounded-pill"
+                            placeholder="Nombre del Mesero" v-model="usuario_autenticado" ref="mesero" readonly>
+                        </div>
                         <div class="form-group">
-                          <label for="observacion">Observaciones</label>
-                          <input type="text" id="observacion" class="form-control" v-model="observacion">
+                          <label for="paraLlevar" class="form-label fw-bold text-uppercase">Para llevar:
+                            <span class="text-danger">*</span>
+                            <input type="checkbox" id="paraLlevar" aria-label="Checkbox for following text input"
+                              v-model="paraLlevar" class="form-check-input">
+                          </label>
                         </div>
                       </div>
-                    </div>
-                  </div>
 
-                  <!-- Tipo de Pago -->
-                  <div class="col-md-12">
-                    <div class="form-group row border">
+                      <!-- Otros campos ocultos -->
+                      <input type="hidden" id="nombreCliente" class="form-control" readonly>
+                      <input type="hidden" id="idcliente" class="form-control" readonly>
+                      <input type="hidden" id="tipo_documento" class="form-control" readonly>
+                      <input type="hidden" id="complemento_id" class="form-control" v-model="complemento_id"
+                        ref="complementoIdRef" readonly>
+                      <input type="hidden" id="usuarioAutenticado" class="form-control" v-model="usuarioAutenticado"
+                        readonly>
+                      <input type="hidden" id="documento" class="form-control" readonly value="0000">
+                      <input type="hidden" id="email" class="form-control" readonly value="sinnombre@gmail.com">
+                      <input type="hidden" id="idAlmacen" class="form-control" readonly value="1">
+
+                      <div v-show="!paraLlevar" class="col-md-5">
+                        <div class="form-group">
+                          <label for="mesa" class="form-label fw-bold text-uppercase">Num Mesa(*)</label>
+                          <input type="number" id="mesa" class="form-control form-control-lg rounded-pill"
+                            v-model="mesa">
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="num_comprobante" class="form-label fw-bold text-uppercase">Número Ticket</label>
+                          <input type="text" id="num_comprobante" class="form-control form-control-lg rounded-pill"
+                            v-model="num_comprob" ref="numeroComprobanteRef" readonly>
+                        </div>
+                      </div>
+                      <!-- Otros campos según la lógica de tu aplicación -->
+
+                      <!-- Observaciones -->
                       <div class="col-md-12">
                         <div class="form-group">
-                          <label for="tipoPago">Tipo de Pago</label>
-                          <select class="form-control" id="tipoPago" v-model="tipoPago" @change="manejarTipoPago"
-                            required>
+                          <label for="observacion" class="form-label fw-bold text-uppercase">Observaciones</label>
+                          <input type="text" id="observacion" class="form-control form-control-lg rounded-pill"
+                            v-model="observacion">
+                        </div>
+                      </div>
+
+                      <!-- Tipo de Pago -->
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="tipoPago" class="form-label fw-bold text-uppercase">Tipo de Pago</label>
+                          <select class="form-select form-select-lg rounded-pill" id="tipoPago" v-model="tipoPago"
+                            @change="manejarTipoPago" required>
                             <option value="" disabled selected>Seleccione</option>
                             <option value="efectivo">Efectivo</option>
                             <option value="qr">QR</option>
@@ -232,86 +231,89 @@
                           <div v-if="!tipoPago" class="text-danger">Por favor, seleccione un tipo de pago.</div>
                         </div>
                       </div>
-                    </div>
-                  </div>
 
-                  <!-- Vista para pago en efectivo -->
-                  <template v-if="tipoPago === 'efectivo'">
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label for="montoEfectivo">Monto en Efectivo:</label>
-                        <input type="number" id="montoEfectivo" class="form-control" v-model="montoEfectivo"
-                          @input="calcularCambio">
+                      <!-- Vista para pago en efectivo -->
+                      <template v-if="tipoPago === 'efectivo'">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="montoEfectivo" class="form-label fw-bold text-uppercase">Monto en
+                              Efectivo:</label>
+                            <input type="number" id="montoEfectivo" class="form-control form-control-lg rounded-pill"
+                              v-model="montoEfectivo" @input="calcularCambio">
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <label class="form-label fw-bold text-uppercase">Total a Pagar: {{ totalAPagar.toFixed(2)
+                            }}</label>
+                        </div>
+                        <div class="col-md-12" v-if="cambio">
+                          <label class="form-label fw-bold text-uppercase">Cambio: {{ cambio.toFixed(2) }}</label>
+                        </div>
+                      </template>
+
+                      <!-- Vista para pago con QR -->
+                      <template v-if="tipoPago === 'qr'">
+                        <div class="col-md-12">
+                          <h4 class="text-uppercase fw-bold">Pago con QR</h4>
+                          <p>Por favor, escanee el código QR para realizar el pago.</p>
+                          <!-- Aquí iría el código QR generado dinámicamente -->
+                        </div>
+                      </template>
+
+                      <!-- Detalles de Venta -->
+                      <div class="col-md-12">
+                        <div class="table-responsive">
+                          <table class="table table-bordered table-striped table-sm">
+                            <thead class="thead-dark">
+                              <tr>
+                                <th>Opciones</th>
+                                <th>Artículo</th>
+                                <th>Cantidad</th>
+                                <th>Subtotal</th>
+                              </tr>
+                            </thead>
+                            <tbody v-if="arrayDetalle.length">
+                              <tr v-for="(detalle, index) in arrayDetalle" :key="detalle.id">
+                                <td>
+                                  <button @click="eliminarDetalle(index)" type="button" class="btn btn-danger btn-sm">
+                                    <i class="icon-close"></i>
+                                  </button>
+                                </td>
+                                <td>{{ detalle.articulo }}</td>
+                                <td>
+                                  <span style="color:red;" v-show="detalle.cantidad > detalle.stock">Stock: {{
+                                    detalle.stock }}</span>
+                                  <input v-model="detalle.cantidad" type="number" class="form-control">
+                                </td>
+                                <td>{{ (detalle.precio * detalle.cantidad - detalle.descuento).toFixed(2) }}</td>
+                              </tr>
+                              <tr class="table-active">
+                                <td colspan="3" align="right" class="fw-bold">Total: Bs.</td>
+                                <td id="montoTotal" class="fw-bold">{{ total=(calcularTotal).toFixed(2) }}</td>
+                              </tr>
+                            </tbody>
+                            <tbody v-else>
+                              <tr>
+                                <td colspan="6" class="text-center">No hay artículos agregados</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-md-12">
-                      <label>Total a Pagar: {{ totalAPagar.toFixed(2) }}</label>
-                    </div>
-                    <div class="col-md-12" v-if="cambio">
-                      <label>Cambio: {{ cambio.toFixed(2) }}</label>
-                    </div>
-                  </template>
 
-                  <!-- Vista para pago con QR -->
-                  <template v-if="tipoPago === 'qr'">
-                    <div class="col-md-12">
-                      <h4>Pago con QR</h4>
-                      <p>Por favor, escanee el código QR para realizar el pago.</p>
-                      <!-- Aquí iría el código QR generado dinámicamente -->
-                    </div>
-                  </template>
-
-                  <!-- Detalles de Venta -->
-                  <div class="col-md-12">
-                    <div class="form-group row border">
-                      <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-sm">
-                          <thead>
-                            <tr>
-                              <th>Opciones</th>
-                              <th>Artículo</th>
-                              <th>Cantidad</th>
-                              <th>Subtotal</th>
-                            </tr>
-                          </thead>
-                          <tbody v-if="arrayDetalle.length">
-                            <tr v-for="(detalle, index) in arrayDetalle" :key="detalle.id">
-                              <td>
-                                <button @click="eliminarDetalle(index)" type="button" class="btn btn-danger btn-sm">
-                                  <i class="icon-close"></i>
-                                </button>
-                              </td>
-                              <td>{{ detalle.articulo }}</td>
-                              <td>
-                                <span style="color:red;" v-show="detalle.cantidad > detalle.stock">Stock: {{
-                                  detalle.stock }}</span>
-                                <input v-model="detalle.cantidad" type="number" class="form-control">
-                              </td>
-                              <td>{{ (detalle.precio * detalle.cantidad - detalle.descuento).toFixed(2) }}</td>
-                            </tr>
-                            <tr style="background-color: #CEECF5;">
-                              <td colspan="3" align="right"><strong>Total: Bs.</strong></td>
-                              <td id="montoTotal">{{ total=(calcularTotal).toFixed(2) }}</td>
-                            </tr>
-                          </tbody>
-                          <tbody v-else>
-                            <tr>
-                              <td colspan="6">No hay artículos agregados</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Botones -->
-                  <div class="col-md-12">
-                    <div class="form-group row">
-                      <div class="col-md-6">
-                        <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
-                      </div>
-                      <div class="col-md-6">
-                        <button type="button" class="btn btn-primary" @click="registrar()">Registrar Venta</button>
+                      <!-- Botones -->
+                      <div class="col-md-12">
+                        <div class="form-group row">
+                          <div class="col-md-6">
+                            <button type="button" @click="ocultarDetalle()"
+                              class="btn btn-outline-light btn-lg rounded-pill w-100">Cerrar</button>
+                          </div>
+                          <div class="col-md-6">
+                            <button type="button" class="btn btn-primary btn-lg rounded-pill w-100"
+                              @click="registrar()">Registrar
+                              Venta</button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1129,7 +1131,7 @@ export default {
         var respuesta = response.data;
         arrayVentaT = respuesta.venta;
         me.categoria = (arrayVentaT[0]['cliente'] == null) ? 'Mesa' : 'Llevar';
-        me.cliente = (arrayVentaT[0]['cliente'] != null) ? arrayVentaT[0]['cliente'] : 'SIN NOMBRE';
+        me.cliente = (arrayVentaT[0]['cliente'] != null) ? arrayVentaT[0]['cliente'] : '';
         me.tipo_comprobante = arrayVentaT[0]['tipo_comprobante'];
         me.serie_comprobante = arrayVentaT[0]['serie_comprobante'];
         me.num_comprobante = arrayVentaT[0]['num_comprobante'];
@@ -1427,5 +1429,19 @@ body {
 
 .object-fit-cover {
   object-fit: cover;
+
+}
+
+.table {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.table thead th {
+  background-color: #343a40;
+  color: #fff;
+  border-color: #454d55;
+  text-align: center;
 }
 </style>

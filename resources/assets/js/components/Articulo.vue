@@ -29,58 +29,66 @@
                             </div>
                         </div>
                     </div>
-                <div style="overflow-x: auto;">
-                <table class="table table-bordered table-striped table-sm">
-                <thead>
-                    <tr>
-                    <th>Opciones</th>
-                    <th>Precio</th>
-                    <th>Nombre</th>
-                    <th v-for="precio in precios" :key="precio.id">{{ precio.nombre_precio }}</th>
-                    <th v-if="rolUsuario === 1 && mostrarCostos === 1">Precio venta</th>
-                    <th>Categorìa</th>
-                    <th>Descripción</th>
-                    <th>Foto</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="articulo in arrayArticulo" :key="articulo.id">
-                    <td>
-                        <button type="button" @click="abrirModal('articulo', 'actualizar', articulo)" class="btn btn-warning btn-sm">
-                        <i class="icon-pencil"></i> Editar
-                        </button>
-                        <br>
-                        <template v-if="articulo.condicion">
-                        <button type="button" class="btn btn-danger btn-sm" @click="desactivarArticulo(articulo.id)">
-                            <i class="icon-trash"></i> Eliminar
-                        </button>
-                        </template>
-                        <template v-else>
-                        <button type="button" class="btn btn-info btn-sm" @click="activarArticulo(articulo.id)">
-                            <i class="icon-check"></i> Activar
-                        </button>
-                        </template>
-                    </td>
-                    <td v-text="articulo.precio_venta"></td>
-                    <td v-text="articulo.nombre"></td>
-                    <td v-for="(precio, index) in precios" :key="precio.id">
-                        <!-- Mostrar el precio correspondiente según el índice -->
-                        <span v-if="index === 0">{{ articulo.precio_uno }}</span>
-                        <span v-if="index === 1">{{ articulo.precio_dos }}</span>
-                        <span v-if="index === 2">{{ articulo.precio_tres }}</span>
-                        <span v-if="index === 3">{{ articulo.precio_cuatro }}</span>
-                    </td>
-                    <td v-if="rolUsuario === 1 && mostrarCostos === 1" v-text="articulo.precio_venta"></td>
-                    <td v-text="articulo.nombre_categoria"></td>
-                    <td v-text="articulo.descripcion"></td>
-                    <td class="text-center">
-                        <b-img :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()" fluid-grow class="img-thumbnail" v-if="articulo.fotografia" ref="imagen" style="width: 100px; height: 100px; object-fit: contain;"></b-img>
-                        <b-img :src="'img/articulo/' + 'defecto.jpg'" fluid-grow class="img-thumbnail" v-else ref="imagen"></b-img>
-                    </td>
-                    </tr>
-                </tbody>
-                </table>
-                </div>
+                    <div style="overflow-x: auto;">
+                        <table class="table table-bordered table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Opciones</th>
+                                    <th>Precio</th>
+                                    <th>Nombre</th>
+                                    <th v-for="precio in precios" :key="precio.id">{{ precio.nombre_precio }}</th>
+                                    <th v-if="rolUsuario === 1 && mostrarCostos === 1">Precio venta</th>
+                                    <th>Categorìa</th>
+                                    <th>Descripción</th>
+                                    <th>Foto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="articulo in arrayArticulo" :key="articulo.id">
+                                    <td>
+                                        <button type="button" @click="abrirModal('articulo', 'actualizar', articulo)"
+                                            class="btn btn-warning btn-sm">
+                                            <i class="icon-pencil"></i> Editar
+                                        </button>
+                                        <br>
+                                        <template v-if="articulo.condicion">
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                @click="desactivarArticulo(articulo.id)">
+                                                <i class="icon-trash"></i> Eliminar
+                                            </button>
+                                        </template>
+                                        <template v-else>
+                                            <button type="button" class="btn btn-info btn-sm"
+                                                @click="activarArticulo(articulo.id)">
+                                                <i class="icon-check"></i> Activar
+                                            </button>
+                                        </template>
+                                    </td>
+                                    <td v-text="articulo.precio_venta"></td>
+                                    <td v-text="articulo.nombre"></td>
+                                    <td v-for="(precio, index) in precios" :key="precio.id">
+                                        <!-- Mostrar el precio correspondiente según el índice -->
+                                        <span v-if="index === 0">{{ articulo.precio_uno }}</span>
+                                        <span v-if="index === 1">{{ articulo.precio_dos }}</span>
+                                        <span v-if="index === 2">{{ articulo.precio_tres }}</span>
+                                        <span v-if="index === 3">{{ articulo.precio_cuatro }}</span>
+                                    </td>
+                                    <td v-if="rolUsuario === 1 && mostrarCostos === 1" v-text="articulo.precio_venta">
+                                    </td>
+                                    <td v-text="articulo.nombre_categoria"></td>
+                                    <td v-text="articulo.descripcion"></td>
+                                    <td class="text-center">
+                                        <b-img
+                                            :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()"
+                                            fluid-grow class="img-thumbnail" v-if="articulo.fotografia" ref="imagen"
+                                            style="width: 100px; height: 100px; object-fit: contain;"></b-img>
+                                        <b-img :src="'img/articulo/' + 'defecto.jpg'" fluid-grow class="img-thumbnail"
+                                            v-else ref="imagen"></b-img>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <nav>
                         <ul class="pagination">
                             <li class="page-item" v-if="pagination.current_page > 1">
@@ -123,11 +131,8 @@
                                 <label class="col-md-3 form-control-label" for="text-input"
                                     style="color: blue;">Código</label>
                                 <div class="col-md-4">
-                                    <input type="text"
-                                        v-model="codigo"
-                                        class="form-control"
-                                        :class="{ 'border-red': codigoVacio }"
-                                        @input="codigoVacio = false"
+                                    <input type="text" v-model="codigo" class="form-control"
+                                        :class="{ 'border-red': codigoVacio }" @input="codigoVacio = false"
                                         placeholder="Código de barras">
                                 </div>
                                 <div class="col-md-12 order-md-2">
@@ -136,36 +141,27 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="text-input">Nombre(*)</label>
-                                        <input type="text"
-                                        v-model="nombre_producto"
-                                        class="form-control"
-                                        :class="{ 'border-red': nombreProductoVacio }"
-                                        @input="nombreProductoVacio = false"
-                                        placeholder="Nombre de artículo">
+                                        <input type="text" v-model="nombre_producto" class="form-control"
+                                            :class="{ 'border-red': nombreProductoVacio }"
+                                            @input="nombreProductoVacio = false" placeholder="Nombre de artículo">
                                     </div>
                                     <div style="display: none;" class="form-group">
                                         <label class="form-control-label" for="text-input">Unid.X Envase(*)</label>
-                                        <input type="text" 
-                                        v-model="unidad_envase" 
-                                        class="form-control"
-                                        :class="{ 'border-red': unidad_envaseVacio }"
-                                        @input="unidad_envaseVacio = false"
-                                        placeholder="Unid X Envase">
+                                        <input type="text" v-model="unidad_envase" class="form-control"
+                                            :class="{ 'border-red': unidad_envaseVacio }"
+                                            @input="unidad_envaseVacio = false" placeholder="Unid X Envase">
                                     </div>
                                     <div style="display: none;" class="form-group">
                                         <label class="form-control-label" for="email-input">Precio Costo(Unid*.)</label>
                                         <div class="input-group">
-                                            <input type="text" 
-                                                v-model="precio_costo_unid" 
-                                                class="form-control"
+                                            <input type="text" v-model="precio_costo_unid" class="form-control"
                                                 :class="{ 'border-red': precio_costo_unidVacio }"
-                                                @input="precio_costo_unidVacio = false"
-                                                placeholder="Unidad">
+                                                @input="precio_costo_unidVacio = false" placeholder="Unidad">
                                             <div class="input-group-append">
                                                 <button type="button" class="btn btn-primary"
                                                     @click="calcularPrecioCostoUnid">Calcular</button>
@@ -175,102 +171,95 @@
                                     <div style="display: none;" class="form-group">
                                         <label class="form-control-label" for="email-input">Precio Costo(paq*.)</label>
                                         <div class="input-group">
-                                            <input type="text" 
-                                            v-model="precio_costo_paq" 
-                                            class="form-control"
-                                            :class="{ 'border-red': precio_costo_paqVacio }"
-                                            @input="precio_costo_paqVacio = false"
-                                            placeholder="paquete">
+                                            <input type="text" v-model="precio_costo_paq" class="form-control"
+                                                :class="{ 'border-red': precio_costo_paqVacio }"
+                                                @input="precio_costo_paqVacio = false" placeholder="paquete">
                                             <div class="input-group-append">
                                                 <button type="button" class="btn btn-primary"
                                                     @click="calcularPrecioCostoPaq">Calcular</button>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                                 <!---DERECHA-->
                                 <div class="col-md-6">
                                     <div style="display: none;" class="form-group">
-                                        <label class="form-control-label" for="text-input"><strong>Nombre Generico(*)</strong></label>
-                                        <input type="text" 
-                                        v-model="nombre_generico" 
-                                        class="form-control"
-                                        :class="{ 'border-red': nombre_genericoVacio }"
-                                        @input="nombre_genericoVacio = false"
-                                        placeholder="Uidad">
+                                        <label class="form-control-label" for="text-input"><strong>Nombre
+                                                Generico(*)</strong></label>
+                                        <input type="text" v-model="nombre_generico" class="form-control"
+                                            :class="{ 'border-red': nombre_genericoVacio }"
+                                            @input="nombre_genericoVacio = false" placeholder="Uidad">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-control-label" for="text-input"><strong>Precio(*)</strong></label>
-                                        <input type="number" 
-                                            v-model="precio_venta" 
-                                            class="form-control"
-                                            :class="{ 'border-red': precio_ventaVacio }" 
-                                            @input="precio_ventaVacio = false"
-                                            placeholder="">
+                                        <label class="form-control-label"
+                                            for="text-input"><strong>Precio(*)</strong></label>
+                                        <input type="number" v-model="precio_venta" class="form-control"
+                                            :class="{ 'border-red': precio_ventaVacio }"
+                                            @input="precio_ventaVacio = false" placeholder="">
                                     </div>
                                     <div style="display: none;" class="form-group">
                                         <label class="form-control-label" for="text-input">Costo Compra(*)</label>
-                                        <input type="number" 
-                                            v-model="costo_compra" 
-                                            class="form-control"
-                                            :class="{ 'border-red': costo_compraVacio }" 
-                                            @input="costo_compraVacio = false"
-                                            placeholder="">
+                                        <input type="number" v-model="costo_compra" class="form-control"
+                                            :class="{ 'border-red': costo_compraVacio }"
+                                            @input="costo_compraVacio = false" placeholder="">
                                     </div>
                                     <div style="display: none;" class="form-group">
                                         <label class="form-control-label" for="text-input">Stock Minimo(*)</label>
-                                        <input type="number" 
-                                            v-model="stock" 
-                                            class="form-control"
-                                            :class="{ 'border-red': stockVacio }" 
-                                            @input="stockVacio = false"
+                                        <input type="number" v-model="stock" class="form-control"
+                                            :class="{ 'border-red': stockVacio }" @input="stockVacio = false"
                                             placeholder="Ingrese estock minimo">
                                     </div>
                                 </div>
                             </div>
-                           
-                                                        
+
+
                             <div v-for="(precio, index) in precios" :key="precio.id" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input" style="color: blue;">{{ precio.nombre_precio }}</label>
+                                <label class="col-md-3 form-control-label" for="text-input" style="color: blue;">{{
+                                    precio.nombre_precio }}</label>
                                 <div class="col-md-4">
-                                    <input v-if="index === 0" type="text" class="form-control" placeholder="Precio" v-model="precio_uno">
-                                    <input v-if="index === 1" type="text" class="form-control" placeholder="Precio" v-model="precio_dos">
-                                    <input v-if="index === 2" type="text" class="form-control" placeholder="Precio" v-model="precio_tres">
-                                    <input v-if="index === 3" type="text" class="form-control" placeholder="Precio" v-model="precio_cuatro">
+                                    <input v-if="index === 0" type="text" class="form-control" placeholder="Precio"
+                                        v-model="precio_uno">
+                                    <input v-if="index === 1" type="text" class="form-control" placeholder="Precio"
+                                        v-model="precio_dos">
+                                    <input v-if="index === 2" type="text" class="form-control" placeholder="Precio"
+                                        v-model="precio_tres">
+                                    <input v-if="index === 3" type="text" class="form-control" placeholder="Precio"
+                                        v-model="precio_cuatro">
                                 </div>
                                 <div class=" input-group" style="width: 90px">
-                                    <input type="text" class="form-control" placeholder="Porcentaje" :value="precio.porcentage">
+                                    <input type="text" class="form-control" placeholder="Porcentaje"
+                                        :value="precio.porcentage">
                                     <div class="input-group-append">
-                                    <span class="input-group-text">%</span>
+                                        <span class="input-group-text">%</span>
                                     </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <button type="button" class="btn btn-primary" @click="calcularPrecio(precio, index)">Calcular</button>
+                                    <button type="button" class="btn btn-primary"
+                                        @click="calcularPrecio(precio, index)">Calcular</button>
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="text-input"><strong>Descripción</strong></label>
-                                        <input type="email" 
-                                        v-model="descripcion" 
-                                        class="form-control"
-                                        :class="{ 'border-red': descripcionVacio }" 
-                                        @input="descripcionVacio = false"
-                                        placeholder="Ingrese descripción">
+                                        <label class="form-control-label"
+                                            for="text-input"><strong>Descripción</strong></label>
+                                        <input type="email" v-model="descripcion" class="form-control"
+                                            :class="{ 'border-red': descripcionVacio }"
+                                            @input="descripcionVacio = false" placeholder="Ingrese descripción">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="text-input"><strong>Fotografia(*)</strong></label>
+                                        <label class="form-control-label"
+                                            for="text-input"><strong>Fotografia(*)</strong></label>
                                         <div class="input-group">
-                                            
-                                                <input type="file" @change="obtenerFotografia" class="form-control"
-                                            :class="{ 'border-red': fotografiaVacio }" 
-                                            @input="fotografiaVacio = false"
-                                            placeholder="fotografia usuario" ref="fotografiaInput">                                           
+
+                                            <input type="file" @change="obtenerFotografia" class="form-control"
+                                                :class="{ 'border-red': fotografiaVacio }"
+                                                @input="fotografiaVacio = false" placeholder="fotografia usuario"
+                                                ref="fotografiaInput">
                                         </div>
                                     </div>
                                 </div>
@@ -282,7 +271,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div v-show="errorArticulo" class="form-group row div-error">
                                 <div class="text-center text-error">
                                     <div v-for="error in errorMostrarMsjArticulo" :key="error" v-text="error">
@@ -291,16 +280,17 @@
                                 </div>
                             </div>
                         </form>
-                        <div  class="row">
+                        <div class="row">
                             <div class="col-md-4">
-                               
+
                                 <div class="form-group">
                                     <label class="form-control-label" for="text-input">Categoria(*)</label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="lineaseleccionada.nombre"
-                                        :class="{ 'border-red': lineaseleccionadaVacio }">
+                                            :class="{ 'border-red': lineaseleccionadaVacio }">
                                         <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button" @click="abrirModal2('Lineas')">...</button>
+                                            <button class="btn btn-primary" type="button"
+                                                @click="abrirModal2('Lineas')">...</button>
                                         </div>
                                     </div>
                                 </div>
@@ -308,22 +298,24 @@
                                     <label class="form-control-label" for="text-input">Marca(*)</label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="marcaseleccionada.nombre"
-                                        :class="{ 'border-red': marcaseleccionadaVacio }">
+                                            :class="{ 'border-red': marcaseleccionadaVacio }">
                                         <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button" @click="abrirModal2('Marcas')">...</button>
+                                            <button class="btn btn-primary" type="button"
+                                                @click="abrirModal2('Marcas')">...</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
-            
+
                                 <div style="display: none;" class="form-group">
                                     <label class="form-control-label" for="text-input">Industria(*)</label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="industriaseleccionada.nombre"
-                                        :class="{ 'border-red': industriaseleccionadaVacio }" />
+                                            :class="{ 'border-red': industriaseleccionadaVacio }" />
                                         <div class="input-group-append">
-                                            <button @click="abrirModal2('Industrias')" class="btn btn-primary">...</button>
+                                            <button @click="abrirModal2('Industrias')"
+                                                class="btn btn-primary">...</button>
                                         </div>
                                     </div>
                                 </div>
@@ -331,20 +323,21 @@
                                     <label class="form-control-label" for="text-input">Proveedor(*)</label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="proveedorseleccionada.nombre"
-                                        :class="{ 'border-red': proveedorseleccionadaVacio }" />
+                                            :class="{ 'border-red': proveedorseleccionadaVacio }" />
                                         <div class="input-group-append">
-                                            <button @click="abrirModal2('Proveedors')" class="btn btn-primary">...</button>
+                                            <button @click="abrirModal2('Proveedors')"
+                                                class="btn btn-primary">...</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                
+
                                 <div style="display: none;" class="form-group">
                                     <label class="form-control-label" for="text-input">Grupo O Familia(*)</label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="gruposeleccionada.nombre_grupo"
-                                        :class="{ 'border-red': gruposeleccionadaVacio }" />
+                                            :class="{ 'border-red': gruposeleccionadaVacio }" />
                                         <div class="input-group-append">
                                             <button @click="abrirModal2('Grupos')" class="btn btn-primary">...</button>
                                         </div>
@@ -354,13 +347,13 @@
                                     <label class="form-control-label" for="text-input">Medida(*)</label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="medidaseleccionada.descripcion_medida"
-                                        :class="{ 'border-red': medidaseleccionadaVacio }" />
+                                            :class="{ 'border-red': medidaseleccionadaVacio }" />
                                         <div class="input-group-append">
                                             <button @click="abrirModal6('Medidas')" class="btn btn-primary">...</button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>                   
+                            </div>
                         </div>
                     </div>
 
@@ -378,8 +371,8 @@
         </div>
 
         <!-- MODAL PARA LA LISTA DE MEDIDA -->
-        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal6 }" role="dialog" aria-labelledby="myModalLabel"
-            style="display: none;" aria-hidden="true">
+        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal6 }" role="dialog"
+            aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-primary modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -452,8 +445,8 @@
         </div>
         <!-- HASTA AQUI EL MODAL DE LISTA MEDIDA -->
 
-        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal2 }" role="dialog" aria-labelledby="myModalLabel"
-            style="display: none;" aria-hidden="true">
+        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal2 }" role="dialog"
+            aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-primary modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -588,7 +581,8 @@
                                 </tbody>
                             </table>
                             <!--###########################################################-->
-                            <table class="table table-bordered table-striped table-sm" v-else-if="tituloModal2 == 'Grupos'">
+                            <table class="table table-bordered table-striped table-sm"
+                                v-else-if="tituloModal2 == 'Grupos'">
                                 <thead>
                                     <tr>
                                         <th>Opciones</th>
@@ -616,7 +610,7 @@
                             </table>
                             <!--##################################################################3-->
                         </div>
-                          </div>
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" @click="modal2 = false">Cerrar</button>
                     </div>
@@ -627,8 +621,8 @@
         </div>
         <!--Fin del modal-->
         <!--######################################-aqui registro de industria,Marca,Linea#####################-->
-        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal3 }" role="dialog" aria-labelledby="myModalLabel"
-            style="display: none;" aria-hidden="true">
+        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal3 }" role="dialog"
+            aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-primary modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -650,7 +644,7 @@
                                     <input type="text" v-model="descripcion" class="form-control1"
                                         :placeholder="placeholderInput('descripcion')">
                                 </div>
-                               
+
                             </div>
                             <!-- prueba de habilitar  -->
                             <div v-if="tituloModal2 == 'Industrias'" class="form-group row">
@@ -735,7 +729,8 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="email-input">Teléfono de contacto</label>
+                                <label class="col-md-3 form-control-label" for="email-input">Teléfono de
+                                    contacto</label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="telefono_contacto" class="form-control"
                                         placeholder="Teléfono del contacto">
@@ -777,8 +772,8 @@
         <!--######################################hasta aqui registro de industria#####################-->
 
         <!--######################################-aqui registro de medida#####################-->
-        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal7 }" role="dialog" aria-labelledby="myModalLabel"
-            style="display: none;" aria-hidden="true">
+        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal7 }" role="dialog"
+            aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-primary modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -862,13 +857,13 @@ export default {
             idgrupo: 0,
 
             idmedida: 0,
-            nombreLinea:'',
+            nombreLinea: '',
             nombre_categoria: '',
             nombre_proveedor: '',
             //id:'',//aumente 7 julio
             codigo: '',
             nombre: '',
-            nombre_producto : '',
+            nombre_producto: '',
             nombre_generico: '',
             //validaion para inputs
             nombreProductoVacio: false,
@@ -899,9 +894,9 @@ export default {
             //mostrarPrecios: false,
             //precioCount: 0,
             //aumento 13_junio
-            precio_uno:0,
-            precio_dos:0,
-            precio_tres:0,
+            precio_uno: 0,
+            precio_dos: 0,
+            precio_tres: 0,
             precio_cuatro: 0,
             //hasta aqui
             //--------proveedor para almacer el registrado y editar------
@@ -988,7 +983,7 @@ export default {
         isActivedM: function () {
             return this.pagination.current_page;
         },
-        isActivedMar:function () {
+        isActivedMar: function () {
             return this.pagination.current_page;
         },
         pagesNumber: function () {
@@ -1003,30 +998,30 @@ export default {
         },
     },
     methods: {
-        calculatePages: function(paginationObject, offset) {
+        calculatePages: function (paginationObject, offset) {
             if (!paginationObject.to) {
-            return [];
+                return [];
             }
 
             var from = paginationObject.current_page - offset;
             if (from < 1) {
-            from = 1;
+                from = 1;
             }
 
             var to = from + (offset * 2);
             if (to >= paginationObject.last_page) {
-            to = paginationObject.last_page;
+                to = paginationObject.last_page;
             }
 
             var pagesArray = [];
             while (from <= to) {
-            pagesArray.push(from);
-            from++;
+                pagesArray.push(from);
+                from++;
             }
             return pagesArray;
         },
-        createPaginationObject(){
-            return{
+        createPaginationObject() {
+            return {
                 'total': 0,
                 'current_page': 0,
                 'per_page': 0,
@@ -1058,23 +1053,23 @@ export default {
             if (this.tituloModal2 == "Marcas") {
                 this.marcaseleccionadaVacio = false;
                 if (selected.condicion == 1) {
-                this.marcaseleccionada = selected;
+                    this.marcaseleccionada = selected;
                 } else if (selected.condicion == 0) {
-                this.advertenciaInactiva('Marcas');
+                    this.advertenciaInactiva('Marcas');
                 }
             } else if (this.tituloModal2 == "Industrias") {
                 this.industriaseleccionadaVacio = false;
                 if (selected.estado == 1) {
-                this.industriaseleccionada = selected;
+                    this.industriaseleccionada = selected;
                 } else if (selected.estado == 0) {
-                this.advertenciaInactiva('Industrias');
+                    this.advertenciaInactiva('Industrias');
                 }
             } else if (this.tituloModal2 == "Lineas") {
                 this.lineaseleccionadaVacio = false;
                 if (selected.condicion == 1) {
-                this.lineaseleccionada = selected;
+                    this.lineaseleccionada = selected;
                 } else if (selected.condicion == 0) {
-                this.advertenciaInactiva('Lineas');
+                    this.advertenciaInactiva('Lineas');
                 }
             } else if (this.tituloModal2 == "Proveedors") {
                 this.proveedorseleccionadaVacio = false;
@@ -1098,9 +1093,9 @@ export default {
             if (this.tituloModal6 == "Medidas") {
                 this.medidaseleccionadaVacio = false;
                 if (selected.estado == 1) {
-                this.medidaseleccionada = selected;
+                    this.medidaseleccionada = selected;
                 } else if (selected.estado == 0) {
-                this.advertenciaInactiva('Medidas');
+                    this.advertenciaInactiva('Medidas');
                 }
             }
             this.arrayBuscador = [];
@@ -1342,7 +1337,7 @@ export default {
             axios.get(url).then(function (response) {
                 var respuesta = response.data;
                 me.precios = respuesta.precio.data;
-                console.log('PRECIOS',me.precios);
+                console.log('PRECIOS', me.precios);
                 //me.precioCount = me.arrayBuscador.length;
             }).catch(function (error) {
                 console.log(error);
@@ -1373,7 +1368,7 @@ export default {
             //Envia la petición para visualizar la data de esa página
             me.listarArticulo(page, buscar, criterio);
         },
-        
+
         //mostrar foto de articulo
         obtenerFotografia(event) {
 
@@ -1424,7 +1419,7 @@ export default {
             let formData = new FormData();
 
             formData.append('idcategoria', this.lineaseleccionada.id);
-           // formData.append('idindustria', this.industriaseleccionada.id);
+            // formData.append('idindustria', this.industriaseleccionada.id);
             //formData.append('idmarca', this.marcaseleccionada.id);
             //formData.append('idproveedor', this.proveedorseleccionada.id);
             //formData.append('idgrupo', this.gruposeleccionada.id);//AUMENtE 5 julio
@@ -1439,7 +1434,7 @@ export default {
             //formData.append('stock', this.stock);
             formData.append('precio_venta', this.precio_venta);
 
-           // formData.append('precio_uno', this.precio_uno);
+            // formData.append('precio_uno', this.precio_uno);
             //formData.append('precio_dos', this.precio_dos);
             //formData.append('precio_tres', this.precio_tres);
             //formData.append('precio_cuatro', this.precio_cuatro);
@@ -1449,7 +1444,7 @@ export default {
 
             //formData.append('idmedida', this.medidaseleccionada.id);
             //formData.append('costo_compra', this.costo_compra);
-            console.log("FORMDATA",formData);
+            console.log("FORMDATA", formData);
             axios.post('/articulo/registrar', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -1612,10 +1607,10 @@ export default {
                 confirmButtonClass: 'btn btn-success',
                 buttonsStyling: false,
             }).then(() => {
-                if (nombre=='Medidas'){
+                if (nombre == 'Medidas') {
                     this.abrirModal6(nombre);
                 }
-                else{
+                else {
                     this.abrirModal2(nombre);
                 }
 
@@ -1710,8 +1705,8 @@ export default {
             axios.post('/categoria/registrar', {
                 'nombre': this.nombreLinea,
                 'condicion': this.condicion,
-                'descripcion':this.descripcion,
-           
+                'descripcion': this.descripcion,
+
             }).then(function (response) {
                 me.cerrarModal3();
                 //me.modal3=0;
@@ -1732,7 +1727,7 @@ export default {
                 'nombre': this.nombreLinea,
                 'condicion': this.condicion,
                 'descripcion': this.descripcion,
-              
+
                 'id': this.linea_id
             }).then(function (response) {
                 me.cerrarModal3();
@@ -1814,22 +1809,22 @@ export default {
             //this.nombre_categoria = '';
             //validacion para quitar borde rojo en los inputs
             this.codigoVacio = false;
-            this.nombreProductoVacio= false;
-            this.unidad_envaseVacio= false;
-            this.nombre_genericoVacio= false;
-            this.precio_costo_unidVacio= false;
-            this.precio_costo_paqVacio= false;
-            this.precio_ventaVacio= false;
-            this.costo_compraVacio= false;
-            this.stockVacio= false;
-            this.descripcionVacio= false;
-            this.fotografiaVacio= false;
-            this.lineaseleccionadaVacio= false;
-            this.marcaseleccionadaVacio= false;
-            this.industriaseleccionadaVacio= false;
-            this.proveedorseleccionadaVacio= false;
-            this.gruposeleccionadaVacio= false;
-            this.medidaseleccionadaVacio= false;
+            this.nombreProductoVacio = false;
+            this.unidad_envaseVacio = false;
+            this.nombre_genericoVacio = false;
+            this.precio_costo_unidVacio = false;
+            this.precio_costo_paqVacio = false;
+            this.precio_ventaVacio = false;
+            this.costo_compraVacio = false;
+            this.stockVacio = false;
+            this.descripcionVacio = false;
+            this.fotografiaVacio = false;
+            this.lineaseleccionadaVacio = false;
+            this.marcaseleccionadaVacio = false;
+            this.industriaseleccionadaVacio = false;
+            this.proveedorseleccionadaVacio = false;
+            this.gruposeleccionadaVacio = false;
+            this.medidaseleccionadaVacio = false;
             //
             this.codigo = '';
             this.nombre_producto = '';
@@ -1964,8 +1959,8 @@ export default {
         },
 
         calcularPrecio(precio, index) {
-            console.log("PRECIO_COSTO",this.precio_costo_unid);
-            console.log("PRECIO_PORCENTAGE",precio.porcentage);
+            console.log("PRECIO_COSTO", this.precio_costo_unid);
+            console.log("PRECIO_PORCENTAGE", precio.porcentage);
             if (isNaN(this.precio_costo_unid) || isNaN(parseFloat(precio.porcentage))) {
                 console.log('El valor de precio_costo_unid o porcentaje no es válido');
                 return;
@@ -1979,7 +1974,7 @@ export default {
                 this.precio_dos = precio_publico.toFixed(2);
             } else if (index === 2) {
                 this.precio_tres = precio_publico.toFixed(2);
-            }else if (index === 3) {
+            } else if (index === 3) {
                 this.precio_cuatro = precio_publico.toFixed(2);
             }
             console.log('Precio público:', precio_publico);
@@ -2034,7 +2029,7 @@ export default {
             } else if (this.tituloModal2 === 'Lineas') {
                 if (!this.nombreLinea) this.errorMostrarMsjIndustria.push("El nombre de Linea no puede estar vacío.");
                 if (!this.descripcion) this.errorMostrarMsjIndustria.push("La descripcion de Linea no puede estar vacío.");
-                 }
+            }
 
             //if (!this.nombre) this.errorMostrarMsjIndustria.push("El nombre de Industria no puede estar vacío.");
             if (this.errorMostrarMsjIndustria.length) this.errorIndustria = 1;
@@ -2068,8 +2063,8 @@ export default {
                 } else if (inputType === 'descripcion') {
                     return 'Descripcion de Linea';
                 }
-               
-            } 
+
+            }
         },
         //############hasta aqui-#########
         //################-Abrl moda de industrial,marca,Linea########
@@ -2134,7 +2129,7 @@ export default {
                                     this.tituloModal3 = 'Registrar Linea';
                                     this.nombreLinea = '';
                                     this.descripcion = '';
-                                  
+
                                     this.condicion = '';
                                     this.tipoAccion2 = 7;
                                     break;
@@ -2148,7 +2143,7 @@ export default {
                                     this.linea_id = data['id'];
                                     this.nombreLinea = data['nombre'];
                                     this.descripcion = data['descripcion'];
-                                    
+
                                     this.condicion = data['condicion'];
                                     break;
                                 }
@@ -2285,143 +2280,145 @@ export default {
 }
 </script>
 <style>
-  /* Estilos para la tabla */
-  .table {
+/* Estilos para la tabla */
+.table {
     border-radius: 0.5rem;
     overflow: hidden;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  }
+}
 
-  .table thead th {
+.table thead th {
     background-color: #343a40;
     color: #fff;
     border-color: #454d55;
     text-align: center;
-  }
+}
 
-  .table td,
-  .table th {
+.table td,
+.table th {
     vertical-align: middle;
     text-align: center;
-  }
+}
 
-  /* Estilos para los botones */
-  .btn {
+/* Estilos para los botones */
+.btn {
     transition: all 0.3s ease;
-  }
+}
 
-  .btn-warning {
+.btn-warning {
     color: #212529;
     background-color: #ffc107;
     border-color: #ffc107;
-  }
+}
 
-  .btn-warning:hover {
+.btn-warning:hover {
     color: #212529;
     background-color: #e0a800;
     border-color: #d39e00;
-  }
+}
 
-  .btn-danger {
+.btn-danger {
     color: #fff;
     background-color: #dc3545;
     border-color: #dc3545;
-  }
+}
 
-  .btn-danger:hover {
+.btn-danger:hover {
     color: #fff;
     background-color: #c82333;
     border-color: #bd2130;
-  }
+}
 
-  .btn-info {
+.btn-info {
     color: #fff;
     background-color: #17a2b8;
     border-color: #17a2b8;
-  }
+}
 
-  .btn-info:hover {
+.btn-info:hover {
     color: #fff;
     background-color: #138496;
     border-color: #117a8b;
-  }
+}
 
-  /* Estilos para las imágenes */
-  .img-thumbnail {
+/* Estilos para las imágenes */
+.img-thumbnail {
     max-width: 150px;
     height: auto;
     border-radius: 0.25rem;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease-in-out;
-  }
-
-  .img-thumbnail:hover {
-    transform: scale(1.1);
-  }
-  .align-middle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
 }
+
+.img-thumbnail:hover {
+    transform: scale(1.1);
+}
+
+.align-middle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
 .form-control {
     border-radius: 0.25rem;
-  }
+}
 
-  .form-control:focus {
+.form-control:focus {
     box-shadow: 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
-  }
+}
 
-  .btn-outline-secondary {
+.btn-outline-secondary {
     color: #6c757d;
     border-color: #6c757d;
-  }
+}
 
-  .btn-outline-secondary:hover {
+.btn-outline-secondary:hover {
     color: #fff;
     background-color: #6c757d;
     border-color: #6c757d;
-  }
+}
 
-  /* Estilos para el modal */
-  .modal-content {
+/* Estilos para el modal */
+.modal-content {
     border-radius: 0.5rem;
-  }
+}
 
-  .modal-header {
+.modal-header {
     background-color: #343a40;
     color: #fff;
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
-  }
+}
 
-  .modal-title {
+.modal-title {
     font-weight: bold;
-  }
+}
 
-  .modal-footer {
+.modal-footer {
     background-color: #f8f9fa;
     border-bottom-left-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
-  }
+}
 
-  .btn-primary {
+.btn-primary {
     background-color: #007bff;
     border-color: #007bff;
-  }
+}
 
-  .btn-primary:hover {
+.btn-primary:hover {
     background-color: #0069d9;
     border-color: #0062cc;
-  }
+}
 
-  .btn-secondary {
+.btn-secondary {
     background-color: #6c757d;
     border-color: #6c757d;
-  }
+}
 
-  .btn-secondary:hover {
+.btn-secondary:hover {
     background-color: #5a6268;
     border-color: #545b62;
-  }
+}
 </style>
