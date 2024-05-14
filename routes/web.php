@@ -229,6 +229,9 @@ Route::group(['middleware' => ['auth']], function () {
         //REPORTES
         Route::get('/ventas-diarias', 'VentaController@reporteVentasDiarias');
 
+        Route::post('/qr/generarqr', 'QrController@generarQr');
+        Route::post('/qr/verificarestado', 'QrController@verificarEstado');
+
 
     });
 

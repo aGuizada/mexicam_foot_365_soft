@@ -253,11 +253,34 @@
 
                     <!-- Vista para pago con QR -->
                     <template v-if="tipoPago === 'qr'">
-                      <div class="col-md-12">
-                        <h4 class="text-uppercase fw-bold small">Pago con QR</h4>
-                        <p class="small">Por favor, escanee el código QR para realizar el pago.</p>
-                        <!-- Aquí iría el código QR generado dinámicamente -->
+                      <div class="d-flex justify-content-center align-items-center">
+                          <div>
+                              <label for="alias">Alias:</label>
+                              <input type="text" class="form-control" v-model="alias" />
+                              <br>
+                              <label for="montoQR">Monto:</label>
+                              <span class="font-weight-bold">{{ total=(calcularTotal).toFixed(2) }}</span>
+                              <br>
+                              <button class="btn btn-primary" @click="generarQr">Generar QR</button>
+
+                              <!-- Espacio para mostrar la imagen del código QR -->
+                              <div v-if="qrImage">
+                                  <img :src="qrImage" alt="Código QR" />
+                              </div>
+
+                              <!-- Botón para verificar estado -->
+                              <button class="btn btn-secondary" @click="verificarEstado" v-if="qrImage">Verificar Estado de Pago</button>
+
+                              <!-- Mostrar estado de transacción -->
+                              <div v-if="estadoTransaccion" class="card p-2">
+                                  <div class="font-weight-bold">Estado Actual:</div>
+                                  <div>
+                                      <span :class="'badge badge-' + badgeSeverity">{{ estadoTransaccion.objeto.estadoActual }}</span>
+                                  </div>
+                              </div>
+                          </div>
                       </div>
+
                     </template>
 
                     <!-- Detalles de Venta -->
@@ -429,9 +452,18 @@
 
 <script>
 import vSelect from 'vue-select';
+
 export default {
   data() {
     return {
+      //qr
+      alias: '',
+      montoQR: 0,
+      qrImage: '',
+      aliasverificacion: '',
+      estadoTransaccion: null,
+      currency: 'BOB', // Define tu moneda
+
       tipoPago: '',
       montoEfectivo: 0,
       cambio: 0,
@@ -560,9 +592,48 @@ export default {
       }
       return resultado;
     },
+    badgeSeverity() {
+            if (this.estadoTransaccion && this.estadoTransaccion.objeto.estadoActual === 'PENDIENTE') {
+                return 'danger'; // Rojo para estado PENDIENTE
+            } else if (this.estadoTransaccion && this.estadoTransaccion.objeto.estadoActual === 'PAGADO') {
+                return 'success'; // Verde para estado PAGADO
+            } else {
+                return 'info'; // Otros estados
+            }
+            }
 
   },
   methods: {
+    verificarEstado() {
+      axios.post('/qr/verificarestado', {
+        alias: this.aliasverificacion,
+      })
+      .then(response => {
+        this.estadoTransaccion = response.data;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    },
+
+    generarQr() {
+      this.aliasverificacion = this.alias;
+      axios.post('/qr/generarqr', {
+        alias: this.alias,
+        monto: this.calcularTotal
+      })
+      .then(response => {
+        const imagenBase64 = response.data.objeto.imagenQr;
+        this.qrImage = `data:image/png;base64,${imagenBase64}`;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+      this.alias = '';
+      this.montoQR = 0;
+    },
+
     volverAPaginaDeVenta() {
       this.tipoPago = '';
       this.precio = ''; // Asegúrate de ajustar esto según cómo estés manejando el precio
