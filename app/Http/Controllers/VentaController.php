@@ -504,13 +504,31 @@ class VentaController extends Controller
 
     public function desactivar(Request $request)
     {
-        if (!$request->ajax())
+        if (!$request->ajax()) {
             return redirect('/');
+        }
+    
+        // Obtener el rol del usuario autenticado
+        $rolUsuario = Auth::user()->idrol;
+    
+        // Verificar si el usuario es administrador
+        if ($rolUsuario !== 1) {
+            return response()->json([
+                'error' => 'Sólo los administradores pueden anular ventas.'
+            ], 403);
+        }
+    
+        // Buscar la venta a anular
         $venta = Venta::findOrFail($request->id);
+    
+        // Anular la venta
         $venta->estado = 'Anulado';
         $venta->save();
+    
+        return response()->json([
+            'mensaje' => 'Venta anulada correctamente.'
+        ]);
     }
-
     public function verificarComunicacion(){
         require "SiatController.php";
             $siat = new SiatController();

@@ -49,19 +49,17 @@
                         <i class="icon-eye"></i>
                       </button> &nbsp;
 
-                      <template v-if="venta.estado == 'Registrado'">
-                        <button v-if="idrol !== 2 && venta.estado === 'Registrado'" type="button"
-                          class="btn btn-danger btn-sm" @click="desactivarVenta(venta.id)">
+                      <template v-if="venta.estado == 'Registrado' && idrol !== 2">
+                        <button type="button" class="btn btn-danger btn-sm" @click="desactivarVenta(venta.id)">
                           <i class="icon-trash"></i>
                         </button>
                       </template>
 
-
                       <button type="button" @click="imprimirTicket(venta.id)" class="btn btn-info btn-sm">
                         Imprimir Ticket
                       </button>
-
                     </td>
+
                     <td v-text="venta.usuario"></td>
                     <td v-text="venta.cliente"></td>
                     <td v-text="venta.tipo_comprobante"></td>
@@ -75,24 +73,18 @@
             </div>
             <nav>
               <ul class="pagination">
-                <li class="page-item" :class="{ disabled: pagination.current_page === 1 }">
+                <li class="page-item" v-if="pagination.current_page > 1">
                   <a class="page-link" href="#"
-                    @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)" aria-label="Anterior">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Anterior</span>
-                  </a>
+                    @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
                 </li>
-                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="{ active: page === isActived }">
+                <li class="page-item" v-for="page in pagesNumber" :key="page"
+                  :class="[page == isActived ? 'active' : '']">
                   <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)"
                     v-text="page"></a>
                 </li>
-                <li class="page-item" :class="{ disabled: pagination.current_page === pagination.last_page }">
+                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
                   <a class="page-link" href="#"
-                    @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)"
-                    aria-label="Siguiente">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Siguiente</span>
-                  </a>
+                    @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
                 </li>
               </ul>
             </nav>
@@ -1185,8 +1177,13 @@ export default {
     },
 
     desactivarVenta(id) {
+
+
+
+
+      // Mostrar el diálogo de confirmación
       swal({
-        title: 'Esta seguro de anular esta venta?',
+        title: '¿Está seguro de anular esta venta?',
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -1207,22 +1204,19 @@ export default {
             me.listarVenta(1, '', 'num_comprobante');
             swal(
               'Anulado!',
-              'La venta ha sido anulado con éxito.',
+              'La venta ha sido anulada con éxito.',
               'success'
-            )
+            );
           }).catch(function (error) {
             console.log(error);
           });
-
-
-        } else if (
-          // Read more about handling dismissals
-          result.dismiss === swal.DismissReason.cancel
-        ) {
-
+        } else if (result.dismiss === swal.DismissReason.cancel) {
+          // El usuario ha cancelado la acción
         }
-      })
+      });
     },
+
+
   },
 
   created() {

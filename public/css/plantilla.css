@@ -10419,9 +10419,8 @@ base-chart.chart {
 }
 .sidebar .nav {
   width: 200px;
-  -ms-flex-direction: column;
   flex-direction: column;
-  min-height: 100%;
+  min-height: 100vh;
 }
 .sidebar .nav-title {
   padding: 0.75rem 1rem;
