@@ -254,31 +254,33 @@
                     <!-- Vista para pago con QR -->
                     <template v-if="tipoPago === 'qr'">
                       <div class="d-flex justify-content-center align-items-center">
-                          <div>
-                              <label for="alias">Alias:</label>
-                              <input type="text" class="form-control" v-model="alias" />
-                              <br>
-                              <label for="montoQR">Monto:</label>
-                              <span class="font-weight-bold">{{ total=(calcularTotal).toFixed(2) }}</span>
-                              <br>
-                              <button class="btn btn-primary" @click="generarQr">Generar QR</button>
+                        <div>
+                          <label for="alias">Alias:</label>
+                          <input type="text" class="form-control" v-model="alias" />
+                          <br>
+                          <label for="montoQR">Monto:</label>
+                          <span class="font-weight-bold">{{ total=(calcularTotal).toFixed(2) }}</span>
+                          <br>
+                          <button class="btn btn-primary" @click="generarQr">Generar QR</button>
 
-                              <!-- Espacio para mostrar la imagen del código QR -->
-                              <div v-if="qrImage">
-                                  <img :src="qrImage" alt="Código QR" />
-                              </div>
-
-                              <!-- Botón para verificar estado -->
-                              <button class="btn btn-secondary" @click="verificarEstado" v-if="qrImage">Verificar Estado de Pago</button>
-
-                              <!-- Mostrar estado de transacción -->
-                              <div v-if="estadoTransaccion" class="card p-2">
-                                  <div class="font-weight-bold">Estado Actual:</div>
-                                  <div>
-                                      <span :class="'badge badge-' + badgeSeverity">{{ estadoTransaccion.objeto.estadoActual }}</span>
-                                  </div>
-                              </div>
+                          <!-- Espacio para mostrar la imagen del código QR -->
+                          <div v-if="qrImage">
+                            <img :src="qrImage" alt="Código QR" />
                           </div>
+
+                          <!-- Botón para verificar estado -->
+                          <button class="btn btn-secondary" @click="verificarEstado" v-if="qrImage">Verificar Estado de
+                            Pago</button>
+
+                          <!-- Mostrar estado de transacción -->
+                          <div v-if="estadoTransaccion" class="card p-2">
+                            <div class="font-weight-bold">Estado Actual:</div>
+                            <div>
+                              <span :class="'badge badge-' + badgeSeverity">{{ estadoTransaccion.objeto.estadoActual
+                                }}</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
 
                     </template>
@@ -356,52 +358,55 @@
         <div class="card-body">
           <div class="row border rounded mx-auto my-4 p-3"
             style="max-width: 800px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-            <div class="col-md-4">
-              <div class="form-group mb-3">
-                <label class="font-weight-bold text-uppercase text-muted mb-1"><strong>Categoría</strong></label>
-                <p class="text-danger font-weight-bold mb-0" style="text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);"
-                  v-text="categoria"></p>
+            <div class="row border rounded mx-auto my-4 p-3 bg-white "
+              style="box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);">
+              <div class=" col-md-4">
+                <div class="form-group mb-3">
+                  <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Categoría</strong></label>
+                  <p class="text-danger font-weight-bold mb-0" v-text="categoria"></p>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group mb-3">
-                <label class="font-weight-bold text-uppercase text-muted mb-1"><strong>Cliente</strong></label>
-                <p class="mb-0" v-text="cliente"></p>
+              <div class="col-md-4">
+                <div class="form-group mb-3">
+                  <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Cliente</strong></label>
+                  <p class="text-dark mb-0" v-text="cliente"></p>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group mb-3">
-                <label class="font-weight-bold text-uppercase text-muted mb-1"><strong>Tipo
-                    Comprobante</strong></label>
-                <p class="mb-0" v-text="tipo_comprobante"></p>
+              <div class="col-md-4">
+                <div class="form-group mb-3">
+                  <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Tipo
+                      Comprobante</strong></label>
+                  <p class="text-dark mb-0" v-text="tipo_comprobante"></p>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group mb-3">
-                <label class="font-weight-bold text-uppercase text-muted mb-1"><strong>Número
-                    Comprobante</strong></label>
-                <p class="mb-0" v-text="num_comprobante"></p>
+              <div class="col-md-4">
+                <div class="form-group mb-3">
+                  <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Número
+                      Comprobante</strong></label>
+                  <p class="text-dark mb-0" v-text="num_comprobante"></p>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group mb-3">
-                <label class="font-weight-bold text-uppercase text-muted mb-1"><strong>Número Mesa</strong></label>
-                <p class="mb-0" v-text="mesa"></p>
+              <div class="col-md-4">
+                <div class="form-group mb-3">
+                  <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Número Mesa</strong></label>
+                  <p class="text-dark mb-0" v-text="mesa"></p>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group mb-3">
-                <label class="font-weight-bold text-uppercase text-muted mb-1"><strong>Observaciones</strong></label>
-                <p class="mb-0" v-text="observacion"></p>
+              <div class="col-md-4">
+                <div class="form-group mb-3">
+                  <label
+                    class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Observaciones</strong></label>
+                  <p class="text-dark mb-0" v-text="observacion"></p>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group mb-3">
-                <label class="font-weight-bold text-uppercase text-muted mb-1"><strong>Tipo de Pago</strong></label>
-                <!-- Condición para mostrar QR o Efectivo -->
-                <p class="mb-0" v-if="tipoPago === 'qr'">Pago por QR</p>
-                <p class="mb-0" v-else-if="tipoPago === 'efectivo'">Pago en efectivo</p>
-                <p class="mb-0" v-else>Tipo de pago no especificado</p>
+              <div class="col-md-4">
+                <div class="form-group mb-3">
+                  <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Tipo de
+                      Pago</strong></label>
+                  <p class="text-dark mb-0" v-if="tipoPago === 'qr'">Pago por QR</p>
+                  <p class="text-dark mb-0" v-else-if="tipoPago === 'efectivo'">Pago en efectivo</p>
+                  <p class="text-dark mb-0" v-else>Tipo de pago no especificado</p>
+                </div>
               </div>
             </div>
           </div>
@@ -593,14 +598,14 @@ export default {
       return resultado;
     },
     badgeSeverity() {
-            if (this.estadoTransaccion && this.estadoTransaccion.objeto.estadoActual === 'PENDIENTE') {
-                return 'danger'; // Rojo para estado PENDIENTE
-            } else if (this.estadoTransaccion && this.estadoTransaccion.objeto.estadoActual === 'PAGADO') {
-                return 'success'; // Verde para estado PAGADO
-            } else {
-                return 'info'; // Otros estados
-            }
-            }
+      if (this.estadoTransaccion && this.estadoTransaccion.objeto.estadoActual === 'PENDIENTE') {
+        return 'danger'; // Rojo para estado PENDIENTE
+      } else if (this.estadoTransaccion && this.estadoTransaccion.objeto.estadoActual === 'PAGADO') {
+        return 'success'; // Verde para estado PAGADO
+      } else {
+        return 'info'; // Otros estados
+      }
+    }
 
   },
   methods: {
@@ -608,12 +613,12 @@ export default {
       axios.post('/qr/verificarestado', {
         alias: this.aliasverificacion,
       })
-      .then(response => {
-        this.estadoTransaccion = response.data;
-      })
-      .catch(error => {
-        console.error(error);
-      });
+        .then(response => {
+          this.estadoTransaccion = response.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
 
     generarQr() {
@@ -622,13 +627,13 @@ export default {
         alias: this.alias,
         monto: this.calcularTotal
       })
-      .then(response => {
-        const imagenBase64 = response.data.objeto.imagenQr;
-        this.qrImage = `data:image/png;base64,${imagenBase64}`;
-      })
-      .catch(error => {
-        console.error(error);
-      });
+        .then(response => {
+          const imagenBase64 = response.data.objeto.imagenQr;
+          this.qrImage = `data:image/png;base64,${imagenBase64}`;
+        })
+        .catch(error => {
+          console.error(error);
+        });
 
       this.alias = '';
       this.montoQR = 0;
@@ -1170,9 +1175,9 @@ export default {
 
     mostrarDetalle() {
       let me = this;
-      me.montoQR = '';  
+      me.montoQR = '';
       me.montoEfectivo = '';
-      me.tipoPago='';
+      me.tipoPago = '';
       me.selectAlmacen();
       me.listado = 0;
       me.listarArticulo('', '3');
