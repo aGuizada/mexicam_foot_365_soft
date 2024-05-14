@@ -37,7 +37,7 @@
             </form>
         </div>
         <div class="right">
-            <img class="portada" src="img/logomexico.jpg" alt="">
+            <img class="portada" src="img/tikiLOgo.jpeg" alt="">
         </div>
     </div>
 </div>

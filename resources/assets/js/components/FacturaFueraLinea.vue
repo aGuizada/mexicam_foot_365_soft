@@ -109,7 +109,7 @@
                       <div class="dropdown">
                         <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownComidas"
                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Comidas
+                          Categoria
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownComidas">
                           <button v-for="subcategoria in arrayBuscador" :key="subcategoria.id"
@@ -1170,6 +1170,9 @@ export default {
 
     mostrarDetalle() {
       let me = this;
+      me.montoQR = '';  
+      me.montoEfectivo = '';
+      me.tipoPago='';
       me.selectAlmacen();
       me.listado = 0;
       me.listarArticulo('', '3');

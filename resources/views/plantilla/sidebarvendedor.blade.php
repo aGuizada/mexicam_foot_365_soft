@@ -6,13 +6,11 @@
             </li>
                 
             <li @click="menu=39" class="nav-item">
-  <a class="nav-link" href="#">
-    <i class="icon-basket me-2"></i>
-    Ventas
-  </a>
-</li>
-            
+              <a class="nav-link" href="#">
+                <i class="icon-basket me-2"></i>
+                Ventas
+              </a>
+            </li>    
         </ul>
     </nav>
-    <button class="sidebar-minimizer brand-minimizer" type="button"></button>
 </div>
