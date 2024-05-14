@@ -29,7 +29,8 @@
               </div>
             </div>
             <div class="table-responsive">
-              <table class="table table-bordered table-striped table-sm custom-table">
+              <table v-if="esAdministrador || arrayVenta.length > 0"
+                class="table table-bordered table-striped table-sm custom-table">
                 <thead>
                   <tr>
                     <th>Opciones</th>
@@ -42,6 +43,9 @@
                     <th>Estado</th>
                   </tr>
                 </thead>
+                <tr v-if="!esAdministrador && arrayVenta.length === 0">
+                  <td colspan="8" class="text-center">No hay ventas realizadas por usted.</td>
+                </tr>
                 <tbody>
                   <tr v-for="(venta) in arrayVenta" :key="venta.id">
                     <td>
@@ -70,6 +74,7 @@
                   </tr>
                 </tbody>
               </table>
+              <div v-else>No hay ventas disponibles.</div>
             </div>
             <nav>
               <ul class="pagination">
@@ -505,6 +510,9 @@ export default {
     vSelect
   },
   computed: {
+    esAdministrador() {
+      return this.idrol === 1; // Asume que el idrol 1 corresponde al administrador
+    },
     isActived: function () {
       return this.pagination.current_page;
     },

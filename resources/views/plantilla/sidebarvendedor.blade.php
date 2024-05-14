@@ -4,7 +4,7 @@
             <li @click="menu=42" class="nav-item">
                 <a class="nav-link active" href="#"><i class="icon-speedometer"></i> Escritorio</a>
             </li>
-            
+                
             <li @click="menu=39" class="nav-item">
   <a class="nav-link" href="#">
     <i class="icon-basket me-2"></i>

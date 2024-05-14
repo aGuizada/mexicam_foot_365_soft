@@ -57,6 +57,7 @@ class VentaController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         $usuario = \Auth::user();
+        $idRolUsuario = Auth::user()->idrol; // Obtener el rol del usuario autenticado
 
         if ($buscar == '') {
             $ventas = Venta::join('users', 'ventas.idusuario', '=', 'users.id')
@@ -72,7 +73,13 @@ class VentaController extends Controller
                     'ventas.estado',
                     'users.usuario'
                 )
-                ->orderBy('ventas.id', 'desc')->paginate(10);
+                ->orderBy('ventas.id', 'desc');
+
+            if ($idRolUsuario != 1) { // Si no es administrador
+                $ventas = $ventas->where('ventas.idusuario', Auth::user()->id); // Filtrar solo las ventas del usuario autenticado
+            }
+
+            $ventas = $ventas->paginate(10);
         } else {
             $ventas = Venta::join('users', 'ventas.idusuario', '=', 'users.id')
                 ->select(
@@ -88,7 +95,13 @@ class VentaController extends Controller
                     'users.usuario'
                 )
                 ->where('ventas.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('ventas.id', 'desc')->paginate(10);
+                ->orderBy('ventas.id', 'desc');
+
+            if ($idRolUsuario != 1) { // Si no es administrador
+                $ventas = $ventas->where('ventas.idusuario', Auth::user()->id); // Filtrar solo las ventas del usuario autenticado
+            }
+
+            $ventas = $ventas->paginate(10);
         }
 
         return [
@@ -109,17 +122,18 @@ class VentaController extends Controller
         if (!$request->ajax()) {
             return redirect('/');
         }
-    
+
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         $usuario = \Auth::user();
+        $idRolUsuario = Auth::user()->idrol; // Obtener el rol del usuario autenticado
         $idRoles = $request->idRoles;
         $idAlmacen = $request->idAlmacen;
         $fechaInicio = $request->fechaInicio;
         $fechaFin = $request->fechaFin;
         $idRoles = ($idRoles == 0) ? null : $idRoles;
         $idAlmacen = ($idAlmacen == 0) ? null : $idAlmacen;
-    
+
         if ($buscar == '') {
             $ventas = Venta::join('personas', 'ventas.idcliente', '=', 'personas.id')
                 ->join('users', 'ventas.idusuario', '=', 'users.id')
@@ -151,85 +165,97 @@ class VentaController extends Controller
                         $query->where('inventarios.idalmacen', $idAlmacen);
                     }
                 });
-    
+
             // Filtrar por fechas solo si se proporcionan fechas distintas de la actual
             if ($fechaInicio !== now()->toDateString() || $fechaFin !== now()->addDay()->toDateString()) {
                 $ventas->whereBetween('ventas.fecha_hora', [$fechaInicio, $fechaFin]);
             }
+
+            if ($idRolUsuario != 1) { // Si no es administrador
+                $ventas = $ventas->where('ventas.idusuario', Auth::user()->id); // Filtrar solo las ventas del usuario autenticado
+            }
+
+            $ventas = $ventas->orderBy('ventas.id', 'desc')->paginate(3);
+        } else {if ($criterio === 'usuario') { // Buscar por usuario
+            $ventas = Venta::join('users', 'ventas.idusuario', '=', 'users.id')
+                ->select(
+                    'ventas.id',
+                    'ventas.tipo_comprobante',
+                    'ventas.serie_comprobante',
+                    'ventas.num_comprobante',
+                    'ventas.fecha_hora',
+                    'ventas.impuesto',
+                    'ventas.total',
+                    'ventas.estado',
+                    'users.usuario'
+                )
+                ->where('users.usuario', 'like', '%' . $buscar . '%')
+                ->orderBy('ventas.id', 'desc');
+    
+            if ($idRolUsuario != 1) { // Si no es administrador
+                $ventas = $ventas->where('ventas.idusuario', Auth::user()->id); // Filtrar solo las ventas del usuario autenticado
+            }
+    
+            $ventas = $ventas->paginate(3);
+        } else {
+            $ventas = Venta::join('personas', 'ventas.idcliente', '=', 'personas.id')
+                ->join('users', 'ventas.idusuario', '=', 'users.id')
+                ->join('detalle_ventas', 'ventas.id', '=', 'detalle_ventas.idventa')
+                ->join('articulos', 'detalle_ventas.idarticulo', '=', 'articulos.id')
+                ->join('inventarios', 'articulos.id', '=', 'inventarios.idarticulo')
+                ->select(
+                    'ventas.id',
+                    'ventas.tipo_comprobante',
+                    'ventas.serie_comprobante',
+                    'ventas.num_comprobante',
+                    'ventas.fecha_hora',
+                    'ventas.impuesto',
+                    'ventas.total',
+                    'ventas.estado',
+                    'personas.nombre',
+                    'users.usuario',
+                    'users.idrol',
+                    'detalle_ventas.idarticulo'
+                )
+                ->distinct()
+                ->where(function ($query) use ($idRoles) {
+                    if ($idRoles !== null) {
+                        $query->where('users.idrol', $idRoles);
+                    }
+                })
+                ->where(function ($query) use ($idAlmacen) {
+                    if ($idAlmacen !== null) {
+                        $query->where('inventarios.idalmacen', $idAlmacen);
+                    }
+                })
+                ->where('personas.' . $criterio, 'like', '%' . $buscar . '%');
+    
+            // Filtrar por fechas
+            if ($fechaInicio !== now()->toDateString() || $fechaFin !== now()->addDay()->toDateString()) {
+                $ventas->whereBetween('ventas.fecha_hora', [$fechaInicio, $fechaFin]);
+            }
+    
+            if ($idRolUsuario != 1) { // Si no es administrador
+                $ventas = $ventas->where('ventas.idusuario', Auth::user()->id); // Filtrar solo las ventas del usuario autenticado
+            }
     
             $ventas = $ventas->orderBy('ventas.id', 'desc')->paginate(3);
-        } else {
-            if ($criterio === 'usuario') { // Buscar por usuario
-                $ventas = Venta::join('users', 'ventas.idusuario', '=', 'users.id')
-                    ->select(
-                        'ventas.id',
-                        'ventas.tipo_comprobante',
-                        'ventas.serie_comprobante',
-                        'ventas.num_comprobante',
-                        'ventas.fecha_hora',
-                        'ventas.impuesto',
-                        'ventas.total',
-                        'ventas.estado',
-                        'users.usuario'
-                    )
-                    ->where('users.usuario', 'like', '%' . $buscar . '%')
-                    ->orderBy('ventas.id', 'desc')
-                    ->paginate(3);
-            } else {
-                $ventas = Venta::join('personas', 'ventas.idcliente', '=', 'personas.id')
-                    ->join('users', 'ventas.idusuario', '=', 'users.id')
-                    ->join('detalle_ventas', 'ventas.id', '=', 'detalle_ventas.idventa')
-                    ->join('articulos', 'detalle_ventas.idarticulo', '=', 'articulos.id')
-                    ->join('inventarios', 'articulos.id', '=', 'inventarios.idarticulo')
-                    ->select(
-                        'ventas.id',
-                        'ventas.tipo_comprobante',
-                        'ventas.serie_comprobante',
-                        'ventas.num_comprobante',
-                        'ventas.fecha_hora',
-                        'ventas.impuesto',
-                        'ventas.total',
-                        'ventas.estado',
-                        'personas.nombre',
-                        'users.usuario',
-                        'users.idrol',
-                        'detalle_ventas.idarticulo'
-                    )
-                    ->distinct()
-                    ->where(function ($query) use ($idRoles) {
-                        if ($idRoles !== null) {
-                            $query->where('users.idrol', $idRoles);
-                        }
-                    })
-                    ->where(function ($query) use ($idAlmacen) {
-                        if ($idAlmacen !== null) {
-                            $query->where('inventarios.idalmacen', $idAlmacen);
-                        }
-                    })
-                    ->where('personas.' . $criterio, 'like', '%' . $buscar . '%');
-    
-                // Filtrar por fechas
-                if ($fechaInicio !== now()->toDateString() || $fechaFin !== now()->addDay()->toDateString()) {
-                    $ventas->whereBetween('ventas.fecha_hora', [$fechaInicio, $fechaFin]);
-                }
-    
-                $ventas = $ventas->orderBy('ventas.id', 'desc')->paginate(3);
-            }
         }
-    
-        return [
-            'pagination' => [
-                'total' => $ventas->total(),
-                'current_page' => $ventas->currentPage(),
-                'per_page' => $ventas->perPage(),
-                'last_page' => $ventas->lastPage(),
-                'from' => $ventas->firstItem(),
-                'to' => $ventas->lastItem(),
-            ],
-            'ventas' => $ventas,
-            'usuario' => $usuario
-        ];
     }
+    
+    return [
+        'pagination' => [
+            'total' => $ventas->total(),
+            'current_page' => $ventas->currentPage(),
+            'per_page' => $ventas->perPage(),
+            'last_page' => $ventas->lastPage(),
+            'from' => $ventas->firstItem(),
+            'to' => $ventas->lastItem(),
+        ],
+        'ventas' => $ventas,
+        'usuario' => $usuario
+    ];
+}
 
     public function obtenerUltimoComprobante(Request $request)
     {
