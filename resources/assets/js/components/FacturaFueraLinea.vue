@@ -277,7 +277,8 @@
                         <div class="col-md-12">
                           <div class="form-group row">
                             <button class="col-md-6 btn btn-danger btn-sm rounded-pill" type="button"
-                              data-dismiss="modal">Cerrar</button>
+                              data-dismiss="modal" @click="recargarPagina()">Cerrar</button>
+
                             <div class="col-md-6">
                               <button type="button" class="btn btn-primary btn-sm rounded-pill w-100"
                                 @click="registrar()">Registrar
@@ -458,6 +459,77 @@ export default {
 
   },
   methods: {
+    recargarPagina() {
+      window.location.reload(); // Recargar la página actual
+    },
+
+    registrarVenta() {
+      if (this.validarVenta()) {
+        return;
+      }
+
+      let me = this;
+
+      console.log("cliente ", this.cliente);
+      console.log("mesa ", this.mesa);
+      console.log("Carrito ", this.arrayDetalle);
+
+      axios.post('/venta/registrar', {
+        'idcliente': this.idcliente,
+        'cliente': this.cliente,
+        'mesa': this.mesa,
+        'idtipo_pago': this.tipoPago,
+        'observacion': this.observacion,
+        'tipo_comprobante': this.tipo_comprobante,
+        'serie_comprobante': this.serie_comprobante,
+        'num_comprobante': this.num_comprob,
+        'impuesto': this.impuesto,
+        'total': this.total,
+        'idAlmacen': this.idAlmacen,
+        'data': this.arrayDetalle
+      }).then(function (response) {
+        console.log(response.data.id);
+
+        if (response.data.id > 0) {
+          me.listado = 1;
+          me.listarVenta(1, '', 'num_comprob');
+          me.idproveedor = 0;
+          me.cliente = '';
+          me.tipo_comprobante = 'TICKET';
+          me.serie_comprobante = '';
+          me.num_comprob = '';
+          me.impuesto = 0.18;
+          me.total = 0.0;
+          me.idarticulo = 0;
+          me.articulo = '';
+          me.cantidad = 0;
+          me.precio = 0;
+          me.stock = 0;
+          me.codigo = '';
+          me.descuento = 0;
+          me.mesa = 0;
+          me.observacion = '';
+          me.arrayDetalle = [];
+
+          swal('VENTA REGISTRADA', 'Correctamente', 'success');
+
+          setTimeout(function () {
+            window.location.reload();
+          }, 200); // Esperar 300 milisegundos antes de recargar la página (ajustable)
+        } else {
+          if (response.data.valorMaximo) {
+            swal('Aviso', 'El valor de descuento no puede exceder el ' + response.data.valorMaximo, 'warning');
+          } else {
+            swal('Aviso', response.data.caja_validado, 'warning');
+          }
+        }
+      }).catch(function (error) {
+        console.log(error);
+        swal('Error', 'Hubo un problema al registrar la venta', 'error');
+      });
+    },
+
+
     verificarEstado() {
       axios.post('/qr/verificarestado', {
         alias: this.aliasverificacion,
