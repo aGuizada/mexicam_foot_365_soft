@@ -171,14 +171,18 @@
 
                         <!-- Vista para pago en efectivo -->
                         <template v-if="tipoPago === '1'">
-                          <div class="col-md-12">
-                            <div class="form-group">
-                              <label for="montoEfectivo" class="form-label fw-bold text-uppercase small">Monto en
-                                Efectivo:</label>
-                              <input type="number" id="montoEfectivo" class="form-control form-control-sm rounded-pill"
-                                v-model="montoEfectivo" @input="calcularCambio">
+                          <template v-if="tipoPago === '1'">
+                            <div class="col-md-12">
+                              <div class="form-group">
+                                <label for="montoEfectivo" class="form-label fw-bold text-uppercase small">Monto en
+                                  Efectivo:</label>
+                                <input type="number" id="montoEfectivo"
+                                  class="form-control form-control-sm rounded-pill" v-model="montoEfectivo"
+                                  @input="calcularCambio">
+                              </div>
                             </div>
-                          </div>
+                          </template>
+
                           <div class="col-md-12">
                             <label class="form-label fw-bold text-uppercase small">Total a Pagar: {{
                               totalAPagar.toFixed(2)
@@ -481,7 +485,7 @@ export default {
         'serie_comprobante': this.serie_comprobante,
         'num_comprobante': this.num_comprob,
         'impuesto': this.impuesto,
-        'total': this.total,
+        'total': this.montoEfectivo,
         'idAlmacen': this.idAlmacen,
         'data': this.arrayDetalle
       }).then(function (response) {
