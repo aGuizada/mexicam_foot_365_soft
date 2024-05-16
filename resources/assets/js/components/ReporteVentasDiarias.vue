@@ -1,89 +1,76 @@
 <template>
     <main class="main">
-        <!-- Breadcrumb -->
-        <ol class="breadcrumb">
-
-        </ol>
         <div class="container-fluid">
             <div class="card">
-                <div class="card-header">
-                    <i class="fa fa-align-justify"></i> Reporte de Ventas Diarias
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fa fa-align-justify"></i> Reporte de Ventas Diarias</h5>
+                    <button type="button" @click="generarReporte" class="btn btn-light"><i class="fa fa-search"></i>
+                        Generar Reporte</button>
                 </div>
-                <template v-if="listado == 1">
-
-                    <!-- Ejemplo de tabla Listado -->
-
-                    <div class="card-body">
-                        <div class="form-group row">
+                <div class="card-body">
+                    <template v-if="listado == 1">
+                        <div class="row">
                             <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        <b-form-datepicker v-model="fecha" locale="es"
+                                            class="form-control"></b-form-datepicker>
+                                    </div>
 
-                                <template>
-                                    <b-row>
-                                        <b-col md="auto">
-                                            <b-calendar v-model="fecha" locale="en-US"></b-calendar>
-                                        </b-col>
-
-
-                                    </b-row>
-
-                                </template>
-                                <select v-model="idcategoria" class="form-control" value="hola">
-                                    <option value="0" disabled>Seleccione</option>
-                                    <option value="all">Todas las categorías</option>
-                                    <option v-for="categoria in arrayCategoria" :key="categoria.id"
-                                        :value="categoria.id" v-text="categoria.nombre">
-                                    </option>
-                                </select>
-                                <button type="submit" @click="generarReporte" class="btn btn-primary">
-                                    <i class="fa fa-search"></i> Generar Reporte
-                                </button>
+                                    <select v-model="idcategoria" class="form-select me-3">
+                                        <option value="0" disabled>Seleccione</option>
+                                        <option value="all">Todas las categorías</option>
+                                        <option v-for="categoria in arrayCategoria" :key="categoria.id"
+                                            :value="categoria.id">{{ categoria.nombre }}</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                        <table class="table table-bordered table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Opciones</th>
-                                    <th>Cliente</th>
-                                    <th>Producto</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio</th>
-                                    <th>Total</th>
-                                    <th>Número Factura</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="venta in arrayVentas" :key="venta.id">
-                                    <td>
-                                        <button type="button" @click="verVenta(venta.id)"
-                                            class="btn btn-success btn-sm">
-                                            <i class="icon-eye"></i>
-                                        </button> &nbsp;
-                                    </td>
-                                    <td v-text="venta.cliente ? venta.cliente : 'Sin Nombre'"></td>
-                                    <td v-text="venta.articulo"></td>
-                                    <td v-text="venta.cantidad"></td>
-                                    <td v-text="venta.precio"></td>
-                                    <td v-text="venta.total"></td>
-                                    <td v-text="venta.num_comprobante"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="text-right">
-                            <strong>Total Ganado: </strong>Bs. {{ totalGanado }}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-sm">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Opciones</th>
+                                        <th>Cliente</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                        <th>Total</th>
+                                        <th>Número Factura</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="venta in arrayVentas" :key="venta.id">
+                                        <td>
+                                            <button type="button" @click="verVenta(venta.id)"
+                                                class="btn btn-success btn-sm"><i class="icon-eye"></i></button>
+                                        </td>
+                                        <td>{{ venta.cliente ? venta.cliente : 'Sin Nombre' }}</td>
+                                        <td>{{ venta.articulo }}</td>
+                                        <td>{{ venta.cantidad }}</td>
+                                        <td>{{ venta.precio }}</td>
+                                        <td>{{ venta.total }}</td>
+                                        <td>{{ venta.num_comprobante }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="d-flex justify-content-between mt-3">
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="text-right">
+                                <strong>Total Ganado: </strong>Bs. {{ totalGanado }}
+                            </div>
                             <button @click="exportarPDF" class="btn btn-danger">Exportar a PDF</button>
                         </div>
                         <nav>
-                            <ul class="pagination">
+                            <ul class="pagination justify-content-center mt-3">
                                 <li class="page-item" v-if="pagination.current_page > 1">
                                     <a class="page-link" href="#"
                                         @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
                                 </li>
                                 <li class="page-item" v-for="page in pagesNumber" :key="page"
                                     :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)"
-                                        v-text="page"></a>
+                                    <a class="page-link" href="#"
+                                        @click.prevent="cambiarPagina(page, buscar, criterio)">{{ page }}</a>
                                 </li>
                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
                                     <a class="page-link" href="#"
@@ -91,98 +78,83 @@
                                 </li>
                             </ul>
                         </nav>
-                    </div>
+                    </template>
 
-                    <!-- Fin ejemplo de tabla Listado -->
-                </template>
-
-
-                <template v-if="listado == 2">
-                    <div class="card-body">
-                        <div class="form-group row border">
+                    <template v-if="listado == 2">
+                        <div class="row">
                             <div class="col-md-9">
                                 <div class="form-group">
-                                    <label for="">Cliente</label>
-                                    <p v-text="cliente"></p>
+                                    <label>Cliente</label>
+                                    <p>{{ cliente }}</p>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <label for="">Impuesto</label>
-                                <p v-text="impuesto"></p>
+                                <label>Impuesto</label>
+                                <p>{{ impuesto }}</p>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Tipo Comprobante</label>
-                                    <p v-text="tipo_comprobante"></p>
+                                    <p>{{ tipo_comprobante }}</p>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Serie Comprobante</label>
-                                    <p v-text="serie_comprobante"></p>
+                                    <p>{{ serie_comprobante }}</p>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Número Comprobante</label>
-                                    <p v-text="num_comprobante"></p>
+                                    <p>{{ num_comprobante }}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row border">
-                            <div class="table-responsive col-md-12">
-                                <table class="table table-bordered table-striped table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Artículo</th>
-                                            <th>Precio</th>
-                                            <th>Cantidad</th>
-                                            <th>Descuento</th>
-                                            <th>Subtotal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody v-if="arrayDetalle.length">
-                                        <tr v-for="detalle in arrayDetalle" :key="detalle.id">
-                                            <td v-text="detalle.articulo">
-                                            </td>
-                                            <td v-text="detalle.precio">
-                                            </td>
-                                            <td v-text="detalle.cantidad">
-                                            </td>
-                                            <td v-text="detalle.descuento">
-                                            </td>
-                                            <td>
-                                                {{ detalle.precio * detalle.cantidad - detalle.descuento }}
-                                            </td>
-                                        </tr>
-
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="4" align="right"><strong>Total:</strong></td>
-                                            <td>$ {{ total }}</td>
-                                        </tr>
-                                    </tbody>
-                                    <tbody v-else>
-                                        <tr>
-                                            <td colspan="5">
-                                                No hay articulos agregados
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-sm">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Artículo</th>
+                                        <th>Precio</th>
+                                        <th>Cantidad</th>
+                                        <th>Descuento</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody v-if="arrayDetalle.length">
+                                    <tr v-for="detalle in arrayDetalle" :key="detalle.id">
+                                        <td>{{ detalle.articulo }}</td>
+                                        <td>{{ detalle.precio }}</td>
+                                        <td>{{ detalle.cantidad }}</td>
+                                        <td>{{ detalle.descuento }}</td>
+                                        <td>{{ (detalle.precio * detalle.cantidad - detalle.descuento).toFixed(2) }}
+                                        </td>
+                                    </tr>
+                                    <tr class="table-active">
+                                        <td colspan="4" class="text-end fw-bold">Total:</td>
+                                        <td>$ {{ total.toFixed(2) }}</td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td colspan="5" class="text-center">No hay artículos agregados</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="form-group row">
+                        <div class="form-group row mt-3">
                             <div class="col-md-12">
                                 <button type="button" @click="ocultarDetalle()"
                                     class="btn btn-secondary">Cerrar</button>
                             </div>
                         </div>
-                    </div>
-                </template>
+                    </template>
+                </div>
             </div>
         </div>
-
-
     </main>
 </template>
 

@@ -163,6 +163,9 @@
             </template>
 
             @elseif (Auth::user()->idrol == 2)
+             <template v-if="menu==60">
+                 <ventasvendedor></ventasvendedor>
+            </template>
             <template v-if="menu==0">
                 <facturafueralinea></facturafueralinea>
             </template>

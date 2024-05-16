@@ -276,11 +276,8 @@
                         <!-- Botones -->
                         <div class="col-md-12">
                           <div class="form-group row">
-                            <div class="col-md-6">
-                              <button type="button" @click="ocultarDetalle()"
-                                class="btn btn-danger btn-sm rounded-pill w-100">Cerrar</button>
-                            </div>
-
+                            <button class="col-md-6 btn btn-danger btn-sm rounded-pill" type="button"
+                              data-dismiss="modal">Cerrar</button>
                             <div class="col-md-6">
                               <button type="button" class="btn btn-primary btn-sm rounded-pill w-100"
                                 @click="registrar()">Registrar
@@ -292,29 +289,12 @@
                     </div>
                   </div>
                 </div>
-
-
-
-
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Send message</button>
-                </div>
               </div>
             </div>
           </div>
-
-
-
-
-
           <!-- Columna de Detalles de Venta -->
-
         </div>
       </div>
-
-
-
       <!-- Fin Detalle-->
       <!--Ver ingreso-->
 
