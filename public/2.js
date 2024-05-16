@@ -1,9 +1,9 @@
 webpackJsonp([2],{
 
-/***/ 590:
+/***/ 597:
 /***/ (function(module, exports, __webpack_require__) {
 
-/*! @license DOMPurify 2.5.2 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.5.2/LICENSE */
+/*! @license DOMPurify 2.5.3 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.5.3/LICENSE */
 
 (function (global, factory) {
    true ? module.exports = factory() :
@@ -121,6 +121,7 @@ webpackJsonp([2],{
   var stringTrim = unapply(String.prototype.trim);
   var regExpTest = unapply(RegExp.prototype.test);
   var typeErrorCreate = unconstruct(TypeError);
+  var numberIsNaN = unapply(Number.isNaN);
   function unapply(func) {
     return function (thisArg) {
       for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -292,7 +293,7 @@ webpackJsonp([2],{
      * Version label, exposed for easier checks
      * if DOMPurify is up to date or not
      */
-    DOMPurify.version = '2.5.2';
+    DOMPurify.version = '2.5.3';
 
     /**
      * Array of elements that DOMPurify removed during sanitation.
@@ -1074,7 +1075,7 @@ webpackJsonp([2],{
     // eslint-disable-next-line complexity
     var _isValidAttribute = function _isValidAttribute(lcTag, lcName, value) {
       /* Make sure attribute cannot clobber */
-      if (SANITIZE_DOM && (lcName === 'id' || lcName === 'name') && (value in document || value in formElement)) {
+      if (SANITIZE_DOM && (lcName === 'id' || lcName === 'name') && (value in document || value in formElement || value === '__depth' || value === '__removalCount')) {
         return false;
       }
 
@@ -1176,6 +1177,12 @@ webpackJsonp([2],{
           continue;
         }
 
+        /* Work around a security issue with comments inside attributes */
+        if (SAFE_FOR_XML && regExpTest(/((--!?|])>)|<\/(style|title)/i, value)) {
+          _removeAttribute(name, currentNode);
+          continue;
+        }
+
         /* Sanitize attribute content to be template-safe */
         if (SAFE_FOR_TEMPLATES) {
           value = stringReplace(value, MUSTACHE_EXPR$1, ' ');
@@ -1226,7 +1233,11 @@ webpackJsonp([2],{
             /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
             currentNode.setAttribute(name, value);
           }
-          arrayPop(DOMPurify.removed);
+          if (_isClobbered(currentNode)) {
+            _forceRemove(currentNode);
+          } else {
+            arrayPop(DOMPurify.removed);
+          }
         } catch (_) {}
       }
 
@@ -1268,8 +1279,11 @@ webpackJsonp([2],{
           }
         }
 
-        /* Remove an element if nested too deeply to avoid mXSS */
-        if (shadowNode.__depth >= MAX_NESTING_DEPTH) {
+        /*
+         * Remove an element if nested too deeply to avoid mXSS
+         * or if the __depth might have been tampered with
+         */
+        if (shadowNode.__depth >= MAX_NESTING_DEPTH || numberIsNaN(shadowNode.__depth)) {
           _forceRemove(shadowNode);
         }
 
@@ -1420,8 +1434,11 @@ webpackJsonp([2],{
           }
         }
 
-        /* Remove an element if nested too deeply to avoid mXSS */
-        if (currentNode.__depth >= MAX_NESTING_DEPTH) {
+        /*
+         * Remove an element if nested too deeply to avoid mXSS
+         * or if the __depth might have been tampered with
+         */
+        if (currentNode.__depth >= MAX_NESTING_DEPTH || numberIsNaN(currentNode.__depth)) {
           _forceRemove(currentNode);
         }
 
