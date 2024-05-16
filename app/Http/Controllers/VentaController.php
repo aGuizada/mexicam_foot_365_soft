@@ -360,174 +360,76 @@ class VentaController extends Controller
         return $pdf->setPaper('a4', 'landscape')->download('venta-' . $numventa[0]->num_comprobante . '.pdf');
 
     }
-    public function store(Request $request)
-    {
-        if (!$request->ajax())
-            return redirect('/');
+public function store(Request $request)
+{
+    if (!$request->ajax())
+        return redirect('/');
 
-        try {
-            DB::beginTransaction();
+    try {
+        DB::beginTransaction();
 
-            $descu = '';
-            $valorMaximoDescuentoEmpresa = Empresa::first();
-            $valorMaximo = $valorMaximoDescuentoEmpresa->valorMaximoDescuento;
-            $detalles = $request->data; //Array de detalles
-            $idAlmacen = $request->idAlmacen;
+        $detalles = $request->data; //Array de detalles
+        $idAlmacen = $request->idAlmacen;
+        $idtipo_pago = $request->idtipo_pago;
 
-            foreach ($detalles as $ep => $det) {
-                $descu = $det['descuento'];
-            }
+        $ultimaCaja = Caja::latest()->first();
 
-            if ($descu > $valorMaximoDescuentoEmpresa->valorMaximoDescuento) {
-                return [
-                    'id' => -1,
-                    'valorMaximo' => $valorMaximo
-                ];
-            } else {
+        if ($ultimaCaja) {
+            if ($ultimaCaja->estado == '1') {
+                $venta = new Venta();
 
-                $ultimaCaja = Caja::latest()->first();
+                $venta->idusuario = \Auth::user()->id;
+                $venta->idtipo_pago = $request->idtipo_pago;
+                $venta->tipo_comprobante = $request->tipo_comprobante;
+                $venta->serie_comprobante = $request->serie_comprobante;
+                $venta->num_comprobante = $request->num_comprobante;
+                $venta->fecha_hora = now()->setTimezone('America/La_Paz');
+                $venta->impuesto = $request->impuesto;
+                if ($request->has('mesa') && $request->mesa != '') {
+                    $venta->mesa = $request->mesa;
+                }
+                if ($request->has('cliente') && $request->cliente != '') {
+                    $venta->cliente = $request->cliente;
+                }
+                $venta->total = $request->total;
+                $venta->observacion = $request->observacion;
+                $venta->estado = 'Registrado';
+                $venta->idcaja = $ultimaCaja->id;
+                $venta->save();
 
-                if ($ultimaCaja) {
-                    if ($ultimaCaja->estado == '1') {
-                        $venta = new Venta();
+                $ultimaCaja->ventasContado = ($request->total) + ($ultimaCaja->ventasContado);
+                $ultimaCaja->save();
 
-                        $venta->idusuario = \Auth::user()->id;
-                        //$venta->idtipo_pago = $request->idtipo_pago;
-
-                        $venta->tipo_comprobante = $request->tipo_comprobante;
-                        $venta->serie_comprobante = $request->serie_comprobante;
-                        $venta->num_comprobante = $request->num_comprobante;
-                        $venta->fecha_hora = now()->setTimezone('America/La_Paz');
-                        $venta->impuesto = $request->impuesto;
-                        if ($request->has('mesa') && $request->mesa != '') {
-                            $venta->mesa = $request->mesa;
-                        }
-                        if ($request->has('cliente') && $request->cliente != '') {
-                            $venta->cliente = $request->cliente;
-                        }
-                        $venta->total = $request->total;
-
-                        $venta->observacion = $request->observacion;
-                        $venta->estado = 'Registrado';
-                        $venta->idcaja = $ultimaCaja->id;
-                        //---------registro credito_Ventas---
-                        Log::info('DATOS REGISTRO ARTICULO VENTA:', [
-                            'idcliente' => $request->idcliente,
-                            'idusuario' => $request->id,
-                            'idtipo_pago' => $request->idtipo_pago,
-                            'tipo_comprobante' => $request->tipo_comprobante,
-                            'serie_comprobante' => $request->serie_comprobante,
-                            'num_comprobante' => $request->num_comprobante,
-                            'fecha_hora' => $request->fecha_hora,
-                            'impuesto' => $request->impuesto,
-                            'total' => $request->total,
-                            //'estado' => $request->precio_venta,
-                            'idcaja' => $request->id,
-                        ]);
-                        $venta->save();
-                        //-----hasta aqui----
-
-                        if ($request->idtipo_pago == 2) {
-                            //----REGIStRADO DE CREDITOS_VENTAAS--
-                            $creditoventa = new CreditoVenta();
-                            $creditoventa->idventa = $venta->id;
-                            $creditoventa->idpersona = $request->idpersona;
-                            $creditoventa->numero_cuotas = $request->numero_cuotas;
-                            $creditoventa->tiempo_dias_cuota = $request->tiempo_dias_cuota;
-                            $creditoventa->estado = $request->estadocrevent;//--OJO CON ESTO REPIDE EN VARIOS
-                            Log::info('LLEGA_2 CREDITOS_VENTAS:', [
-                                'DATOS' => $creditoventa,
-                            ]);
-                            $creditoventa->save();
-                            //----HASTA AQUI REGIStRADO DE CREDITOS_VENTAS--
-
-                            //------para Ver que daTos llega
-                            $detallescuota = $request->cuotaspago;//Array de detalles
-                            //Recorro todos los elementos
-                            Log::info('LLEGA_3 CUOTAS_CREDITO:', [
-                                'DATOS' => $detallescuota,
-                            ]);
-                            //----REGIStRADO DE CUOTAS_CREDITO--
-                            foreach ($detallescuota as $detalle) {
-                                $cuotascredito = new CuotasCredito();
-                                $cuotascredito->idcredito = $creditoventa->id;
-                                $cuotascredito->fecha_pago = $detalle['fechaPago'];
-                                $cuotascredito->fecha_cancelado = $detalle['fechaCancelado'];
-                                $cuotascredito->precio_cuota = $detalle['precioCuota'];
-                                $cuotascredito->total_cancelado = $detalle['totalCancelado'];
-                                $cuotascredito->saldo = $detalle['saldo'];
-                                $cuotascredito->estado = $detalle['estadocuocre'];
-                                $cuotascredito->save();
-                            }
-                            //---hastaa qui REGIStRADO DE CUOTAS_CREDITO--
-
-                        }
-
-                        $ultimaCaja->ventasContado = ($request->total) + ($ultimaCaja->ventasContado);
-                        $ultimaCaja->save();
-
-                        Log::info('venta', [
-                            'data' => $ultimaCaja,
-                            'idalmacen' => $idAlmacen,
-                        ]);
-
-                        foreach ($detalles as $ep => $det) {
-
-                            /*$disminuirStock = Inventario::where('idalmacen', $idAlmacen)
-                                                        ->where('idarticulo', $det['idarticulo'])
-                                                        ->firstOrFail();
-                            $disminuirStock->saldo_stock -= $det['cantidad'];
-                            $disminuirStock->save();*/
-
-                            $detalle = new DetalleVenta();
-                            $detalle->idventa = $venta->id;
-                            $detalle->idarticulo = $det['idarticulo'];
-                            $detalle->cantidad = $det['cantidad'];
-                            $detalle->precio = $det['precio'];
-                            $detalle->descuento = $det['descuento'];
-                            $detalle->save();
-                        }
-                        $fechaActual = date('Y-m-d');
-                        $numVentas = DB::table('ventas')->whereDate('created_at', $fechaActual)->count();
-                        $numIngresos = DB::table('ingresos')->whereDate('created_at', $fechaActual)->count();
-
-                        $arreglosDatos = [
-                            'ventas' => [
-                                'numero' => $numVentas,
-                                'msj' => 'Ventas'
-                            ],
-                            'ingresos' => [
-                                'numero' => $numIngresos,
-                                'msj' => 'Ingresos'
-                            ]
-                        ];
-                        $allUsers = User::all();
-
-                        foreach ($allUsers as $notificar) {
-                            User::findOrFail($notificar->id)->notify(new NotifyAdmin($arreglosDatos));
-                        }
-                        DB::commit();
-                        return [
-                            'id' => $venta->id
-                        ];
-                    } else {
-                        return [
-                            'id' => -1,
-                            'caja_validado' => 'Debe tener una caja abierta'
-                        ];
-                    }
-                } else {
-                    return [
-                        'id' => -1,
-                        'caja_validado' => 'Debe crear primero una apertura de caja'
-                    ];
+                foreach ($detalles as $ep => $det) {
+                    $detalle = new DetalleVenta();
+                    $detalle->idventa = $venta->id;
+                    $detalle->idarticulo = $det['idarticulo'];
+                    $detalle->cantidad = $det['cantidad'];
+                    $detalle->precio = $det['precio'];
+                    $detalle->descuento = $det['descuento'];
+                    $detalle->save();
                 }
 
+                DB::commit();
+                return [
+                    'id' => $venta->id
+                ];
+            } else {
+                return [
+                    'id' => -1,
+                    'caja_validado' => 'Debe tener una caja abierta'
+                ];
             }
-        } catch (Exception $e) {
-            DB::rollBack();
+        } else {
+            return [
+                'id' => -1,
+                'caja_validado' => 'Debe crear primero una apertura de caja'
+            ];
         }
+    } catch (Exception $e) {
+        DB::rollBack();
     }
+}
 
     public function desactivar(Request $request)
     {

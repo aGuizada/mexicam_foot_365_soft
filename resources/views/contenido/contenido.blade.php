@@ -158,6 +158,9 @@
             <template v-if="menu==45">
                 <reporteventas></reporteventas>
             </template>
+             <template v-if="menu==55">
+                <verventasadmin></verventasadmin>
+            </template>
 
             @elseif (Auth::user()->idrol == 2)
             <template v-if="menu==0">

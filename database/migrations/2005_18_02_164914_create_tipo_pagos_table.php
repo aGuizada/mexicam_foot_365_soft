@@ -20,12 +20,12 @@ class CreateTipoPagosTable extends Migration
         });
         DB::table('tipo_pagos')->insert([
             [
-                'nombre_tipo_pago' => 'Contado',
+                'nombre_tipo_pago' => 'Efectivo',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nombre_tipo_pago' => 'Credito',
+                'nombre_tipo_pago' => 'Qr',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

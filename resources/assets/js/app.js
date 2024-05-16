@@ -117,6 +117,10 @@ Vue.component(
   "facturafueralinea",
   require("./components/FacturaFueraLinea.vue")
 );
+Vue.component(
+  "verventasadmin",
+  require("./components/VerVentasADmin.vue")
+);
 Vue.component("puntoventa", require("./components/PuntoVenta.vue"));
 Vue.component("rolventa", require("./components/RegistroVentas.vue"));
 Vue.component("devoluciones", require("./components/Devoluciones.vue"));

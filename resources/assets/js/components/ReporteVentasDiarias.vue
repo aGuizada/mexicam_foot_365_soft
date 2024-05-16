@@ -16,12 +16,23 @@
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <input type="date" v-model="fecha" class="form-control" />
+
+                                <template>
+                                    <b-row>
+                                        <b-col md="auto">
+                                            <b-calendar v-model="fecha" locale="en-US"></b-calendar>
+                                        </b-col>
+
+
+                                    </b-row>
+
+                                </template>
                                 <select v-model="idcategoria" class="form-control" value="hola">
                                     <option value="0" disabled>Seleccione</option>
                                     <option value="all">Todas las categorías</option>
                                     <option v-for="categoria in arrayCategoria" :key="categoria.id"
-                                        :value="categoria.id" v-text="categoria.nombre"></option>
+                                        :value="categoria.id" v-text="categoria.nombre">
+                                    </option>
                                 </select>
                                 <button type="submit" @click="generarReporte" class="btn btn-primary">
                                     <i class="fa fa-search"></i> Generar Reporte
@@ -183,6 +194,9 @@ import 'jspdf-autotable';
 export default {
     data() {
         return {
+            value: '',
+            context: null,
+            fecha: new Date().toISOString().split('T')[0],
             cliente: "",
             num_comprobante: "",
             impuesto: "",
@@ -200,7 +214,6 @@ export default {
             rol_id: 0,
             nombre: '',
             descripcion: '',
-            fecha: '',
             idcategoria: 'all',
             arrayVentas: [],
             arrayCategoria: [],
@@ -260,6 +273,9 @@ export default {
         }
     },
     methods: {
+        onContext(ctx) {
+            this.context = ctx
+        },
         cambiarPagina(page) {
             let me = this;
             //Actualiza la página actual

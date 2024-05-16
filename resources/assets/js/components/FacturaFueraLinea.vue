@@ -3,452 +3,321 @@
     <div class="container-fluid py-3"></div>
     <!-- Ejemplo de tabla Listado -->
     <div class="card">
-      <div class="card-header">
-        <i class="fa fa-align-justify"></i> Ventas
-        <button type="button" @click="mostrarDetalle()" class="btn btn-secondary">
-          <i class="icon-plus"></i>&nbsp;Nueva Venta
-        </button>
-      </div>
+
       <!-- Listado-->
-      <template v-if="listado == 1">
-        <div class="card-body">
-          <div class="form-group row">
-            <div class="col-md-6">
-              <div class="input-group">
-                <select class="form-control col-md-3" v-model="criterio">
-                  <option value="" disabled selected>Seleccione</option>
-                  <option value="tipo_comprobante">Tipo Comprobante</option>
-                  <option value="num_comprobante">Número Comprobante</option>
-                  <option value="fecha_hora">Fecha-Hora</option>
-                  <option value="usuario">Usuario</option>
-                </select>
-                <input type="text" v-model="buscar" @keyup="listarVenta(1, buscar, criterio)" class="form-control"
-                  placeholder="Texto a buscar">
-                <!--button type="submit" @click="listarVenta(1, buscar, criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button-->
-              </div>
-            </div>
-          </div>
-          <div class="table-responsive">
-            <table v-if="esAdministrador || arrayVenta.length > 0"
-              class="table table-bordered table-striped table-sm custom-table">
-              <thead>
-                <tr>
-                  <th>Opciones</th>
-                  <th>Usuario</th>
-                  <th>Cliente</th>
-                  <th>Tipo Comprobante</th>
-                  <th>Número Comprobante</th>
-                  <th>Fecha Hora</th>
-                  <th>Total</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tr v-if="!esAdministrador && arrayVenta.length === 0">
-                <td colspan="8" class="text-center">No hay ventas realizadas por usted.</td>
-              </tr>
-              <tbody>
-                <tr v-for="(venta) in arrayVenta" :key="venta.id">
-                  <td>
-                    <button type="button" @click="verVenta(venta.id)" class="btn btn-success btn-sm">
-                      <i class="icon-eye"></i>
-                    </button> &nbsp;
 
-                    <template v-if="venta.estado == 'Registrado' && idrol !== 2">
-                      <button type="button" class="btn btn-danger btn-sm" @click="desactivarVenta(venta.id)">
-                        <i class="icon-trash"></i>
-                      </button>
-                    </template>
-
-                    <button type="button" @click="imprimirTicket(venta.id)" class="btn btn-info btn-sm">
-                      Imprimir Ticket
-                    </button>
-                  </td>
-
-                  <td v-text="venta.usuario"></td>
-                  <td v-text="venta.cliente"></td>
-                  <td v-text="venta.tipo_comprobante"></td>
-                  <td v-text="venta.num_comprobante"></td>
-                  <td v-text="venta.fecha_hora"></td>
-                  <td v-text="venta.total"></td>
-                  <td v-text="venta.estado"></td>
-                </tr>
-              </tbody>
-            </table>
-            <div v-else>No hay ventas disponibles.</div>
-          </div>
-          <nav>
-            <ul class="pagination">
-              <li class="page-item" v-if="pagination.current_page > 1">
-                <a class="page-link" href="#"
-                  @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
-              </li>
-              <li class="page-item" v-for="page in pagesNumber" :key="page"
-                :class="[page == isActived ? 'active' : '']">
-                <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)" v-text="page"></a>
-              </li>
-              <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                <a class="page-link" href="#"
-                  @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </template>
       <!--Fin Listado-->
       <!-- Detalle-->
-      <template v-else-if="listado == 0">
-        <div class="card-body">
-          <div class="row">
-            <!-- Columna de Comidas -->
-            <div class="col-md-8">
-              <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
-                <div class="modal-body">
-                  <!-- Dropdown de Comidas -->
-                  <div class="form-group row">
-                    <div class="col-md-6">
-                      <div class="dropdown">
-                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownComidas"
-                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Categoria
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownComidas">
-                          <button v-for="subcategoria in arrayBuscador" :key="subcategoria.id"
-                            @click="listarArticulo('', subcategoria.id)"
-                            :class="{ 'btn-primary': criterioA === subcategoria.id }" class="dropdown-item">
-                            {{ subcategoria.nombre }}
+
+      <div class="card-body">
+        <div class="row">
+          <!-- Columna de Comidas -->
+          <div class="container">
+            <div class="row">
+              <div class="col-md-15">
+                <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                  <div class="modal-body">
+                    <!-- Dropdown de Comidas -->
+                    <div class="form-group row">
+                      <div class="col-md-6">
+                        <div class="dropdown">
+                          <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownComidas"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Categoria
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownComidas">
+                            <button v-for="subcategoria in arrayBuscador" :key="subcategoria.id"
+                              @click="listarArticulo('', subcategoria.id)"
+                              :class="{ 'btn-primary': criterioA === subcategoria.id }" class="dropdown-item">
+                              {{ subcategoria.nombre }}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <h3 class="text-primary mb-4">Productos</h3>
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-6"> <!-- Cambio aquí -->
+                      <!-- Tarjetas de Artículos -->
+                      <div class="col mb-3" v-for="articulo in arrayArticulo" :key="articulo.id">
+                        <div class="card h-100 border-0 shadow-lg">
+                          <button class="btn btn-block p-0 position-relative" @click="agregarDetalleModal(articulo)">
+                            <div class="position-relative overflow-hidden">
+                              <b-img v-if="articulo.fotografia"
+                                :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()" fluid-grow
+                                class="card-img-top rounded-lg object-fit-cover"
+                                style="max-width: 150px; max-height: 150px;">
+                                <div
+                                  class="img-overlay position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center text-white bg-dark bg-opacity-50"
+                                  @mouseover="zoomImage = true" @mouseleave="zoomImage = false"
+                                  :class="{ 'd-none': !zoomImage }">
+                                  <span class="fa fa-search-plus fa-2x"></span>
+                                </div>
+                              </b-img>
+                            </div>
+                            <div class="card-body text-center pt-3">
+                              <h5 class="card-title mb-2 fw-bold">{{ articulo.nombre }}</h5>
+                              <p class="card-text mb-0 text-primary">Bs. {{ articulo.precio_venta }}</p>
+                            </div>
+                            <div class="card-hover-effect position-absolute top-0 start-0 w-100 h-100 rounded-lg"
+                              style="background-color: rgba(255, 255, 255, 0.2); opacity: 0; transition: opacity 0.3s ease;">
+                            </div>
                           </button>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <h3 class="text-primary mb-4">Productos</h3>
-                  <div class="row">
-                    <!-- Tarjetas de Artículos -->
-                    <div class="col-md-4 mb-3" v-for="articulo in arrayArticulo" :key="articulo.id">
-                      <div class="card h-100 border-0 shadow-lg">
-                        <button class="btn btn-block p-0 position-relative" @click="agregarDetalleModal(articulo)">
-                          <div class="position-relative overflow-hidden">
-                            <b-img v-if="articulo.fotografia"
-                              :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()" fluid-grow
-                              class="card-img-top rounded-lg object-fit-cover"
-                              style="max-width: 150px; max-height: 150px;">
-                              <div
-                                class="img-overlay position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center text-white bg-dark bg-opacity-50"
-                                @mouseover="zoomImage = true" @mouseleave="zoomImage = false"
-                                :class="{ 'd-none': !zoomImage }">
-                                <span class="fa fa-search-plus fa-2x"></span>
-                              </div>
-                            </b-img>
-                          </div>
-                          <div class="card-body text-center pt-3">
-                            <h5 class="card-title mb-2 fw-bold">{{ articulo.nombre }}</h5>
-                            <p class="card-text mb-0 text-primary">Bs. {{ articulo.precio_venta }}</p>
-                          </div>
-                          <div class="card-hover-effect position-absolute top-0 start-0 w-100 h-100 rounded-lg"
-                            style="background-color: rgba(255, 255, 255, 0.2); opacity: 0; transition: opacity 0.3s ease;">
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            <!-- Columna de Detalles de Venta -->
-            <div class="col-md-4">
-              <div class="card bg-dark text-white rounded-lg shadow-lg">
-                <div class="card-body">
-                  <div class="form-group row">
-                    <div class="col-md-4">
-                      <div v-show="paraLlevar" class="form-group">
-                        <label for="cliente" class="form-label fw-bold text-uppercase small">Cliente(*)</label>
-                        <input type="text" id="cliente" class="form-control form-control-sm rounded-pill"
-                          placeholder="Nombre del Cliente" v-model="cliente" ref="cliente">
-                      </div>
-                      <div v-show="!paraLlevar" class="form-group">
-                        <label for="mesero" class="form-label fw-bold text-uppercase small">Mesero(*)</label>
-                        <input type="text" id="mesero" class="form-control form-control-sm rounded-pill"
-                          placeholder="Nombre del Mesero" v-model="usuario_autenticado" ref="mesero" readonly>
-                      </div>
-                      <div class="form-group">
-                        <label for="paraLlevar" class="form-label fw-bold text-uppercase small">Para llevar:
-                          <span class="text-danger">*</span>
-                          <input type="checkbox" id="paraLlevar" aria-label="Checkbox for following text input"
-                            v-model="paraLlevar" class="form-check-input">
-                        </label>
-                      </div>
-                    </div>
 
-                    <!-- Otros campos ocultos -->
-                    <input type="hidden" id="nombreCliente" class="form-control form-control-sm" readonly>
-                    <input type="hidden" id="idcliente" class="form-control form-control-sm" readonly>
-                    <input type="hidden" id="tipo_documento" class="form-control form-control-sm" readonly>
-                    <input type="hidden" id="complemento_id" class="form-control form-control-sm"
-                      v-model="complemento_id" ref="complementoIdRef" readonly>
-                    <input type="hidden" id="usuarioAutenticado" class="form-control form-control-sm"
-                      v-model="usuarioAutenticado" readonly>
-                    <input type="hidden" id="documento" class="form-control form-control-sm" readonly value="0000">
-                    <input type="hidden" id="email" class="form-control form-control-sm" readonly
-                      value="sinnombre@gmail.com">
-                    <input type="hidden" id="idAlmacen" class="form-control form-control-sm" readonly value="1">
 
-                    <div v-show="!paraLlevar" class="col-md-5">
-                      <div class="form-group">
-                        <label for="mesa" class="form-label fw-bold text-uppercase small">Num Mesa(*)</label>
-                        <input type="number" id="mesa" class="form-control form-control-sm rounded-pill" v-model="mesa">
-                      </div>
-                    </div>
-                    <div class="col-md-3">
-                      <div class="form-group">
-                        <label for="num_comprobante" class="form-label fw-bold text-uppercase small">Número
-                          Ticket</label>
-                        <input type="text" id="num_comprobante" class="form-control form-control-sm rounded-pill"
-                          v-model="num_comprob" ref="numeroComprobanteRef" readonly>
-                      </div>
-                    </div>
-                    <!-- Otros campos según la lógica de tu aplicación -->
 
-                    <!-- Observaciones -->
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label for="observacion" class="form-label fw-bold text-uppercase small">Observaciones</label>
-                        <input type="text" id="observacion" class="form-control form-control-sm rounded-pill"
-                          v-model="observacion">
-                      </div>
-                    </div>
 
-                    <!-- Tipo de Pago -->
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label for="tipoPago" class="form-label fw-bold text-uppercase small">Tipo de Pago</label>
-                        <select class="form-select form-select-sm rounded-pill" id="tipoPago" v-model="tipoPago"
-                          @change="manejarTipoPago" required>
-                          <option value="" disabled selected>Seleccione</option>
-                          <option value="efectivo">Efectivo</option>
-                          <option value="qr">QR</option>
-                        </select>
-                        <div v-if="!tipoPago" class="text-danger small">Por favor, seleccione un tipo de pago.</div>
-                      </div>
-                    </div>
 
-                    <!-- Vista para pago en efectivo -->
-                    <template v-if="tipoPago === 'efectivo'">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label for="montoEfectivo" class="form-label fw-bold text-uppercase small">Monto en
-                            Efectivo:</label>
-                          <input type="number" id="montoEfectivo" class="form-control form-control-sm rounded-pill"
-                            v-model="montoEfectivo" @input="calcularCambio">
+
+          <button type="button" class="btn btn-primary"
+            style="position: fixed; bottom: 20px; right: 20px; left: 20px; z-index: 1000;" data-toggle="modal"
+            data-target="#exampleModal" data-whatever="@getbootstrap">
+            REALIZAR VENTA
+          </button>
+
+
+
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+
+                <div class="col-md-15">
+                  <div class="card bg-dark text-white rounded-lg shadow-lg">
+                    <div class="card-body">
+                      <div class="form-group row">
+                        <div class="col-md-5">
+                          <div v-show="paraLlevar" class="form-group">
+                            <label for="cliente" class="form-label fw-bold text-uppercase small">Cliente(*)</label>
+                            <input type="text" id="cliente" class="form-control form-control-sm rounded-pill"
+                              placeholder="Nombre del Cliente" v-model="cliente" ref="cliente">
+                          </div>
+                          <div v-show="!paraLlevar" class="form-group">
+                            <label for="mesero" class="form-label fw-bold text-uppercase small">Mesero(*)</label>
+                            <input type="text" id="mesero" class="form-control form-control-sm rounded-pill"
+                              placeholder="Nombre del Mesero" v-model="usuario_autenticado" ref="mesero" readonly>
+                          </div>
+                          <div class="form-group">
+                            <label for="paraLlevar" class="form-label fw-bold text-uppercase small">Para llevar:
+                              <span class="text-danger">*</span>
+                              <input type="checkbox" id="paraLlevar" aria-label="Checkbox for following text input"
+                                v-model="paraLlevar" class="form-check-input">
+                            </label>
+                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-12">
-                        <label class="form-label fw-bold text-uppercase small">Total a Pagar: {{ totalAPagar.toFixed(2)
-                          }}</label>
-                      </div>
-                      <div class="col-md-12" v-if="cambio">
-                        <label class="form-label fw-bold text-uppercase small">Cambio: {{ cambio.toFixed(2) }}</label>
-                      </div>
-                    </template>
 
-                    <!-- Vista para pago con QR -->
-                    <template v-if="tipoPago === 'qr'">
-                      <div class="d-flex justify-content-center align-items-center">
-                        <div>
-                          <label for="alias">Alias:</label>
-                          <input type="text" class="form-control" v-model="alias" />
-                          <br>
-                          <label for="montoQR">Monto:</label>
-                          <span class="font-weight-bold">{{ total=(calcularTotal).toFixed(2) }}</span>
-                          <br>
-                          <button class="btn btn-primary" @click="generarQr">Generar QR</button>
+                        <!-- Otros campos ocultos -->
+                        <input type="hidden" id="nombreCliente" class="form-control form-control-sm" readonly>
+                        <input type="hidden" id="idcliente" class="form-control form-control-sm" readonly>
+                        <input type="hidden" id="tipo_documento" class="form-control form-control-sm" readonly>
+                        <input type="hidden" id="complemento_id" class="form-control form-control-sm"
+                          v-model="complemento_id" ref="complementoIdRef" readonly>
+                        <input type="hidden" id="usuarioAutenticado" class="form-control form-control-sm"
+                          v-model="usuarioAutenticado" readonly>
+                        <input type="hidden" id="documento" class="form-control form-control-sm" readonly value="0000">
+                        <input type="hidden" id="email" class="form-control form-control-sm" readonly
+                          value="sinnombre@gmail.com">
+                        <input type="hidden" id="idAlmacen" class="form-control form-control-sm" readonly value="1">
 
-                          <!-- Espacio para mostrar la imagen del código QR -->
-                          <div v-if="qrImage">
-                            <img :src="qrImage" alt="Código QR" />
+                        <div v-show="!paraLlevar" class="col-md-5">
+                          <div class="form-group">
+                            <label for="mesa" class="form-label fw-bold text-uppercase small">Num Mesa(*)</label>
+                            <input type="number" id="mesa" class="form-control form-control-sm rounded-pill"
+                              v-model="mesa">
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label for="num_comprobante" class="form-label fw-bold text-uppercase small">Número
+                              Ticket</label>
+                            <input type="text" id="num_comprobante" class="form-control form-control-sm rounded-pill"
+                              v-model="num_comprob" ref="numeroComprobanteRef" readonly>
+                          </div>
+                        </div>
+                        <!-- Otros campos según la lógica de tu aplicación -->
+
+                        <!-- Observaciones -->
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="observacion"
+                              class="form-label fw-bold text-uppercase small">Observaciones</label>
+                            <input type="text" id="observacion" class="form-control form-control-sm rounded-pill"
+                              v-model="observacion">
+                          </div>
+                        </div>
+
+                        <!-- Tipo de Pago -->
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label>Tipo pago</label>
+                            <select class="form-select form-select-sm rounded-pill" id="idtipo_pago" v-model="tipoPago"
+                              @change="manejarTipoPago" required>
+                              <option value="" disabled selected>Seleccione</option>
+                              <option value="1">Efectivo</option>
+                              <option value="2">QR</option>
+                            </select>
+                            <div v-if="!tipoPago" class="text-danger small">Por favor, seleccione un tipo de pago.
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Vista para pago en efectivo -->
+                        <template v-if="tipoPago === '1'">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label for="montoEfectivo" class="form-label fw-bold text-uppercase small">Monto en
+                                Efectivo:</label>
+                              <input type="number" id="montoEfectivo" class="form-control form-control-sm rounded-pill"
+                                v-model="montoEfectivo" @input="calcularCambio">
+                            </div>
+                          </div>
+                          <div class="col-md-12">
+                            <label class="form-label fw-bold text-uppercase small">Total a Pagar: {{
+                              totalAPagar.toFixed(2)
+                            }}</label>
+                          </div>
+                          <div class="col-md-12" v-if="cambio">
+                            <label class="form-label fw-bold text-uppercase small">Cambio: {{ cambio.toFixed(2)
+                              }}</label>
+                          </div>
+                        </template>
+
+                        <!-- Vista para pago con QR -->
+                        <template v-if="tipoPago === '2'">
+                          <div class="d-flex justify-content-center align-items-center">
+                            <div>
+                              <label for="alias">Alias:</label>
+                              <input type="text" class="form-control" v-model="alias" />
+                              <br>
+                              <label for="montoQR">Monto:</label>
+                              <span class="font-weight-bold">{{ total=(calcularTotal).toFixed(2) }}</span>
+                              <br>
+                              <button class="btn btn-primary" @click="generarQr">Generar QR</button>
+
+                              <!-- Espacio para mostrar la imagen del código QR -->
+                              <div v-if="qrImage">
+                                <img :src="qrImage" alt="Código QR" />
+                              </div>
+
+                              <!-- Botón para verificar estado -->
+                              <button class="btn btn-secondary" @click="verificarEstado" v-if="qrImage">Verificar
+                                Estado de
+                                Pago</button>
+
+                              <!-- Mostrar estado de transacción -->
+                              <div v-if="estadoTransaccion" class="card p-2">
+                                <div class="font-weight-bold">Estado Actual:</div>
+                                <div>
+                                  <span :class="'badge badge-' + badgeSeverity">{{
+                              estadoTransaccion.objeto.estadoActual
+                            }}</span>
+                                </div>
+                              </div>
+                            </div>
                           </div>
 
-                          <!-- Botón para verificar estado -->
-                          <button class="btn btn-secondary" @click="verificarEstado" v-if="qrImage">Verificar Estado de
-                            Pago</button>
+                        </template>
 
-                          <!-- Mostrar estado de transacción -->
-                          <div v-if="estadoTransaccion" class="card p-2">
-                            <div class="font-weight-bold">Estado Actual:</div>
-                            <div>
-                              <span :class="'badge badge-' + badgeSeverity">{{ estadoTransaccion.objeto.estadoActual
-                                }}</span>
+                        <!-- Detalles de Venta -->
+                        <div class="col-md-12">
+                          <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-sm">
+                              <thead class="thead-dark">
+                                <tr>
+                                  <th class="small">Opciones</th>
+                                  <th class="small">Artículo</th>
+                                  <th class="small">Cantidad</th>
+                                  <th class="small">Subtotal</th>
+                                </tr>
+                              </thead>
+                              <tbody v-if="arrayDetalle.length">
+                                <tr v-for="(detalle, index) in arrayDetalle" :key="detalle.id">
+                                  <td>
+                                    <button @click="eliminarDetalle(index)" type="button" class="btn btn-danger btn-sm">
+                                      <i class="icon-close"></i>
+                                    </button>
+                                  </td>
+                                  <td class="small">{{ detalle.articulo }}</td>
+                                  <td>
+                                    <span style="color:red;" v-show="detalle.cantidad > detalle.stock"
+                                      class="small">Stock:
+                                      {{ detalle.stock
+                                      }}</span>
+                                    <input v-model="detalle.cantidad" type="number"
+                                      class="form-control form-control-sm">
+                                  </td>
+                                  <td class="small">{{ (detalle.precio * detalle.cantidad -
+                              detalle.descuento).toFixed(2) }}
+                                  </td>
+                                </tr>
+                                <tr class="table-active">
+                                  <td colspan="3" align="right" class="fw-bold small">Total: Bs.</td>
+                                  <td id="montoTotal" class="fw-bold small">{{ total=(calcularTotal).toFixed(2) }}
+                                  </td>
+                                </tr>
+                              </tbody>
+                              <tbody v-else>
+                                <tr>
+                                  <td colspan="6" class="text-center small">No hay artículos agregados</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="col-md-12">
+                          <div class="form-group row">
+                            <div class="col-md-6">
+                              <button type="button" @click="ocultarDetalle()"
+                                class="btn btn-danger btn-sm rounded-pill w-100">Cerrar</button>
+                            </div>
+
+                            <div class="col-md-6">
+                              <button type="button" class="btn btn-primary btn-sm rounded-pill w-100"
+                                @click="registrar()">Registrar
+                                Venta</button>
                             </div>
                           </div>
                         </div>
                       </div>
-
-                    </template>
-
-                    <!-- Detalles de Venta -->
-                    <div class="col-md-12">
-                      <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-sm">
-                          <thead class="thead-dark">
-                            <tr>
-                              <th class="small">Opciones</th>
-                              <th class="small">Artículo</th>
-                              <th class="small">Cantidad</th>
-                              <th class="small">Subtotal</th>
-                            </tr>
-                          </thead>
-                          <tbody v-if="arrayDetalle.length">
-                            <tr v-for="(detalle, index) in arrayDetalle" :key="detalle.id">
-                              <td>
-                                <button @click="eliminarDetalle(index)" type="button" class="btn btn-danger btn-sm">
-                                  <i class="icon-close"></i>
-                                </button>
-                              </td>
-                              <td class="small">{{ detalle.articulo }}</td>
-                              <td>
-                                <span style="color:red;" v-show="detalle.cantidad > detalle.stock" class="small">Stock:
-                                  {{ detalle.stock
-                                  }}</span>
-                                <input v-model="detalle.cantidad" type="number" class="form-control form-control-sm">
-                              </td>
-                              <td class="small">{{ (detalle.precio * detalle.cantidad - detalle.descuento).toFixed(2) }}
-                              </td>
-                            </tr>
-                            <tr class="table-active">
-                              <td colspan="3" align="right" class="fw-bold small">Total: Bs.</td>
-                              <td id="montoTotal" class="fw-bold small">{{ total=(calcularTotal).toFixed(2) }}</td>
-                            </tr>
-                          </tbody>
-                          <tbody v-else>
-                            <tr>
-                              <td colspan="6" class="text-center small">No hay artículos agregados</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-
-                    <!-- Botones -->
-                    <div class="col-md-12">
-                      <div class="form-group row">
-                        <div class="col-md-6">
-                          <button type="button" @click="ocultarDetalle()"
-                            class="btn btn-danger btn-sm rounded-pill w-100">Cerrar</button>
-                        </div>
-
-                        <div class="col-md-6">
-                          <button type="button" class="btn btn-primary btn-sm rounded-pill w-100"
-                            @click="registrar()">Registrar
-                            Venta</button>
-                        </div>
-                      </div>
                     </div>
                   </div>
+                </div>
+
+
+
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Send message</button>
                 </div>
               </div>
             </div>
           </div>
+
+
+
+
+
+          <!-- Columna de Detalles de Venta -->
+
         </div>
-      </template>
+      </div>
+
 
 
       <!-- Fin Detalle-->
       <!--Ver ingreso-->
-      <template v-else-if="listado == 2">
-        <div class="card-body">
-          <div class="row border rounded mx-auto my-4 p-3"
-            style="max-width: 800px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-            <div class="row border rounded mx-auto my-4 p-3 bg-white "
-              style="box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);">
-              <div class=" col-md-4">
-                <div class="form-group mb-3">
-                  <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Categoría</strong></label>
-                  <p class="text-danger font-weight-bold mb-0" v-text="categoria"></p>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group mb-3">
-                  <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Cliente</strong></label>
-                  <p class="text-dark mb-0" v-text="cliente"></p>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group mb-3">
-                  <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Tipo
-                      Comprobante</strong></label>
-                  <p class="text-dark mb-0" v-text="tipo_comprobante"></p>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group mb-3">
-                  <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Número
-                      Comprobante</strong></label>
-                  <p class="text-dark mb-0" v-text="num_comprobante"></p>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group mb-3">
-                  <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Número Mesa</strong></label>
-                  <p class="text-dark mb-0" v-text="mesa"></p>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group mb-3">
-                  <label
-                    class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Observaciones</strong></label>
-                  <p class="text-dark mb-0" v-text="observacion"></p>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group mb-3">
-                  <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Tipo de
-                      Pago</strong></label>
-                  <p class="text-dark mb-0" v-if="tipoPago === 'qr'">Pago por QR</p>
-                  <p class="text-dark mb-0" v-else-if="tipoPago === 'efectivo'">Pago en efectivo</p>
-                  <p class="text-dark mb-0" v-else>Tipo de pago no especificado</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row border rounded mx-auto my-4 p-3" style="max-width: 900px;">
-            <div class="table-responsive col-md-12">
-              <table class="table table-borderless table-hover">
-                <thead class="bg-primary text-white">
-                  <tr>
-                    <th>Artículo</th>
-                    <th>Precio</th>
-                    <th>Cantidad</th>
-                    <th>Subtotal</th>
-                  </tr>
-                </thead>
-                <tbody v-if="arrayDetalle.length">
-                  <tr v-for="detalle in arrayDetalle" :key="detalle.id">
-                    <td v-text="detalle.articulo"></td>
-                    <td v-text="detalle.precio"></td>
-                    <td v-text="detalle.cantidad"></td>
-                    <td>{{ detalle.precio * detalle.cantidad }}</td>
-                  </tr>
 
-                  <tr class="bg-success text-white font-weight-bold">
-                    <td colspan="3" class="text-right">Total</td>
-                    <td>$ {{ total }}</td>
-                  </tr>
-                </tbody>
-                <tbody v-else>
-                  <tr>
-                    <td colspan="4" class="text-center">No hay artículos agregados</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-md-12">
-              <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
-            </div>
-          </div>
-        </div>
-      </template>
       <!--Fin ver ingreso-->
     </div>
     <!-- Fin ejemplo de tabla Listado -->
@@ -659,13 +528,13 @@ export default {
       }, 0);
     },
     manejarTipoPago() {
-      if (this.tipoPago === 'efectivo') {
+      if (this.tipoPago === '1') {
         // Mostrar input para monto en efectivo
         this.mostrarMontoEfectivo = true;
         // Calcular el totalAPagar
         this.totalAPagar = this.calcularTotal;
         console.log('Pago en efectivo');
-      } else if (this.tipoPago === 'qr') {
+      } else if (this.tipoPago === '2') {
         // Lógica para manejar el pago con QR
         this.mostrarMontoEfectivo = false;
         console.log('Pago con QR');
@@ -971,6 +840,7 @@ export default {
         'idcliente': this.idcliente,
         'cliente': this.cliente,
         'mesa': this.mesa,
+        'idtipo_pago': this.tipoPago,
         'observacion': this.observacion,
         'tipo_comprobante': this.tipo_comprobante,
         'serie_comprobante': this.serie_comprobante,
@@ -1393,20 +1263,7 @@ body {
   transition: all 0.3s ease-in-out;
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-}
 
-.btn {
-  border-radius: 20px;
-  transition: all 0.3s ease-in-out;
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-}
 
 /* Tablas */
 .table {
@@ -1479,9 +1336,12 @@ body {
   font-weight: bold;
 }
 
-@media (min-width: 600px) {
-  .btnagregar {
-    margin-top: 2rem;
+@media (max-width: 767px) {
+  .row-cols-1>* {
+    flex: 0 0 50%;
+    /* Dos elementos por fila en dispositivos móviles */
+    max-width: 50%;
+    /* Dos elementos por fila en dispositivos móviles */
   }
 }
 

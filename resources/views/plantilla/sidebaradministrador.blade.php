@@ -24,7 +24,11 @@
             <a class="nav-link" href="#"><i class="fa fa-money"></i> Apertura/Cierre Caja</a>
           </li>
           <li @click="menu=39" class="nav-item">
-          <a class="nav-link" href="#"><i class="fa fa-shopping-cart"></i> Ventas</a>
+            <a class="nav-link" href="#"><i class="fa fa-shopping-cart"></i> Ventas</a>
+          </li>
+            <li @click="menu=55" class="nav-item">
+            <a class="nav-link" href="#"><i class="fa fa-shopping-cart"></i> Reporte Ventas</a>
+          </li>
       </li>
 
         </ul>
