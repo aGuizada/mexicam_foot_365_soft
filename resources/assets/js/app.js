@@ -7,7 +7,10 @@
 import BootstrapVue from 'bootstrap-vue';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import 'primeicons/primeicons.css';
+import PrimeVue from 'primevue/config';
 import Vue from "vue";
+Vue.use(PrimeVue)
 Vue.use(BootstrapVue)
 
 /**

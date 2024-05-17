@@ -72,17 +72,20 @@
           </div>
 
 
-
-
-
-
-
-          <button type="button" class="btn btn-primary"
-            style="position: fixed; bottom: 20px; right: 20px; left: 20px; z-index: 1000;" data-toggle="modal"
-            data-target="#exampleModal" data-whatever="@getbootstrap">
-            REALIZAR VENTA
-          </button>
-
+          <div class="container-fluid fixed-bottom pb-3">
+            <div class="row justify-content-end pe-3">
+              <div class="col-auto position-relative">
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger cart-badge">
+                  <span class="cart-badge-count">{{ arrayDetalle.length }}</span>
+                </span>
+                <Button class="p-button-md floating-button" data-toggle="modal" data-target="#exampleModal"
+                  data-whatever="@getbootstrap" style="background-color: #800080; border-color: #800080;">
+                  <i class="pi pi-shopping-cart" style="font-size: 3rem; color: white;"></i>
+                </Button>
+              </div>
+            </div>
+          </div>
 
 
           <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -460,6 +463,7 @@ export default {
 
   },
   methods: {
+
     recargarPagina() {
       window.location.reload(); // Recargar la página actual
     },
@@ -1381,5 +1385,34 @@ body {
   color: #fff;
   border-color: #454d55;
   text-align: center;
+}
+
+.floating-button {
+  padding: 10px 15px 1px 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.floating-buttons {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  z-index: 900;
+}
+
+.cart-badge {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cart-badge-count {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
 }
 </style>
