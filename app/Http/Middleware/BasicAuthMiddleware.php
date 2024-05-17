@@ -17,8 +17,8 @@ class BasicAuthMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        $username = '365soft';
-        $password = 'Banco_365qr';
+        $username = 'devsoft';
+        $password = 'Soft_';
 
         // Decodificar el encabezado de autorización
         $authorizationHeader = $request->header('Authorization');
