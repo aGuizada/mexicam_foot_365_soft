@@ -4,13 +4,12 @@
             <div class="card">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="fa fa-align-justify"></i> Reporte de Ventas Diarias</h5>
-                    <button type="button" @click="generarReporte" class="btn btn-light"><i class="fa fa-search"></i>
-                        Generar Reporte</button>
+
                 </div>
                 <div class="card-body">
                     <template v-if="listado == 1">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="me-3">
                                         <b-form-datepicker v-model="fecha" locale="es"
@@ -23,9 +22,14 @@
                                         <option v-for="categoria in arrayCategoria" :key="categoria.id"
                                             :value="categoria.id">{{ categoria.nombre }}</option>
                                     </select>
+
                                 </div>
                             </div>
+                            <button type="button" @click="generarReporte" class="btn btn-light"><i
+                                    class="fa fa-search"></i>
+                                Generar Reporte</button>
                         </div>
+
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-sm">
                                 <thead class="thead-dark">
@@ -382,6 +386,7 @@ export default {
     },
     mounted() {
         this.selectCategoria();
+        this.generarReporte();
     }
 }
 </script>
