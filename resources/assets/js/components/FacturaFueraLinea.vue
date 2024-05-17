@@ -91,26 +91,42 @@
                 </div>
                 <div class="modal-body">
                   <div class="form-group row">
-                    <div class="col-md-5">
-                      <div v-show="paraLlevar" class="form-group">
-                        <label for="cliente" class="form-label fw-bold text-uppercase small">Cliente(*)</label>
-                        <input type="text" id="cliente" class="form-control form-control-sm rounded"
-                          placeholder="Nombre del Cliente" v-model="cliente" ref="cliente">
+                    <div class="form-group row">
+                      <div class="col-md-5">
+                        <!-- campos cliente -->
+                        <div v-show="paraLlevar" class="form-group">
+                          <label for="cliente" class="form-label fw-bold text-uppercase small">Cliente(*)</label>
+                          <input type="text" id="cliente" class="form-control form-control-sm rounded"
+                            placeholder="Nombre del Cliente" v-model="cliente" ref="cliente">
+                        </div>
+                        <div v-show="!paraLlevar" class="form-group">
+                          <label for="mesero" class="form-label fw-bold text-uppercase small">Mesero(*)</label>
+                          <input type="text" id="mesero" class="form-control form-control-sm rounded"
+                            placeholder="Nombre del Mesero" v-model="usuario_autenticado" ref="mesero" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label for="paraLlevar" class="form-label fw-bold text-uppercase small">Para llevar:
+                            <span class="text-danger">*</span>
+                            <input type="checkbox" id="paraLlevar" aria-label="Checkbox for following text input"
+                              v-model="paraLlevar" class="form-check-input">
+                          </label>
+                        </div>
                       </div>
-                      <div v-show="!paraLlevar" class="form-group">
-                        <label for="mesero" class="form-label fw-bold text-uppercase small">Mesero(*)</label>
-                        <input type="text" id="mesero" class="form-control form-control-sm rounded"
-                          placeholder="Nombre del Mesero" v-model="usuario_autenticado" ref="mesero" readonly>
+                      <div class="col-md-3" v-show="!paraLlevar">
+                        <div class="form-group">
+                          <label for="mesa" class="form-label fw-bold text-uppercase small">Num Mesa(*)</label>
+                          <input type="number" id="mesa" class="form-control form-control-sm rounded" v-model="mesa">
+                        </div>
                       </div>
-                      <div class="form-group">
-                        <label for="paraLlevar" class="form-label fw-bold text-uppercase small">Para llevar:
-                          <span class="text-danger">*</span>
-                          <input type="checkbox" id="paraLlevar" aria-label="Checkbox for following text input"
-                            v-model="paraLlevar" class="form-check-input">
-                        </label>
+                      <div class="col-md-3" v-show="!paraLlevar">
+                        <div class="form-group">
+                          <label for="num_comprobante" class="form-label fw-bold text-uppercase small">Número
+                            Ticket</label>
+                          <input type="text" id="num_comprobante" class="form-control form-control-sm rounded"
+                            v-model="num_comprob" ref="numeroComprobanteRef" readonly>
+                        </div>
                       </div>
                     </div>
-
                     <!-- Otros campos ocultos -->
                     <input type="hidden" id="nombreCliente" class="form-control form-control-sm" readonly>
                     <input type="hidden" id="idcliente" class="form-control form-control-sm" readonly>
@@ -123,22 +139,6 @@
                     <input type="hidden" id="email" class="form-control form-control-sm" readonly
                       value="sinnombre@gmail.com">
                     <input type="hidden" id="idAlmacen" class="form-control form-control-sm" readonly value="1">
-
-                    <div v-show="!paraLlevar" class="col-md-5">
-                      <div class="form-group">
-                        <label for="mesa" class="form-label fw-bold text-uppercase small">Num Mesa(*)</label>
-                        <input type="number" id="mesa" class="form-control form-control-sm rounded" v-model="mesa">
-                      </div>
-                    </div>
-                    <div class="col-md-3">
-                      <div class="form-group">
-                        <label for="num_comprobante" class="form-label fw-bold text-uppercase small">Número
-                          Ticket</label>
-                        <input type="text" id="num_comprobante" class="form-control form-control-sm rounded"
-                          v-model="num_comprob" ref="numeroComprobanteRef" readonly>
-                      </div>
-                    </div>
-                    <!-- Otros campos según la lógica de tu aplicación -->
 
                     <!-- Observaciones -->
                     <div class="col-md-12">
