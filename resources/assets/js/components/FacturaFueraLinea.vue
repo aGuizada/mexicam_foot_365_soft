@@ -83,7 +83,7 @@
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
               <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header bg-danger text-white">
                   <h5 class="modal-title" id="exampleModalLabel">REGISTRAR VENTAS</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -105,7 +105,7 @@
                             placeholder="Nombre del Mesero" v-model="usuario_autenticado" ref="mesero" readonly>
                         </div>
                         <div class="form-group">
-                          <label for="paraLlevar" class="form-label fw-bold text-uppercase small">Para llevar:
+                          <label for="paraLlevar" class="form-label fw-bold text-uppercase small">Para llevar :
                             <span class="text-danger">*</span>
                             <input type="checkbox" id="paraLlevar" aria-label="Checkbox for following text input"
                               v-model="paraLlevar" class="form-check-input">
@@ -114,7 +114,7 @@
                       </div>
                       <div class="col-md-3" v-show="!paraLlevar">
                         <div class="form-group">
-                          <label for="mesa" class="form-label fw-bold text-uppercase small">Num Mesa(*)</label>
+                          <label for="mesa" class="form-label fw-bold text-uppercase small">Numero Mesa(*)</label>
                           <input type="number" id="mesa" class="form-control form-control-sm rounded" v-model="mesa">
                         </div>
                       </div>
