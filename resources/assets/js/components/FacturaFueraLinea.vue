@@ -48,7 +48,7 @@
                               </b-img>
                             </div>
                             <div class="card-body text-center pt-3">
-                              <h5 class="card-title mb-2 fw-bold">{{ articulo.nombre }}</h5>
+                              <h5 class="card-title mb-2 fw-bold titulo-pequeno">{{ articulo.nombre }}</h5>
                               <p class="card-text mb-0 text-primary">Bs. {{ articulo.precio_venta }}</p>
                             </div>
                             <div class="card-hover-effect position-absolute top-0 start-0 w-100 h-100 rounded-lg"
@@ -58,6 +58,7 @@
                         </div>
                       </div>
                     </div>
+
                   </div>
                 </div>
               </div>
@@ -281,8 +282,10 @@
 import vSelect from 'vue-select';
 
 export default {
+
   data() {
     return {
+
       //qr
       alias: '',
       montoQR: 0,
@@ -434,6 +437,35 @@ export default {
 
     recargarPagina() {
       window.location.reload(); // Recargar la página actual
+    },
+    agregarDetalleModal(data = []) {
+      let me = this;
+      if (me.encuentra(data['id'])) {
+        swal({
+          type: 'error',
+          title: 'Error...',
+          text: 'Este Artículo ya se encuentra agregado!',
+        });
+      } else {
+        me.arrayDetalle.push({
+          idarticulo: data['id'],
+          articulo: data['nombre'],
+          cantidad: 1,
+          precio: data['precio_venta'],
+          descuento: 0,
+          stock: data['stock'],
+          medida: data['medida'],
+        });
+
+        swal({
+          position: 'center',
+          icon: 'success',
+          title: 'Artículo agregado al carrito',
+          showConfirmButton: false,
+          timer: 500,
+          width: '400px' // Ajusta el ancho según tus necesidades
+        });
+      }
     },
 
     registrarVenta() {
@@ -805,26 +837,7 @@ export default {
       }
 
     },
-    agregarDetalleModal(data = []) {
-      let me = this;
-      if (me.encuentra(data['id'])) {
-        swal({
-          type: 'error',
-          title: 'Error...',
-          text: 'Este Artículo ya se encuentra agregado!',
-        })
-      } else {
-        me.arrayDetalle.push({
-          idarticulo: data['id'],
-          articulo: data['nombre'],
-          cantidad: 1,
-          precio: data['precio_venta'],
-          descuento: 0,
-          stock: data['stock'],
-          medida: data['medida'],
-        });
-      }
-    },
+
     listarArticulo(page, criterioA) {
       let me = this;
       var url = '/articulo/listarArticuloVenta?page=' + page + '&criterio=' + criterioA + '&idAlmacen=' + this.idAlmacen;
@@ -1382,5 +1395,10 @@ body {
   font-size: 20px;
   font-weight: bold;
   color: white;
+}
+
+.titulo-pequeno {
+  font-size: 14px;
+  /* Ajusta el tamaño de fuente según tus necesidades */
 }
 </style>
