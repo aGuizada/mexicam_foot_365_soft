@@ -442,6 +442,10 @@ export default {
 
   },
   methods: {
+    actualizarFechaHora() {
+            const now = new Date();
+            this.alias = now.toLocaleString();
+        },
 
     recargarPagina() {
       window.location.reload(); // Recargar la página actual
@@ -1098,6 +1102,8 @@ export default {
     this.listarArticulo(1, this.buscar, this.criterio);
     this.listarArticulo('', '1');
     this.listarLinea('1', '', 'nombreLinea');
+    this.actualizarFechaHora();
+
 
   }
 }
