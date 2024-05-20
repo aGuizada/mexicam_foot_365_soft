@@ -16,7 +16,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group row">
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <div class="input-group">
                                 <select class="form-control col-md-3" v-model="criterio">
                                     <option value="nombre">Nombre</option>
@@ -127,20 +127,7 @@
                     </div>
                     <div class="modal-body">
                         <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                            <div style="display: none;" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input"
-                                    style="color: blue;">Código</label>
-                                <div class="col-md-4">
-                                    <input type="text" v-model="codigo" class="form-control"
-                                        :class="{ 'border-red': codigoVacio }" @input="codigoVacio = false"
-                                        placeholder="Código de barras">
-                                </div>
-                                <div class="col-md-12 order-md-2">
-                                    <div class="barcode-container">
-                                        <barcode :value="codigo" :options="{ format: 'EAN-13' }"></barcode>
-                                    </div>
-                                </div>
-                            </div>
+
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -150,47 +137,13 @@
                                             :class="{ 'border-red': nombreProductoVacio }"
                                             @input="nombreProductoVacio = false" placeholder="Nombre de artículo">
                                     </div>
-                                    <div style="display: none;" class="form-group">
-                                        <label class="form-control-label" for="text-input">Unid.X Envase(*)</label>
-                                        <input type="text" v-model="unidad_envase" class="form-control"
-                                            :class="{ 'border-red': unidad_envaseVacio }"
-                                            @input="unidad_envaseVacio = false" placeholder="Unid X Envase">
-                                    </div>
-                                    <div style="display: none;" class="form-group">
-                                        <label class="form-control-label" for="email-input">Precio Costo(Unid*.)</label>
-                                        <div class="input-group">
-                                            <input type="text" v-model="precio_costo_unid" class="form-control"
-                                                :class="{ 'border-red': precio_costo_unidVacio }"
-                                                @input="precio_costo_unidVacio = false" placeholder="Unidad">
-                                            <div class="input-group-append">
-                                                <button type="button" class="btn btn-primary"
-                                                    @click="calcularPrecioCostoUnid">Calcular</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div style="display: none;" class="form-group">
-                                        <label class="form-control-label" for="email-input">Precio Costo(paq*.)</label>
-                                        <div class="input-group">
-                                            <input type="text" v-model="precio_costo_paq" class="form-control"
-                                                :class="{ 'border-red': precio_costo_paqVacio }"
-                                                @input="precio_costo_paqVacio = false" placeholder="paquete">
-                                            <div class="input-group-append">
-                                                <button type="button" class="btn btn-primary"
-                                                    @click="calcularPrecioCostoPaq">Calcular</button>
-                                            </div>
-                                        </div>
-                                    </div>
+
+
 
                                 </div>
                                 <!---DERECHA-->
                                 <div class="col-md-6">
-                                    <div style="display: none;" class="form-group">
-                                        <label class="form-control-label" for="text-input"><strong>Nombre
-                                                Generico(*)</strong></label>
-                                        <input type="text" v-model="nombre_generico" class="form-control"
-                                            :class="{ 'border-red': nombre_genericoVacio }"
-                                            @input="nombre_genericoVacio = false" placeholder="Uidad">
-                                    </div>
+
                                     <div class="form-group">
                                         <label class="form-control-label"
                                             for="text-input"><strong>Precio(*)</strong></label>
@@ -294,17 +247,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div style="display: none;" class="form-group">
-                                    <label class="form-control-label" for="text-input">Marca(*)</label>
-                                    <div class="input-group">
-                                        <input type="text" disabled v-model="marcaseleccionada.nombre"
-                                            :class="{ 'border-red': marcaseleccionadaVacio }">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button"
-                                                @click="abrirModal2('Marcas')">...</button>
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
                             <div class="col-md-4">
 
@@ -1079,11 +1022,7 @@ export default {
             } else if (this.tituloModal2 == "Grupos") {
                 this.gruposeleccionada = selected;
             }
-            // if (this.marcaseleccionada.condicion == 1 ){
-            //     console.log("selcciona", selected);
-            // }else if (this.marcaseleccionada.condicion == 0 ){
-            //     console.log("Estado invalido", this.marcaseleccionada.condicion);
-            // }
+
             console.log("Seleccionado", selected);
             this.arrayBuscador = [];
             this.modal2 = false;
@@ -1419,31 +1358,10 @@ export default {
             let formData = new FormData();
 
             formData.append('idcategoria', this.lineaseleccionada.id);
-            // formData.append('idindustria', this.industriaseleccionada.id);
-            //formData.append('idmarca', this.marcaseleccionada.id);
-            //formData.append('idproveedor', this.proveedorseleccionada.id);
-            //formData.append('idgrupo', this.gruposeleccionada.id);//AUMENtE 5 julio
-
-            //formData.append('precio_costo_unid', this.precio_costo_unid);
-            //formData.append('precio_costo_paq', this.precio_costo_paq);
-
-            //formData.append('codigo', this.codigo);
             formData.append('nombre', this.nombre_producto);
-            //formData.append('nombre_generico', this.nombre_generico);//AUMENtE 5 julio
-            //formData.append('unidad_envase', this.unidad_envase);
-            //formData.append('stock', this.stock);
             formData.append('precio_venta', this.precio_venta);
-
-            // formData.append('precio_uno', this.precio_uno);
-            //formData.append('precio_dos', this.precio_dos);
-            //formData.append('precio_tres', this.precio_tres);
-            //formData.append('precio_cuatro', this.precio_cuatro);
-
             formData.append('descripcion', this.descripcion);
             formData.append('fotografia', this.fotografia);
-
-            //formData.append('idmedida', this.medidaseleccionada.id);
-            //formData.append('costo_compra', this.costo_compra);
             console.log("FORMDATA", formData);
             axios.post('/articulo/registrar', formData, {
                 headers: {
@@ -1499,20 +1417,13 @@ export default {
 
             formData.append('costo_compra', this.costo_compra);
             formData.append('idmedida', this.medidaseleccionada.id);
-            //formData.append('id', this.articulo_id);
-
-            /*for (let [key, value] of formData.entries()) 
-            {
-                console.log(key, value);
-            }*/
 
             axios.post('/articulo/actualizar', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             }).then(function (response) {
-                //alert("Datos actualizados con éxito");
-                //console.log("datos actuales",formData);
+
                 me.cerrarModal();
                 me.listarArticulo(1, '', 'nombre');
             }).catch(function (error) {
@@ -1780,22 +1691,11 @@ export default {
         validarArticulo() {
             this.errorArticulo = 0;
             this.errorMostrarMsjArticulo = [];
-
-            // if (this.lineaseleccionada.length == 0) this.errorMostrarMsjArticulo.push("");
-            // if (this.industriaseleccionada.length == 0) this.errorMostrarMsjArticulo.push("");
-            // if (this.marcaseleccionada.length == 0) this.errorMostrarMsjArticulo.push("");
-            // if (this.proveedorseleccionada.length == 0) this.errorMostrarMsjArticulo.push("");
-            // if (this.medidaseleccionada.length == 0) this.errorMostrarMsjArticulo.push("");
-            // if (this.gruposeleccionada.length == 0) this.errorMostrarMsjArticulo.push("");
-
-            //if (!this.unidad_envase) this.errorMostrarMsjArticulo.push("sin unidad envase");
-            //if (!this.codigo) this.errorMostrarMsjArticulo.push("sin codigo");
             if (!this.nombre_producto) this.errorMostrarMsjArticulo.push("sin nombre producto");
-            //if (!this.nombre_generico) this.errorMostrarMsjArticulo.push("sin nombre generico");
+
             if (!this.descripcion) this.errorMostrarMsjArticulo.push("sin descipcion");
             if (!this.stock) this.errorMostrarMsjArticulo.push("sin stock");
             if (!this.precio_venta) this.errorMostrarMsjArticulo.push("sin precio venta");
-            //if (!this.costo_compra) this.errorMostrarMsjArticulo.push("sin costo compra");
             if (!this.fotografia) this.errorMostrarMsjArticulo.push("sin fotografia");
 
             if (this.errorMostrarMsjArticulo.length) this.errorArticulo = 1;
@@ -1805,9 +1705,7 @@ export default {
         cerrarModal() {
             this.modal = 0;
             this.tituloModal = '';
-            //this.idcategoria = 0;
-            //this.nombre_categoria = '';
-            //validacion para quitar borde rojo en los inputs
+
             this.codigoVacio = false;
             this.nombreProductoVacio = false;
             this.unidad_envaseVacio = false;
@@ -1851,23 +1749,6 @@ export default {
             this.precio_dos = 0;
             this.precio_tres = 0;
             this.precio_cuatro = 0;
-
-            // unidad_envaseVacio: false,
-            // nombre_genericoVacio: false,
-            // precio_costo_unidVacio: false,
-            // precio_costo_paqVacio: false,
-            // precio_ventaVacio: false,
-            // costo_compraVacio: false,
-            // stockVacio: false,
-            // descripcionVacio: false,
-            // fecha_vencimientoVacio: false,
-            // fotografiaVacio: false,
-            // lineaseleccionadaVacio: false,
-            // marcaseleccionadaVacio: false,
-            // industriaseleccionadaVacio: false,
-            // proveedorseleccionadaVacio: false,
-            // gruposeleccionadaVacio: false,
-            // medidaseleccionadaVacio: false,
         },
         abrirModal(modelo, accion, data = []) {
             switch (modelo) {
