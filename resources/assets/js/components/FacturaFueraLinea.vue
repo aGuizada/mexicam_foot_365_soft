@@ -187,38 +187,34 @@
 
                       <!-- Vista para pago con QR -->
                       <template v-if="tipoPago === '2'">
-                        <div class="d-flex justify-content-center align-items-center">
-                          <div>
-                            <label for="alias">Alias:</label>
-                            <input type="text" class="form-control" v-model="alias" />
-                            <br>
-                            <label for="montoEfectivo">Monto:</label>
-                            <span class="font-weight-bold">
-                                                            {{ montoEfectivo=(calcularTotal).toFixed(2) }}</span>                             <br>
-                            <button class="btn btn-primary" @click="generarQr">Generar QR</button>
-
-                            <!-- Espacio para mostrar la imagen del código QR -->
-                            <div v-if="qrImage">
-                              <img :src="qrImage" alt="Código QR" />
-                            </div>
-
-                            <!-- Botón para verificar estado -->
-                            <button class="btn btn-secondary" @click="verificarEstado" v-if="qrImage">Verificar Estado
-                              de
-                              Pago</button>
-
-                            <!-- Mostrar estado de transacción -->
-                            <div v-if="estadoTransaccion" class="card p-2">
-                              <div class="font-weight-bold">Estado Actual:</div>
-                              <div>
-                                <span :class="'badge badge-' + badgeSeverity">{{ estadoTransaccion.objeto.estadoActual
-                                  }}</span>
+                        <div class="container">
+                          <div class="row justify-content-center">
+                            <div class="col-md-8">
+                              <div class="form-group">
+                                <label for="alias">Alias:</label>
+                                <input type="text" class="form-control" v-model="alias" />
+                              </div>
+                              <div class="form-group">
+                                <label for="montoEfectivo">Monto:</label>
+                                <span class="font-weight-bold">{{ montoEfectivo = (calcularTotal).toFixed(2) }}</span>
+                              </div>
+                              <button class="btn btn-primary mb-2" @click="generarQr">Generar QR</button>
+                              <div v-if="qrImage" class="mb-2">
+                                <img :src="qrImage" alt="Código QR" class="img-fluid" />
+                              </div>
+                              <button class="btn btn-secondary mb-2" @click="verificarEstado" v-if="qrImage">Verificar
+                                Estado de Pago</button>
+                              <div v-if="estadoTransaccion" class="card p-2">
+                                <div class="font-weight-bold">Estado Actual:</div>
+                                <div>
+                                  <span :class="'badge badge-' + badgeSeverity">{{ estadoTransaccion.objeto.estadoActual
+                                    }}</span>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </template>
-
                       <!-- Detalles de Venta -->
                       <div class="col-md-12">
                         <div class="table-responsive">
