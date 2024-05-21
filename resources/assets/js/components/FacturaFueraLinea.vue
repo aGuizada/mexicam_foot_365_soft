@@ -190,9 +190,9 @@
                             <label for="alias">Alias:</label>
                             <input type="text" class="form-control" v-model="alias" />
                             <br>
-                            <label for="montoQR">Monto:</label>
-                            <span class="font-weight-bold">{{ total=(calcularTotal).toFixed(2) }}</span>
-                            <br>
+                            <label for="montoEfectivo">Monto:</label>
+                            <span class="font-weight-bold">
+                                                            {{ montoEfectivo=(calcularTotal).toFixed(2) }}</span>                             <br>
                             <button class="btn btn-primary" @click="generarQr">Generar QR</button>
 
                             <!-- Espacio para mostrar la imagen del código QR -->
