@@ -591,9 +591,10 @@ public function store(Request $request)
         $request->validate([
             'fecha' => 'required|date',
         ]);
-
+    
         $query = DetalleVenta::join('ventas', 'detalle_ventas.idventa', '=', 'ventas.id')
             ->join('articulos', 'detalle_ventas.idarticulo', '=', 'articulos.id')
+            ->join('users', 'ventas.idusuario', '=', 'users.id') 
             ->select(
                 'ventas.id',
                 'ventas.cliente',
@@ -605,21 +606,22 @@ public function store(Request $request)
             )
             ->whereDate('ventas.created_at', $request->input('fecha'))
             ->groupBy('ventas.id', 'ventas.cliente', 'ventas.num_comprobante');
-
+    
         if ($request->has('idCategoria') && $request->input('idCategoria') !== 'all') {
             $query->where('articulos.idcategoria', $request->input('idCategoria'));
         }
-
+    
+        if ($request->has('idUsuario') && $request->input('idUsuario') !== 'all') {
+            $query->where('ventas.idusuario', $request->input('idUsuario'));
+        }
+    
         $ventas = $query->get();
-
+    
         if ($ventas->isEmpty()) {
             return response()->json(['mensaje' => 'Ninguna Venta Realizada en la Fecha Indicada']);
         }
-
-        // Devolver las ventas como JSON
-        return response()->json([
-            'ventas' => $ventas
-        ]);
+    
+        return response()->json(['ventas' => $ventas]);
     }
-
+    
 }

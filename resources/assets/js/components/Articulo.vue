@@ -577,7 +577,7 @@
                     <div v-if="tituloModal2 !== 'Proveedors'" class="modal-body">
                         <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                             <div v-if="tituloModal2 == 'Lineas'" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Nombre Linea</label>
+                                <label class="col-md-3 form-control-label" for="text-input">Nombre Categoria</label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="nombreLinea" class="form-control1"
                                         :placeholder="placeholderInput('nombre')">

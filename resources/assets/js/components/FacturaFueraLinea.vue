@@ -29,7 +29,7 @@
                     <h3 class="text-primary mb-4">Productos</h3>
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-6">
                       <div class="col mb-3" v-for="articulo in arrayArticulo" :key="articulo.id">
-                        <div class="card h-100 border-0 shadow-lg">
+                        <div class=" border-0 shadow-lg">
                           <button class="btn btn-block p-0 position-relative" @click="agregarDetalleModal(articulo)">
                             <div class="position-relative overflow-hidden">
                               <b-img v-if="articulo.fotografia"
@@ -46,11 +46,13 @@
                             </div>
                             <div class="card-body text-center pt-3">
                               <h5 class="card-title mb-2 fw-bold titulo-pequeno">{{ articulo.nombre }}</h5>
-                              <p class="card-text mb-0 text-primary">Bs. {{ articulo.precio_venta }}</p>
+                              <p class="card-text mb-0 text-primary fw-bold">Bs. {{ articulo.precio_venta }}</p>
+
                             </div>
                             <div class="card-hover-effect position-absolute top-0 start-0 w-100 h-100 rounded-lg"
-                              style="background-color: rgba(255, 255, 255, 0.2); opacity: 0; transition: opacity 0.3s ease;">
+                              style="background-color: rgba(255, 0, 0, 0.2); opacity: 0; transition: opacity 0.3s ease;">
                             </div>
+
                           </button>
                         </div>
                       </div>
@@ -68,7 +70,7 @@
                   <span class="cart-badge-count">{{ arrayDetalle.length }}</span>
                 </span>
                 <Button class="p-button-md floating-button" data-toggle="modal" data-target="#exampleModal"
-                  data-whatever="@getbootstrap" style="background-color: #800080; border-color: #800080;">
+                  data-whatever="@getbootstrap" style="background-color: #212529; border-color: #800080;">
                   <i class="pi pi-shopping-cart" style="font-size: 3rem; color: white;"></i>
                 </Button>
               </div>
@@ -112,9 +114,10 @@
                         </div>
                         <div class="col-md-3" v-show="!paraLlevar">
                           <div class="form-group">
-                            <label for="mesa" class="form-label fw-bold text-uppercase small">Numero Mesa(*)</label>
+                            <label for="mesa" class="form-label fw-bold text-uppercase small">Número Mesa</label>
                             <input type="number" id="mesa" class="form-control form-control-sm rounded" v-model="mesa">
                           </div>
+
                         </div>
                         <div class="col-md-3" v-show="!paraLlevar">
                           <div class="form-group">
@@ -161,7 +164,6 @@
                         </div>
                       </div>
 
-
                       <!-- Vista para pago en efectivo -->
                       <template v-if="tipoPago === '1'">
                         <div class="col-md-12">
@@ -181,8 +183,8 @@
                               }}</label>
                           </div>
                         </div>
-                        <!-- Resto del código -->
                       </template>
+
                       <!-- Vista para pago con QR -->
                       <template v-if="tipoPago === '2'">
                         <div class="d-flex justify-content-center align-items-center">
@@ -370,7 +372,7 @@ export default {
       mostrarValidarPaquete: false,
       cafc: '',
       scodigomotivo: null,
-      mesa: 0,
+      mesa: '',
       observacion: '',
       usuario_autenticado: '',
       paraLlevar: false,
@@ -443,9 +445,9 @@ export default {
   },
   methods: {
     actualizarFechaHora() {
-            const now = new Date();
-            this.alias = now.toLocaleString();
-        },
+      const now = new Date();
+      this.alias = now.toLocaleString();
+    },
 
     recargarPagina() {
       window.location.reload(); // Recargar la página actual
@@ -513,30 +515,21 @@ export default {
       me.errorMostrarMsjVenta = [];
       var art;
 
-      me.arrayDetalle.map(function (x) {
-        if (x.cantidad > x.stock) {
-          art = x.articulo + " Stock insuficiente";
-          me.errorMostrarMsjVenta.push(art);
-        }
-      });
-
       if (me.paraLlevar) {
         if (!me.cliente) me.errorMostrarMsjVenta.push("Ingrese el Nombre de un Cliente");
-      } else {
-        if (me.mesa === 0 && !me.mesa) me.errorMostrarMsjVenta.push("Ingrese el Número de Mesa");
       }
 
-      if (me.tipo_comprobante == 0) me.errorMostrarMsjVenta.push("Seleccione el Comprobante");
-      if (me.arrayDetalle.length <= 0) me.errorMostrarMsjVenta.push("Ingrese detalles");
+      // if (me.tipo_comprobante == 0) me.errorMostrarMsjVenta.push("Seleccione el Comprobante");
+      // if (me.arrayDetalle.length <= 0) me.errorMostrarMsjVenta.push("Ingrese detalles");
       if (!me.tipoPago) {
         me.errorMostrarMsjVenta.push("Seleccione un tipo de pago (Efectivo o QR)");
         me.errorVenta = 1;
-      }
-
-      else if (me.tipoPago === '1' && me.montoEfectivo === 0) {
+        return 'noTipoPago';
+      } else if (me.tipoPago === '1' && me.montoEfectivo === 0) {
         me.errorMostrarMsjVenta.push("El monto en efectivo no puede ser cero");
         me.errorVenta = 1;
       }
+
       if (me.errorMostrarMsjVenta.length) {
         me.errorVenta = 1;
         return true;
@@ -547,7 +540,14 @@ export default {
 
     registrarVenta() {
       const vm = this;
-      if (this.validarVenta()) {
+      const validacion = this.validarVenta();
+
+      if (validacion === 'noTipoPago') {
+        swal('Aviso', 'Por favor, seleccione un tipo de pago.', 'warning');
+        return;
+      }
+
+      if (validacion) {
         swal('Aviso', 'Por favor, complete todos los campos requeridos.', 'warning');
         return;
       }
@@ -557,10 +557,9 @@ export default {
       console.log("mesa ", this.mesa);
       console.log("Carrito ", this.arrayDetalle);
 
-      axios.post('/venta/registrar', {
+      let postData = {
         'idcliente': this.idcliente,
         'cliente': this.cliente,
-        'mesa': this.mesa,
         'idtipo_pago': this.tipoPago,
         'observacion': this.observacion,
         'tipo_comprobante': this.tipo_comprobante,
@@ -570,48 +569,56 @@ export default {
         'total': this.montoEfectivo,
         'idAlmacen': this.idAlmacen,
         'data': this.arrayDetalle
-      }).then(function (response) {
-        console.log(response.data.id);
+      };
 
-        if (response.data.id > 0) {
-          me.listado = 1;
-          me.listarVenta(1, '', 'num_comprob');
-          me.idproveedor = 0;
-          me.cliente = '';
-          me.tipo_comprobante = 'TICKET';
-          me.serie_comprobante = '';
-          me.num_comprob = '';
-          me.impuesto = 0.18;
-          me.total = 0.0;
-          me.idarticulo = 0;
-          me.articulo = '';
-          me.cantidad = 0;
-          me.precio = 0;
-          me.stock = 0;
-          me.codigo = '';
-          me.descuento = 0;
-          me.mesa = 0;
-          me.observacion = '',
+      if (this.mesa) {
+        postData.mesa = this.mesa;
+      }
+
+      axios.post('/venta/registrar', postData)
+        .then(function (response) {
+          console.log(response.data.id);
+
+          if (response.data.id > 0) {
+            me.listado = 1;
+            me.listarVenta(1, '', 'num_comprob');
+            me.idproveedor = 0;
+            me.cliente = '';
+            me.tipo_comprobante = 'TICKET';
+            me.serie_comprobante = '';
+            me.num_comprob = '';
+            me.impuesto = 0.18;
+            me.total = 0.0;
+            me.idarticulo = 0;
+            me.articulo = '';
+            me.cantidad = 0;
+            me.precio = 0;
+            me.stock = 0;
+            me.codigo = '';
+            me.descuento = 0;
+            me.mesa = 0;
+            me.observacion = '';
             me.arrayDetalle = [];
-          //window.open('/factura/imprimir/' + response.data.id);
-          swal('VENTA REGISTRADA', 'Correctamente', 'success').then(() => {
-            vm.recargarPagina();
-          });
-          me.arrayProductos = [];
-          me.listarVenta(1, '', 'id');
-        } else {
-          if (response.data.valorMaximo) {
-            swal('Aviso', 'El valor de descuento no puede exceder el ' + response.data.valorMaximo, 'warning');
-            return;
+            swal('VENTA REGISTRADA', 'Correctamente', 'success').then(() => {
+              vm.recargarPagina();
+            });
+            me.arrayProductos = [];
+            me.listarVenta(1, '', 'id');
           } else {
-            swal('Aviso', response.data.caja_validado, 'warning');
-            return;
+            if (response.data.valorMaximo) {
+              swal('Aviso', 'El valor de descuento no puede exceder el ' + response.data.valorMaximo, 'warning');
+              return;
+            } else {
+              swal('Aviso', response.data.caja_validado, 'warning');
+              return;
+            }
           }
-        }
-      }).catch(function (error) {
-        console.log(error);
-      });
+        }).catch(function (error) {
+          console.log(error);
+        });
     },
+
+
 
     verificarEstado() {
       axios.post('/qr/verificarestado', {
@@ -1114,7 +1121,7 @@ export default {
 
 body {
   font-family: 'Roboto', sans-serif;
-  background-color: #6d6d6d;
+  background-color: #e1dcdc;
   color: #000000;
 }
 
@@ -1124,7 +1131,7 @@ body {
 }
 
 .text-primary {
-  color: #7e57c2 !important;
+  color: #000000 !important;
 }
 
 .btn-primary {
@@ -1191,7 +1198,7 @@ body {
 }
 
 .dropdown-item:hover {
-  background-color: #7e57c2;
+  background-color: #020202;
   color: #ffffff;
 }
 
