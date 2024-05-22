@@ -1,6 +1,6 @@
 <template>
     <main class="main">
-        <div class="card mx-auto">
+        <div class="container-fluid vw-100 vh-100 p-0">
             <div class="card-body">
                 <div class="card-chart">
                     <div class="card-header">

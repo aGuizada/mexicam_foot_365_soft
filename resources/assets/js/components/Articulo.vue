@@ -1,7 +1,7 @@
 <template>
     <main class="main">
 
-        <div class="container-fluid">
+        <div class="container-fluid vw-100 vh-100 p-0">
             <!-- Ejemplo de tabla Listado -->
             <div class="card">
                 <div class="card-header">

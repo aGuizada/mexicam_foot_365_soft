@@ -1,7 +1,7 @@
 <template>
     <main class="main">
 
-        <div class="container-fluid">
+        <div class="container-fluid vw-100 vh-100 p-0">
             <!-- Ejemplo de tabla Listado -->
             <div class="card">
                 <div class="card-header">
@@ -173,8 +173,8 @@
         </div>
         <!--Fin del modal-->
         <!--Inicio del modal Depósitos-->
-        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal2 }" role="dialog" aria-labelledby="myModalLabel"
-            style="display: none;" aria-hidden="true">
+        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal2 }" role="dialog"
+            aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-primary modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -224,8 +224,8 @@
         <!--Fin del modal-->
 
         <!--Inicio del modal Salidas-->
-        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal3 }" role="dialog" aria-labelledby="myModalLabel"
-            style="display: none;" aria-hidden="true">
+        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal3 }" role="dialog"
+            aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-primary modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -262,8 +262,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" @click="cerrarModal3()">Cerrar</button>
-                        <button type="button" v-if="tipoAccion == 3" class="btn btn-primary" @click="retirar()">Retirar <i
-                                class="icon-arrow-right"></i></button>
+                        <button type="button" v-if="tipoAccion == 3" class="btn btn-primary" @click="retirar()">Retirar
+                            <i class="icon-arrow-right"></i></button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -273,8 +273,8 @@
         <!--Fin del modal-->
 
         <!--Inicio del modal Ver Transacciones-->
-        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal4 }" role="dialog" aria-labelledby="myModalLabel"
-            style="display: none; overflow-y: auto" aria-hidden="true">
+        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal4 }" role="dialog"
+            aria-labelledby="myModalLabel" style="display: none; overflow-y: auto" aria-hidden="true">
             <div class="modal-dialog modal-primary modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -380,8 +380,8 @@
         <!--Fin del modal-->
 
         <!--Inicio del modal Arqueo de Caja-->
-        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal5 }" role="dialog" aria-labelledby="myModalLabel"
-            style="display: none;" aria-hidden="true">
+        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal5 }" role="dialog"
+            aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-primary modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
