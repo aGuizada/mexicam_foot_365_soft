@@ -27,10 +27,11 @@
                       </div>
                     </div>
                     <h3 class="text-primary mb-4">Productos</h3>
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-6">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-4 row-cols-xl-6">
                       <div class="col mb-3" v-for="articulo in arrayArticulo" :key="articulo.id">
-                        <div class=" border-0 shadow-lg">
-                          <button class="btn btn-block p-0 position-relative" @click="agregarDetalleModal(articulo)">
+                        <div class="card border-0 shadow-lg">
+                          <button class="btn btn-block p-0 position-relative btn-custom"
+                            @click="agregarDetalleModal(articulo)">
                             <div class="position-relative overflow-hidden">
                               <b-img v-if="articulo.fotografia"
                                 :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()" fluid-grow
@@ -47,16 +48,17 @@
                             <div class="card-body text-center pt-3">
                               <h5 class="card-title mb-2 fw-bold titulo-pequeno">{{ articulo.nombre }}</h5>
                               <p class="card-text mb-0 text-primary fw-bold">Bs. {{ articulo.precio_venta }}</p>
-
                             </div>
                             <div class="card-hover-effect position-absolute top-0 start-0 w-100 h-100 rounded-lg"
                               style="background-color: rgba(255, 0, 0, 0.2); opacity: 0; transition: opacity 0.3s ease;">
                             </div>
-
                           </button>
                         </div>
                       </div>
                     </div>
+
+
+
                   </div>
                 </div>
               </div>
@@ -160,7 +162,6 @@
                             <option value="1">Efectivo</option>
                             <option value="2">QR</option>
                           </select>
-                          <div v-if="!tipoPago" class="text-danger small">Por favor, seleccione un tipo de pago.</div>
                         </div>
                       </div>
 
@@ -511,6 +512,8 @@ export default {
       me.errorMostrarMsjVenta = [];
       var art;
 
+      if (!me.tipoPago) me.errorMostrarMsjVenta.push("Seleccione un tipo de pago (Efectivo o QR)");
+
       if (me.paraLlevar) {
         if (!me.cliente) me.errorMostrarMsjVenta.push("Ingrese el Nombre de un Cliente");
       }
@@ -538,16 +541,18 @@ export default {
       const vm = this;
       const validacion = this.validarVenta();
 
-      if (validacion === 'noTipoPago') {
-        swal('Aviso', 'Por favor, seleccione un tipo de pago.', 'warning');
-        return;
-      }
-
       if (validacion) {
-        swal('Aviso', 'Por favor, complete todos los campos requeridos.', 'warning');
+        if (!this.tipoPago) {
+          swal({
+            title: 'Aviso',
+            text: 'Por favor, seleccione un tipo de pago.',
+            icon: 'warning'
+          });
+        } else {
+          swal('Aviso', 'Por favor, complete todos los campos requeridos.', 'warning');
+        }
         return;
       }
-
       let me = this;
       console.log("cliente ", this.cliente);
       console.log("mesa ", this.mesa);

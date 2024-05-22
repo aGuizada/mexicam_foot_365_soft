@@ -4,6 +4,7 @@
         <div class="card">
             <div class="card-header">
                 <i class="fa fa-align-justify"></i> REPORTE DEL DIA
+
             </div>
             <div class="card-body">
                 <template v-if="listado == 1">
@@ -15,27 +16,28 @@
                                         class="form-control"></b-form-datepicker>
                                 </div>
 
-                                <select v-model="filtro" class="form-select me-3" @change="onFiltroChange">
+
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+
+                                <select v-model="idcategoria" class="form-select me-3 ms-3">
                                     <option value="0" disabled>Seleccione</option>
                                     <option value="all">Todas las categorías</option>
                                     <option v-for="categoria in arrayCategoria" :key="categoria.id"
                                         :value="categoria.id">{{ categoria.nombre }}</option>
-                                    <option value="usuarios">Usuarios</option>
                                 </select>
-
-                                <input v-if="mostrarBusquedaUsuario" v-model="buscarUsuario" @input="buscarUsuarios"
-                                    placeholder="Buscar Usuario" class="form-control me-3" />
-
-                                <select v-if="mostrarUsuarios" v-model="idusuario" class="form-select me-3">
-                                    <option v-for="usuario in usuariosFiltrados" :key="usuario.id" :value="usuario.id">
-                                        {{ usuario.nombre }}</option>
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <select v-model="idUsuario" class="form-select me-3 ms-3">
+                                    <option value="0" disabled>Seleccione Usuario</option>
+                                    <option value="all">Todos los usuarios</option>
+                                    <option v-for="usuario in arrayUsuarios" :key="usuario.id" :value="usuario.id">
+                                        {{ usuario.usuario }}</option>
                                 </select>
                             </div>
                         </div>
-
-                        <button type="button" @click="generarReporte" class="btn btn-light">
-                            <i class="fa fa-search"></i> Generar Reporte
-                        </button>
+                        <button type="button" @click="generarReporte" class="btn btn-success"><i
+                                class="fa fa-search"></i> Generar Reporte</button>
                     </div>
 
                     <div class="table-responsive">
@@ -142,7 +144,8 @@
                                     <td>{{ detalle.precio }}</td>
                                     <td>{{ detalle.cantidad }}</td>
                                     <td>{{ detalle.descuento }}</td>
-                                    <td>{{ (detalle.precio * detalle.cantidad - detalle.descuento).toFixed(2) }}</td>
+                                    <td>{{ (detalle.precio * detalle.cantidad - detalle.descuento).toFixed(2) }}
+                                    </td>
                                 </tr>
                                 <tr class="table-active">
                                     <td colspan="4" class="text-end fw-bold">Total:</td>
@@ -164,26 +167,20 @@
                 </template>
             </div>
         </div>
+        </div>
     </main>
 </template>
 
 <script>
-import axios from 'axios';
+
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 export default {
     data() {
         return {
-            filtro: '0',
-            idusuario: 'all',
-            mostrarBusquedaUsuario: false,
-            mostrarUsuarios: false,
-            buscarUsuario: '',
-            usuariosFiltrados: [],
-            arrayVentas: [],
-            arrayCategoria: [],
-            arrayUsuario: [],
+            idUsuario: 'all',
+            arrayUsuarios: [],
             value: '',
             context: null,
             fecha: new Date().toISOString().split('T')[0],
@@ -193,15 +190,20 @@ export default {
             tipo_comprobante: "",
             serie_comprobante: "",
             total: null,
+
+
             listado: 1,
             arrayVenta: [],
             arrayCliente: [],
             arrayDetalle: [],
             arrayProductos: [],
+
             rol_id: 0,
             nombre: '',
             descripcion: '',
             idcategoria: 'all',
+            arrayVentas: [],
+            arrayCategoria: [],
             modal: 0,
             tituloModal: '',
             tipoAccion: 0,
@@ -219,48 +221,66 @@ export default {
         }
     },
     computed: {
-        isActived() {
+        isActived: function () {
             return this.pagination.current_page;
         },
 
         totalGanado() {
             this.arrayVentas.reverse();
+            // Calcular la suma de los totales de todas las ventas
             return this.arrayVentas.reduce(
                 (total, venta) => total + venta.precio * venta.cantidad,
                 0
             ).toFixed(2);
         },
 
-        pagesNumber() {
+        //Calcula los elementos de la paginación
+        pagesNumber: function () {
             if (!this.pagination.to) {
                 return [];
             }
 
-            let from = this.pagination.current_page - this.offset;
+            var from = this.pagination.current_page - this.offset;
             if (from < 1) {
                 from = 1;
             }
 
-            let to = from + (this.offset * 2);
+            var to = from + (this.offset * 2);
             if (to >= this.pagination.last_page) {
                 to = this.pagination.last_page;
             }
 
-            const pagesArray = [];
+            var pagesArray = [];
             while (from <= to) {
                 pagesArray.push(from);
                 from++;
             }
             return pagesArray;
+
         }
     },
     methods: {
+        selectUsuarios() {
+            let me = this;
+            var url = '/usuario/selectUsuario';
+            axios.get(url)
+                .then(function (response) {
+                    var respuesta = response.data;
+                    me.arrayUsuarios = respuesta.usuarios;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
         onContext(ctx) {
-            this.context = ctx;
+            this.context = ctx
         },
         cambiarPagina(page) {
-            this.pagination.current_page = page;
-            this.listarRol(page, this.buscar, this.criterio);
+            let me = this;
+            //Actualiza la página actual
+            me.pagination.current_page = page;
+            //Envía la petición para visualizar la data de esa página
+            me.listarRol(page, me.buscar, me.criterio);
         },
         ocultarDetalle() {
             this.listado = 1;
@@ -271,15 +291,20 @@ export default {
             this.nombreCliente = null;
             this.documento = null;
             this.email = null;
+
         },
+
         verVenta(id) {
             let me = this;
             me.listado = 2;
-
+            //Obtener datos del ingreso
+            var arrayVentaT = [];
             var url = '/venta/obtenerCabecera?id=' + id;
+
             axios.get(url).then(function (response) {
+
                 var respuesta = response.data;
-                var arrayVentaT = respuesta.venta;
+                arrayVentaT = respuesta.venta;
 
                 me.cliente = arrayVentaT[0]['nombre'];
                 me.tipo_comprobante = arrayVentaT[0]['tipo_comprobante'];
@@ -292,35 +317,24 @@ export default {
                     console.log(error);
                 });
 
+            //obtener datos de los detalles
             var url = '/venta/obtenerDetalles?id=' + id;
+
             axios.get(url).then(function (response) {
+                //console.log(response);
                 var respuesta = response.data;
                 me.arrayDetalle = respuesta.detalles;
+
             })
                 .catch(function (error) {
                     console.log(error);
                 });
         },
-        selectUsuario() {
-            let me = this;
-            var url = '/usuario/selectUsuario';
-            axios.get(url)
-                .then(function (response) {
-                    var respuesta = response.data;
-                    me.arrayUsuario = respuesta.usuarios;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        },
-        buscarUsuarios() {
-            this.usuariosFiltrados = this.arrayUsuario.filter(usuario =>
-                usuario.nombre.toLowerCase().includes(this.buscarUsuario.toLowerCase())
-            );
-        },
         generarReporte() {
             let me = this;
-            var url = '/ventas-diarias?fecha=' + me.fecha + '&idCategoria=' + me.idcategoria + '&idUsuario=' + me.idusuario;
+
+            var url = '/ventas-diarias?fecha=' + me.fecha + '&idCategoria=' + me.idcategoria + '&idUsuario=' + me.idUsuario;
+
             axios.get(url)
                 .then(function (response) {
                     if ('mensaje' in response.data && response.data.mensaje === 'Ninguna Venta Realizada en la Fecha Indicada') {
@@ -328,16 +342,22 @@ export default {
                     } else {
                         var respuesta = response.data;
                         me.arrayVentas = respuesta.ventas;
+
+
                     }
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
         },
+
+
+
         selectCategoria() {
             let me = this;
             var url = '/categoria/selectCategoria';
             axios.get(url).then(function (response) {
+                //console.log(response);
                 var respuesta = response.data;
                 me.arrayCategoria = respuesta.categorias;
             })
@@ -345,6 +365,7 @@ export default {
                     console.log(error);
                 });
         },
+
         exportarPDF() {
             const pdf = new jsPDF();
 
@@ -375,29 +396,24 @@ export default {
 
             pdf.save('reporte_ventas_diarias.pdf');
         },
+
+
+
         cambiarPagina(page, buscar, criterio) {
             let me = this;
+            //Actualiza la página actual
             me.pagination.current_page = page;
+            //Envia la petición para visualizar la data de esa página
             me.listarRol(page, buscar, criterio);
-        },
-        onFiltroChange() {
-            if (this.filtro === 'usuarios') {
-                this.mostrarBusquedaUsuario = true;
-                this.mostrarUsuarios = true;
-            } else {
-                this.mostrarBusquedaUsuario = false;
-                this.mostrarUsuarios = false;
-            }
         }
     },
     mounted() {
         this.selectCategoria();
-        this.selectUsuario();
         this.generarReporte();
+        this.selectUsuarios();
     }
 }
 </script>
-
 <style>
 .mostrar {
     display: list-item !important;
@@ -414,5 +430,18 @@ export default {
 .text-error {
     color: red !important;
     font-weight: bold;
+}
+
+.custom-select {
+    color: #000;
+    /* Establece el color de texto en negro */
+    background-color: #fff;
+    /* Establece el color de fondo en blanco */
+    border: 1px solid #ccc;
+    /* Establece un borde gris claro */
+    padding: 0.5rem 1rem;
+    /* Añade un poco de espaciado interno */
+    font-size: 1rem;
+    /* Establece el tamaño de fuente */
 }
 </style>

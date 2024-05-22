@@ -53,12 +53,12 @@ class VentaController extends Controller
     {
         if (!$request->ajax())
             return redirect('/');
-
+    
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         $usuario = \Auth::user();
         $idRolUsuario = Auth::user()->idrol; // Obtener el rol del usuario autenticado
-
+    
         if ($buscar == '') {
             $ventas = Venta::join('users', 'ventas.idusuario', '=', 'users.id')
                 ->select(
@@ -74,36 +74,60 @@ class VentaController extends Controller
                     'users.usuario'
                 )
                 ->orderBy('ventas.id', 'desc');
-
+    
             if ($idRolUsuario != 1) { // Si no es administrador
                 $ventas = $ventas->where('ventas.idusuario', Auth::user()->id); // Filtrar solo las ventas del usuario autenticado
             }
-
+    
             $ventas = $ventas->paginate(10);
         } else {
-            $ventas = Venta::join('users', 'ventas.idusuario', '=', 'users.id')
-                ->select(
-                    'ventas.cliente',
-                    'ventas.id',
-                    'ventas.tipo_comprobante',
-                    'ventas.serie_comprobante',
-                    'ventas.num_comprobante',
-                    'ventas.fecha_hora',
-                    'ventas.impuesto',
-                    'ventas.total',
-                    'ventas.estado',
-                    'users.usuario'
-                )
-                ->where('ventas.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('ventas.id', 'desc');
-
-            if ($idRolUsuario != 1) { // Si no es administrador
-                $ventas = $ventas->where('ventas.idusuario', Auth::user()->id); // Filtrar solo las ventas del usuario autenticado
+            if ($criterio === 'usuario') { // Buscar por usuario
+                $ventas = Venta::join('users', 'ventas.idusuario', '=', 'users.id')
+                    ->select(
+                        'ventas.cliente',
+                        'ventas.id',
+                        'ventas.tipo_comprobante',
+                        'ventas.serie_comprobante',
+                        'ventas.num_comprobante',
+                        'ventas.fecha_hora',
+                        'ventas.impuesto',
+                        'ventas.total',
+                        'ventas.estado',
+                        'users.usuario'
+                    )
+                    ->where('users.usuario', 'like', '%' . $buscar . '%')
+                    ->orderBy('ventas.id', 'desc');
+    
+                if ($idRolUsuario != 1) { // Si no es administrador
+                    $ventas = $ventas->where('ventas.idusuario', Auth::user()->id); // Filtrar solo las ventas del usuario autenticado
+                }
+    
+                $ventas = $ventas->paginate(10);
+            } else {
+                $ventas = Venta::join('users', 'ventas.idusuario', '=', 'users.id')
+                    ->select(
+                        'ventas.cliente',
+                        'ventas.id',
+                        'ventas.tipo_comprobante',
+                        'ventas.serie_comprobante',
+                        'ventas.num_comprobante',
+                        'ventas.fecha_hora',
+                        'ventas.impuesto',
+                        'ventas.total',
+                        'ventas.estado',
+                        'users.usuario'
+                    )
+                    ->where('ventas.' . $criterio, 'like', '%' . $buscar . '%')
+                    ->orderBy('ventas.id', 'desc');
+    
+                if ($idRolUsuario != 1) { // Si no es administrador
+                    $ventas = $ventas->where('ventas.idusuario', Auth::user()->id); // Filtrar solo las ventas del usuario autenticado
+                }
+    
+                $ventas = $ventas->paginate(10);
             }
-
-            $ventas = $ventas->paginate(10);
         }
-
+    
         return [
             'pagination' => [
                 'total' => $ventas->total(),
@@ -592,9 +616,11 @@ public function store(Request $request)
             'fecha' => 'required|date',
         ]);
     
+        $idUsuario = $request->input('idUsuario');
+    
         $query = DetalleVenta::join('ventas', 'detalle_ventas.idventa', '=', 'ventas.id')
             ->join('articulos', 'detalle_ventas.idarticulo', '=', 'articulos.id')
-            ->join('users', 'ventas.idusuario', '=', 'users.id') 
+            ->join('users', 'ventas.idusuario', '=', 'users.id')
             ->select(
                 'ventas.id',
                 'ventas.cliente',
@@ -611,8 +637,8 @@ public function store(Request $request)
             $query->where('articulos.idcategoria', $request->input('idCategoria'));
         }
     
-        if ($request->has('idUsuario') && $request->input('idUsuario') !== 'all') {
-            $query->where('ventas.idusuario', $request->input('idUsuario'));
+        if ($idUsuario !== 'all') {
+            $query->where('ventas.idusuario', $idUsuario);
         }
     
         $ventas = $query->get();
@@ -623,5 +649,10 @@ public function store(Request $request)
     
         return response()->json(['ventas' => $ventas]);
     }
+    public function selectUsuarios()
+{
+    $usuarios = User::select('id', 'usuario')->get();
+    return response()->json(['usuarios' => $usuarios]);
+}
     
 }

@@ -231,8 +231,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::post('/qr/generarqr', 'QrController@generarQr');
         Route::post('/qr/verificarestado', 'QrController@verificarEstado');
-
-
+       Route::get('/usuario/selectUsuario', 'VentaController@selectUsuarios');
     });
 
     //RUTA PARA RECUPERAR LA SESSION CON EL ID DE LA PERSONA LOGUEADA
