@@ -1,178 +1,178 @@
-    <template>
-        <main class="main">
-            <div class="container-fluid vw-100 vh-100 p-0">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fa fa-align-justify"></i> REPORTE DEL DIA
+<template>
+    <main class="main">
+        <div class="container-fluid vw-100 vh-100 p-0">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> REPORTE DEL DIA
 
-                    </div>
-                    <div class="card-body">
-                        <template v-if="listado == 1">
-                            <div class="row align-items-center">
-                                <div class="col-md-3 pe-0">
-                                    <div class="form-group me-2">
-                                        <b-form-datepicker v-model="fecha" locale="es"
-                                            class="form-control"></b-form-datepicker>
-                                    </div>
+                </div>
+                <div class="card-body">
+                    <template v-if="listado == 1">
+                        <div class="row align-items-center">
+                            <div class="col-md-3 pe-0">
+                                <div class="form-group me-2">
+                                    <b-form-datepicker v-model="fecha" locale="es"
+                                        class="form-control"></b-form-datepicker>
                                 </div>
-                                <div class="col-md-3 px-0">
-                                    <div class="form-group me-2">
-                                        <select v-model="idcategoria" class="form-select form-select-sm">
-                                            <option value="0" disabled>Seleccione</option>
-                                            <option value="all">Todas las categorías</option>
-                                            <option v-for="categoria in arrayCategoria" :key="categoria.id"
-                                                :value="categoria.id">{{ categoria.nombre }}</option>
-                                        </select>
-                                    </div>
+                            </div>
+                            <div class="col-md-3 px-0">
+                                <div class="form-group me-2">
+                                    <select v-model="idcategoria" class="form-select form-select-sm">
+                                        <option value="0" disabled>Seleccione</option>
+                                        <option value="all">Todas las categorías</option>
+                                        <option v-for="categoria in arrayCategoria" :key="categoria.id"
+                                            :value="categoria.id">{{ categoria.nombre }}</option>
+                                    </select>
                                 </div>
-                                <div class="col-md-3 px-0">
-                                    <div class="form-group me-1">
-                                        <select v-model="idUsuario" class="form-select form-select-sm">
-                                            <option value="0" disabled>Seleccione Usuario</option>
-                                            <option value="all">Todos los usuarios</option>
-                                            <option v-for="usuario in arrayUsuarios" :key="usuario.id"
-                                                :value="usuario.id">{{ usuario.usuario }}</option>
-                                        </select>
-                                    </div>
+                            </div>
+                            <div class="col-md-3 px-0">
+                                <div class="form-group me-1">
+                                    <select v-model="idUsuario" class="form-select form-select-sm">
+                                        <option value="0" disabled>Seleccione Usuario</option>
+                                        <option value="all">Todos los usuarios</option>
+                                        <option v-for="usuario in arrayUsuarios" :key="usuario.id" :value="usuario.id">
+                                            {{ usuario.usuario }}</option>
+                                    </select>
                                 </div>
+                            </div>
 
+                        </div>
+                        <div class="col-md-2 ps-0 d-flex align-items-start">
+                            <button type="button" @click="generarReporte" class="btn btn-success btn-generar"><i
+                                    class="fa fa-search"></i> Generar Reporte</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-sm">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Opciones</th>
+                                        <th>Cliente</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                        <th>Total</th>
+                                        <th>Número Factura</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="venta in arrayVentas" :key="venta.id">
+                                        <td>
+                                            <button type="button" @click="verVenta(venta.id)"
+                                                class="btn btn-success btn-sm"><i class="icon-eye"></i></button>
+                                        </td>
+                                        <td>{{ venta.cliente ? venta.cliente : 'Sin Nombre' }}</td>
+                                        <td>{{ venta.articulo }}</td>
+                                        <td>{{ venta.cantidad }}</td>
+                                        <td>{{ venta.precio }}</td>
+                                        <td>{{ venta.total }}</td>
+                                        <td>{{ venta.num_comprobante }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="text-right">
+                                <strong>Total Ganado: </strong>Bs. {{ totalGanado }}
                             </div>
-                            <div class="col-md-2 ps-0 d-flex align-items-start">
-                                <button type="button" @click="generarReporte" class="btn btn-success btn-generar"><i
-                                        class="fa fa-search"></i> Generar Reporte</button>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-sm">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th>Opciones</th>
-                                            <th>Cliente</th>
-                                            <th>Producto</th>
-                                            <th>Cantidad</th>
-                                            <th>Precio</th>
-                                            <th>Total</th>
-                                            <th>Número Factura</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="venta in arrayVentas" :key="venta.id">
-                                            <td>
-                                                <button type="button" @click="verVenta(venta.id)"
-                                                    class="btn btn-success btn-sm"><i class="icon-eye"></i></button>
-                                            </td>
-                                            <td>{{ venta.cliente ? venta.cliente : 'Sin Nombre' }}</td>
-                                            <td>{{ venta.articulo }}</td>
-                                            <td>{{ venta.cantidad }}</td>
-                                            <td>{{ venta.precio }}</td>
-                                            <td>{{ venta.total }}</td>
-                                            <td>{{ venta.num_comprobante }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <div class="text-right">
-                                    <strong>Total Ganado: </strong>Bs. {{ totalGanado }}
-                                </div>
-                                <button @click="exportarPDF" class="btn btn-danger">Exportar a PDF</button>
-                            </div>
-                            <nav>
-                                <ul class="pagination justify-content-center mt-3">
-                                    <li class="page-item" v-if="pagination.current_page > 1">
-                                        <a class="page-link" href="#"
-                                            @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
-                                    </li>
-                                    <li class="page-item" v-for="page in pagesNumber" :key="page"
-                                        :class="[page == isActived ? 'active' : '']">
-                                        <a class="page-link" href="#"
-                                            @click.prevent="cambiarPagina(page, buscar, criterio)">{{
-                                                page }}</a>
-                                    </li>
-                                    <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                        <a class="page-link" href="#"
-                                            @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </template>
+                            <button @click="exportarPDF" class="btn btn-danger">Exportar a PDF</button>
+                        </div>
+                        <nav>
+                            <ul class="pagination justify-content-center mt-3">
+                                <li class="page-item" v-if="pagination.current_page > 1">
+                                    <a class="page-link" href="#"
+                                        @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
+                                </li>
+                                <li class="page-item" v-for="page in pagesNumber" :key="page"
+                                    :class="[page == isActived ? 'active' : '']">
+                                    <a class="page-link" href="#"
+                                        @click.prevent="cambiarPagina(page, buscar, criterio)">{{
+                                            page }}</a>
+                                </li>
+                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                                    <a class="page-link" href="#"
+                                        @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </template>
 
-                        <template v-if="listado == 2">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <div class="form-group">
-                                        <label>Cliente</label>
-                                        <p>{{ cliente }}</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label>Impuesto</label>
-                                    <p>{{ impuesto }}</p>
+                    <template v-if="listado == 2">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <label>Cliente</label>
+                                    <p>{{ cliente }}</p>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Tipo Comprobante</label>
-                                        <p>{{ tipo_comprobante }}</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Serie Comprobante</label>
-                                        <p>{{ serie_comprobante }}</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Número Comprobante</label>
-                                        <p>{{ num_comprobante }}</p>
-                                    </div>
+                            <div class="col-md-3">
+                                <label>Impuesto</label>
+                                <p>{{ impuesto }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Tipo Comprobante</label>
+                                    <p>{{ tipo_comprobante }}</p>
                                 </div>
                             </div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-sm">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th>Artículo</th>
-                                            <th>Precio</th>
-                                            <th>Cantidad</th>
-                                            <th>Descuento</th>
-                                            <th>Subtotal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody v-if="arrayDetalle.length">
-                                        <tr v-for="detalle in arrayDetalle" :key="detalle.id">
-                                            <td>{{ detalle.articulo }}</td>
-                                            <td>{{ detalle.precio }}</td>
-                                            <td>{{ detalle.cantidad }}</td>
-                                            <td>{{ detalle.descuento }}</td>
-                                            <td>{{ (detalle.precio * detalle.cantidad - detalle.descuento).toFixed(2) }}
-                                            </td>
-                                        </tr>
-                                        <tr class="table-active">
-                                            <td colspan="4" class="text-end fw-bold">Total:</td>
-                                            <td>$ {{ total.toFixed(2) }}</td>
-                                        </tr>
-                                    </tbody>
-                                    <tbody v-else>
-                                        <tr>
-                                            <td colspan="5" class="text-center">No hay artículos agregados</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="form-group row mt-3">
-                                <div class="col-md-12">
-                                    <button type="button" @click="ocultarDetalle()"
-                                        class="btn btn-secondary">Cerrar</button>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Serie Comprobante</label>
+                                    <p>{{ serie_comprobante }}</p>
                                 </div>
                             </div>
-                        </template>
-                    </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Número Comprobante</label>
+                                    <p>{{ num_comprobante }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-sm">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Artículo</th>
+                                        <th>Precio</th>
+                                        <th>Cantidad</th>
+                                        <th>Descuento</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody v-if="arrayDetalle.length">
+                                    <tr v-for="detalle in arrayDetalle" :key="detalle.id">
+                                        <td>{{ detalle.articulo }}</td>
+                                        <td>{{ detalle.precio }}</td>
+                                        <td>{{ detalle.cantidad }}</td>
+                                        <td>{{ detalle.descuento }}</td>
+                                        <td>{{ (detalle.precio * detalle.cantidad - detalle.descuento).toFixed(2) }}
+                                        </td>
+                                    </tr>
+                                    <tr class="table-active">
+                                        <td colspan="4" class="text-end fw-bold">Total:</td>
+                                        <td>$ {{ total.toFixed(2) }}</td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td colspan="5" class="text-center">No hay artículos agregados</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form-group row mt-3">
+                            <div class="col-md-12">
+                                <button type="button" @click="ocultarDetalle()"
+                                    class="btn btn-secondary">Cerrar</button>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
-        </main>
-    </template>
+        </div>
+    </main>
+</template>
 
 <script>
 
