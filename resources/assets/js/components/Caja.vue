@@ -12,7 +12,6 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-
                     <table class="table table-bordered table-striped table-sm">
                         <thead>
                             <tr>
@@ -20,18 +19,11 @@
                                 <th>Fecha Apertura</th>
                                 <th>Fecha Cierre</th>
                                 <th>Saldo Inicial</th>
-
                                 <th>Ventas Contado</th>
-                                <th>Saldo Faltante</th>
-                                <th>Saldo Sobrante</th>
                                 <th>Total Ingresos Ventas</th>
-                                <th>Total Egresos Compras</th>
-                                <th>Depósitos Extras</th>
-                                <th>Salidas Extras</th>
                                 <th>Saldo Caja</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
-
                             </tr>
                         </thead>
                         <tbody>
@@ -40,14 +32,8 @@
                                 <td v-text="caja.fechaApertura" width="90"></td>
                                 <td v-text="caja.fechaCierre"></td>
                                 <td v-text="caja.saldoInicial"></td>
-
                                 <td v-text="caja.ventasContado"></td>
-                                <td v-text="caja.saldoFaltante"></td>
-                                <td v-text="caja.saldoSobrante"></td>
                                 <td>{{ parseFloat(caja.ventasContado) + parseFloat(caja.ventasCredito) }}</td>
-                                <td>{{ parseFloat(caja.comprasContado) + parseFloat(caja.comprasCredito) }}</td>
-                                <td v-text="caja.depositos"></td>
-                                <td v-text="caja.salidas"></td>
                                 <td v-text="caja.saldoCaja"></td>
                                 <td>
                                     <div v-if="caja.estado">
@@ -58,57 +44,33 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <template v-if=caja.estado>
+                                    <template v-if="caja.estado">
                                         <template v-if="!mostrarBotonesSecundarios">
-                                            <button type="button"
-                                                @click="abrirModal2('cajaDepositar', 'depositar', caja)"
-                                                class="btn btn-primary btn-sm">
-                                                <i class="icon-plus"></i>
-                                            </button> &nbsp;
-
                                             <button type="button" @click="abrirModal3('cajaRetirar', 'retirar', caja)"
                                                 class="btn btn-danger btn-sm">
                                                 <i class="icon-minus"></i>
                                             </button> &nbsp;
-
-                                            <button type="button" @click="abrirModal4('cajaVer', 'ver', caja.id)"
-                                                class="btn btn-warning btn-sm">
-                                                <i class="icon-eye"></i>
-                                            </button> &nbsp;
-
                                             <button type="button" @click="abrirModal5('arqueoCaja', 'contar', caja.id)"
                                                 class="btn btn-success btn-sm">
                                                 <i class="icon-calculator"></i>
                                             </button> &nbsp;
-
-                                        </template>
-
-                                        <template v-else>
-                                            <button type="button" @click="abrirModal4('cajaVer', 'ver', caja.id)"
-                                                class="btn btn-warning btn-sm">
-                                                <i class="icon-eye"></i>
-                                            </button> &nbsp;
-
                                             <button type="button" class="btn btn-danger btn-sm"
                                                 @click="cerrarCaja(caja.id)">
                                                 <i class="icon-lock"></i>
                                             </button>
                                         </template>
                                     </template>
-
                                     <template v-else>
                                         <button type="button" @click="reporte(caja.fechaCierre)"
                                             class="btn btn-success btn-sm">
                                             <i class="icon-printer"></i>
                                         </button>
                                     </template>
-
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-
                 <nav>
                     <ul class="pagination">
                         <li class="page-item" v-if="pagination.current_page > 1">
@@ -129,7 +91,7 @@
             </div>
         </div>
         <!-- Fin ejemplo de tabla Listado -->
-        </div>
+
         <!--Inicio del modal aperturar caja-->
         <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal }" role="dialog" aria-labelledby="myModalLabel"
             style="display: none;" aria-hidden="true">
@@ -170,56 +132,7 @@
             <!-- /.modal-dialog -->
         </div>
         <!--Fin del modal-->
-        <!--Inicio del modal Depósitos-->
-        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal2 }" role="dialog"
-            aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-            <div class="modal-dialog modal-primary modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" v-text="tituloModal2"></h4>
-                        <button type="button" class="close" @click="cerrarModal2()" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                            <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Importe</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="depositos" class="form-control" placeholder="0.00">
-                                </div>
 
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Descripcion de
-                                    Importe</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="Desdepositos" class="form-control"
-                                        placeholder="Descripcion">
-                                </div>
-
-                            </div>
-                            <div v-show="errorCaja" class="form-group row div-error">
-                                <div class="text-center text-error">
-                                    <div v-for="error in errorMostrarMsjCaja" :key="error" v-text="error">
-
-                                    </div>
-                                </div>
-                            </div>
-
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" @click="cerrarModal2()">Cerrar</button>
-                        <button type="button" v-if="tipoAccion == 2" class="btn btn-primary"
-                            @click="depositar()">Depositar <i class="icon-arrow-right"></i></button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!--Fin del modal-->
 
         <!--Inicio del modal Salidas-->
         <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal3 }" role="dialog"
@@ -269,114 +182,6 @@
             <!-- /.modal-dialog -->
         </div>
         <!--Fin del modal-->
-
-        <!--Inicio del modal Ver Transacciones-->
-        <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal4 }" role="dialog"
-            aria-labelledby="myModalLabel" style="display: none; overflow-y: auto" aria-hidden="true">
-            <div class="modal-dialog modal-primary modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" v-text="tituloModal4"></h4>
-                        <button type="button" class="close" @click="cerrarModal4()" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <h4 class="modal-title">Compras Realizadas (egresos)</h4>
-                    <table class="table table-bordered table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>N°</th>
-                                <th>Fecha</th>
-                                <th>Proveedor</th>
-                                <th>Tipo Comprobante</th>
-                                <th>Número Comprobante</th>
-                                <th>importe</th>
-                                <th>Usuario</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(ingreso, index) in ArrayEgresos" :key="ingreso.id">
-                                <td v-text="index + 1"></td>
-                                <td v-text="ingreso.fecha_hora"></td>
-                                <td v-text="ingreso.nombre"></td>
-                                <td v-text="ingreso.tipo_comprobante"></td>
-                                <td v-text="ingreso.num_comprobante"></td>
-                                <td v-text="ingreso.total"></td>
-                                <td v-text="ingreso.usuario"></td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-
-
-                    <h4 class="modal-title">Ventas Realizadas (ingresos) </h4>
-                    <table class="table table-bordered table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>N°</th>
-                                <th>Fecha</th>
-                                <th>Cliente</th>
-                                <th>Tipo Comprobante</th>
-                                <th>Número Comprobante</th>
-                                <th>importe</th>
-                                <th>Usuario</th>
-
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(venta, index) in ArrayIngresos" :key="venta.id">
-                                <td v-text="index + 1"></td>
-                                <td v-text="venta.fecha_hora"></td>
-                                <td v-text="venta.nombre"></td>
-                                <td v-text="venta.tipo_comprobante"></td>
-                                <td v-text="venta.num_comprobante"></td>
-                                <td v-text="venta.total"></td>
-
-                                <td v-text="venta.usuario"></td>
-
-
-
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h4 class="modal-title">Transacciones Extras </h4>
-
-                    <table class="table table-bordered table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>N°</th>
-                                <th>Fecha</th>
-                                <th>Transacción</th>
-                                <th>Importe</th>
-                                <th>Usuario</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(transacciones, index) in arrayTransacciones" :key="transacciones.id">
-                                <td v-text="index + 1"></td>
-                                <td v-text="transacciones.fecha" width="90"></td>
-                                <td v-text="transacciones.transaccion"></td>
-                                <td v-text="transacciones.importe"></td>
-                                <td v-text="transacciones.usuario"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" @click="cerrarModal4()">Cerrar</button>
-
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!--Fin del modal-->
-
         <!--Inicio del modal Arqueo de Caja-->
         <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal5 }" role="dialog"
             aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
@@ -718,26 +523,7 @@ export default {
             });
         },
 
-        depositar() {
-            let me = this;
 
-            axios.put('/caja/depositar', {
-                'depositos': this.depositos,
-                'id': this.id,
-                'transaccion': this.Desdepositos + '  (movimiento de ingreso )',
-
-            }).then(function (response) {
-                me.cerrarModal2();
-                me.listarCaja(1, '', 'id');
-                swal(
-                    'Información!',
-                    'Transacción de caja registrada satisfactoriamente!',
-                    'success'
-                )
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
 
         retirar() {
             let me = this;
@@ -845,20 +631,10 @@ export default {
             this.saldoInicial = '';
         },
 
-        cerrarModal2() {
-            this.modal2 = 0;
-            this.depositos = '';
-            this.Desdepositos = '';
-        },
-
         cerrarModal3() {
             this.modal3 = 0;
             this.salidas = '';
             this.Dessalidas = '';
-        },
-
-        cerrarModal4() {
-            this.modal4 = 0;
         },
 
         cerrarModal5() {
@@ -893,25 +669,6 @@ export default {
             }
         },
 
-        abrirModal2(modelo, accion, data = []) {
-            switch (modelo) {
-                case "cajaDepositar":
-                    {
-                        switch (accion) {
-                            case 'depositar':
-                                {
-                                    this.modal2 = 1;
-                                    this.tituloModal2 = 'Depositar Dinero';
-                                    this.id = data['id'];
-
-                                    this.tipoAccion = 2;
-
-                                    break;
-                                }
-                        }
-                    }
-            }
-        },
 
         abrirModal3(modelo, accion, data = []) {
             switch (modelo) {
@@ -933,39 +690,6 @@ export default {
             }
         },
 
-        abrirModal4(modelo, accion, id) {
-            switch (modelo) {
-                case "cajaVer":
-                    {
-                        switch (accion) {
-                            case 'ver':
-                                {
-                                    this.modal4 = 1;
-                                    this.tituloModal4 = 'Transacciones Caja';
-
-                                    let me = this;
-                                    var url = '/transacciones/' + id;
-                                    axios.get(url).then(function (response) {
-                                        var respuesta = response.data;
-
-                                        console.log(respuesta);
-                                        me.arrayTransacciones = respuesta.transacciones.data;
-                                        me.pagination = respuesta.pagination;
-                                        me.ArrayEgresos = respuesta.ingresos;
-                                        me.ArrayIngresos = respuesta.ventas.data;
-
-
-                                    })
-                                        .catch(function (error) {
-                                            console.log(error);
-                                        });
-
-                                    break;
-                                }
-                        }
-                    }
-            }
-        },
 
         abrirModal5(modelo, accion, id) {
             switch (modelo) {

@@ -384,76 +384,82 @@ class VentaController extends Controller
         return $pdf->setPaper('a4', 'landscape')->download('venta-' . $numventa[0]->num_comprobante . '.pdf');
 
     }
-public function store(Request $request)
-{
-    if (!$request->ajax())
-        return redirect('/');
-
-    try {
-        DB::beginTransaction();
-
-        $detalles = $request->data; //Array de detalles
-        $idAlmacen = $request->idAlmacen;
-        $idtipo_pago = $request->idtipo_pago;
-
-        $ultimaCaja = Caja::latest()->first();
-
-        if ($ultimaCaja) {
-            if ($ultimaCaja->estado == '1') {
-                $venta = new Venta();
-
-                $venta->idusuario = \Auth::user()->id;
-                $venta->idtipo_pago = $request->idtipo_pago;
-                $venta->tipo_comprobante = $request->tipo_comprobante;
-                $venta->serie_comprobante = $request->serie_comprobante;
-                $venta->num_comprobante = $request->num_comprobante;
-                $venta->fecha_hora = now()->setTimezone('America/La_Paz');
-                $venta->impuesto = $request->impuesto;
-                if ($request->has('mesa') && $request->mesa != '') {
-                    $venta->mesa = $request->mesa;
+    public function store(Request $request)
+    {
+        if (!$request->ajax())
+            return redirect('/');
+    
+        try {
+            DB::beginTransaction();
+    
+            $detalles = $request->data; //Array de detalles
+            $idAlmacen = $request->idAlmacen;
+    
+            $ultimaCaja = Caja::latest()->first();
+    
+            if ($ultimaCaja) {
+                if ($ultimaCaja->estado == '1') {
+                    $venta = new Venta();
+    
+                    $venta->idusuario = \Auth::user()->id;
+    
+                    // Determinar el tipo de pago
+                    if ($request->has('pagoPorQR') && $request->pagoPorQR) {
+                        $venta->idtipo_pago = 1; // Asigna el ID correspondiente al pago por QR
+                    } else {
+                        $venta->idtipo_pago = 2; // Asigna el ID correspondiente al pago en efectivo
+                    }
+    
+                    $venta->tipo_comprobante = $request->tipo_comprobante;
+                    $venta->serie_comprobante = $request->serie_comprobante;
+                    $venta->num_comprobante = $request->num_comprobante;
+                    $venta->fecha_hora = now()->setTimezone('America/La_Paz');
+                    $venta->impuesto = $request->impuesto;
+                    if ($request->has('mesa') && $request->mesa != '') {
+                        $venta->mesa = $request->mesa;
+                    }
+                    if ($request->has('cliente') && $request->cliente != '') {
+                        $venta->cliente = $request->cliente;
+                    }
+                    $venta->total = $request->total;
+                    $venta->observacion = $request->observacion;
+                    $venta->estado = 'Registrado';
+                    $venta->idcaja = $ultimaCaja->id;
+                    $venta->save();
+    
+                    $ultimaCaja->ventasContado = ($request->total) + ($ultimaCaja->ventasContado);
+                    $ultimaCaja->save();
+    
+                    foreach ($detalles as $ep => $det) {
+                        $detalle = new DetalleVenta();
+                        $detalle->idventa = $venta->id;
+                        $detalle->idarticulo = $det['idarticulo'];
+                        $detalle->cantidad = $det['cantidad'];
+                        $detalle->precio = $det['precio'];
+                        $detalle->descuento = $det['descuento'];
+                        $detalle->save();
+                    }
+    
+                    DB::commit();
+                    return [
+                        'id' => $venta->id
+                    ];
+                } else {
+                    return [
+                        'id' => -1,
+                        'caja_validado' => 'Debe tener una caja abierta'
+                    ];
                 }
-                if ($request->has('cliente') && $request->cliente != '') {
-                    $venta->cliente = $request->cliente;
-                }
-                $venta->total = $request->total;
-                $venta->observacion = $request->observacion;
-                $venta->estado = 'Registrado';
-                $venta->idcaja = $ultimaCaja->id;
-                $venta->save();
-
-                $ultimaCaja->ventasContado = ($request->total) + ($ultimaCaja->ventasContado);
-                $ultimaCaja->save();
-
-                foreach ($detalles as $ep => $det) {
-                    $detalle = new DetalleVenta();
-                    $detalle->idventa = $venta->id;
-                    $detalle->idarticulo = $det['idarticulo'];
-                    $detalle->cantidad = $det['cantidad'];
-                    $detalle->precio = $det['precio'];
-                    $detalle->descuento = $det['descuento'];
-                    $detalle->save();
-                }
-
-                DB::commit();
-                return [
-                    'id' => $venta->id
-                ];
             } else {
                 return [
                     'id' => -1,
-                    'caja_validado' => 'Debe tener una caja abierta'
+                    'caja_validado' => 'Debe crear primero una apertura de caja'
                 ];
             }
-        } else {
-            return [
-                'id' => -1,
-                'caja_validado' => 'Debe crear primero una apertura de caja'
-            ];
+        } catch (Exception $e) {
+            DB::rollBack();
         }
-    } catch (Exception $e) {
-        DB::rollBack();
     }
-}
 
     public function desactivar(Request $request)
     {
