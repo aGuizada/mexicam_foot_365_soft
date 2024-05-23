@@ -1,114 +1,112 @@
 <template>
     <main class="main">
-
-        <div class="container-fluid vw-100 vh-100 p-0">
-            <!-- Ejemplo de tabla Listado -->
-            <div class="card">
-                <div class="card-header">
-                    <i class="fa fa-align-justify"></i> Productos
-                    <button type="button" @click="abrirModal('articulo', 'registrar'); listarPrecio()"
-                        class="btn btn-secondary">
-                        <i class="icon-plus"></i>&nbsp;Nuevo
-                    </button>
-                    <button type="button" @click="cargarPdf()" class="btn btn-info">
-                        <i class="icon-doc"></i>&nbsp;Reporte
-                    </button>
-                </div>
-                <div class="card-body">
-                    <div class="form-group row">
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <select class="form-control col-md-3" v-model="criterio">
-                                    <option value="nombre">Nombre</option>
-                                    <option value="descripcion">Descripción</option>
-                                </select>
-                                <input type="text" v-model="buscar" @keyup.enter="listarArticulo(1, buscar, criterio)"
-                                    class="form-control" placeholder="Texto a buscar">
-                                <button type="submit" @click="listarArticulo(1, buscar, criterio)"
-                                    class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
-                            </div>
+        <div class="container-fluid py-3"></div>
+        <!-- Ejemplo de tabla Listado -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-align-justify"></i> Productos
+                <button type="button" @click="abrirModal('articulo', 'registrar'); listarPrecio()"
+                    class="btn btn-secondary">
+                    <i class="icon-plus"></i>&nbsp;Nuevo
+                </button>
+                <button type="button" @click="cargarPdf()" class="btn btn-info">
+                    <i class="icon-doc"></i>&nbsp;Reporte
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <select class="form-control col-md-3" v-model="criterio">
+                                <option value="nombre">Nombre</option>
+                                <option value="descripcion">Descripción</option>
+                            </select>
+                            <input type="text" v-model="buscar" @keyup.enter="listarArticulo(1, buscar, criterio)"
+                                class="form-control" placeholder="Texto a buscar">
+                            <button type="submit" @click="listarArticulo(1, buscar, criterio)"
+                                class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                         </div>
                     </div>
-                    <div style="overflow-x: auto;">
-                        <table class="table table-bordered table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Opciones</th>
-                                    <th>Precio</th>
-                                    <th>Nombre</th>
-                                    <th v-for="precio in precios" :key="precio.id">{{ precio.nombre_precio }}</th>
-                                    <th v-if="rolUsuario === 1 && mostrarCostos === 1">Precio venta</th>
-                                    <th>Categorìa</th>
-                                    <th>Descripción</th>
-                                    <th>Foto</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="articulo in arrayArticulo" :key="articulo.id">
-                                    <td>
-                                        <button type="button" @click="abrirModal('articulo', 'actualizar', articulo)"
-                                            class="btn btn-warning btn-sm">
-                                            <i class="icon-pencil"></i> Editar
-                                        </button>
-                                        <br>
-                                        <template v-if="articulo.condicion">
-                                            <button type="button" class="btn btn-danger btn-sm"
-                                                @click="desactivarArticulo(articulo.id)">
-                                                <i class="icon-trash"></i> Eliminar
-                                            </button>
-                                        </template>
-                                        <template v-else>
-                                            <button type="button" class="btn btn-info btn-sm"
-                                                @click="activarArticulo(articulo.id)">
-                                                <i class="icon-check"></i> Activar
-                                            </button>
-                                        </template>
-                                    </td>
-                                    <td v-text="articulo.precio_venta"></td>
-                                    <td v-text="articulo.nombre"></td>
-                                    <td v-for="(precio, index) in precios" :key="precio.id">
-                                        <!-- Mostrar el precio correspondiente según el índice -->
-                                        <span v-if="index === 0">{{ articulo.precio_uno }}</span>
-                                        <span v-if="index === 1">{{ articulo.precio_dos }}</span>
-                                        <span v-if="index === 2">{{ articulo.precio_tres }}</span>
-                                        <span v-if="index === 3">{{ articulo.precio_cuatro }}</span>
-                                    </td>
-                                    <td v-if="rolUsuario === 1 && mostrarCostos === 1" v-text="articulo.precio_venta">
-                                    </td>
-                                    <td v-text="articulo.nombre_categoria"></td>
-                                    <td v-text="articulo.descripcion"></td>
-                                    <td class="text-center">
-                                        <b-img
-                                            :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()"
-                                            fluid-grow class="img-thumbnail" v-if="articulo.fotografia" ref="imagen"
-                                            style="width: 100px; height: 100px; object-fit: contain;"></b-img>
-                                        <b-img :src="'img/articulo/' + 'defecto.jpg'" fluid-grow class="img-thumbnail"
-                                            v-else ref="imagen"></b-img>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item" v-if="pagination.current_page > 1">
-                                <a class="page-link" href="#"
-                                    @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
-                            </li>
-                            <li class="page-item" v-for="page in pagesNumber" :key="page"
-                                :class="[page == isActived ? 'active' : '']">
-                                <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)"
-                                    v-text="page"></a>
-                            </li>
-                            <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                <a class="page-link" href="#"
-                                    @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
-                            </li>
-                        </ul>
-                    </nav>
                 </div>
+                <div style="overflow-x: auto;">
+                    <table class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Opciones</th>
+                                <th>Precio</th>
+                                <th>Nombre</th>
+                                <th v-for="precio in precios" :key="precio.id">{{ precio.nombre_precio }}</th>
+                                <th v-if="rolUsuario === 1 && mostrarCostos === 1">Precio venta</th>
+                                <th>Categorìa</th>
+                                <th>Descripción</th>
+                                <th>Foto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="articulo in arrayArticulo" :key="articulo.id">
+                                <td>
+                                    <button type="button" @click="abrirModal('articulo', 'actualizar', articulo)"
+                                        class="btn btn-warning btn-sm">
+                                        <i class="icon-pencil"></i> Editar
+                                    </button>
+                                    <br>
+                                    <template v-if="articulo.condicion">
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                            @click="desactivarArticulo(articulo.id)">
+                                            <i class="icon-trash"></i> Eliminar
+                                        </button>
+                                    </template>
+                                    <template v-else>
+                                        <button type="button" class="btn btn-info btn-sm"
+                                            @click="activarArticulo(articulo.id)">
+                                            <i class="icon-check"></i> Activar
+                                        </button>
+                                    </template>
+                                </td>
+                                <td v-text="articulo.precio_venta"></td>
+                                <td v-text="articulo.nombre"></td>
+                                <td v-for="(precio, index) in precios" :key="precio.id">
+                                    <!-- Mostrar el precio correspondiente según el índice -->
+                                    <span v-if="index === 0">{{ articulo.precio_uno }}</span>
+                                    <span v-if="index === 1">{{ articulo.precio_dos }}</span>
+                                    <span v-if="index === 2">{{ articulo.precio_tres }}</span>
+                                    <span v-if="index === 3">{{ articulo.precio_cuatro }}</span>
+                                </td>
+                                <td v-if="rolUsuario === 1 && mostrarCostos === 1" v-text="articulo.precio_venta">
+                                </td>
+                                <td v-text="articulo.nombre_categoria"></td>
+                                <td v-text="articulo.descripcion"></td>
+                                <td class="text-center">
+                                    <b-img :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()"
+                                        fluid-grow class="img-thumbnail" v-if="articulo.fotografia" ref="imagen"
+                                        style="width: 100px; height: 100px; object-fit: contain;"></b-img>
+                                    <b-img :src="'img/articulo/' + 'defecto.jpg'" fluid-grow class="img-thumbnail"
+                                        v-else ref="imagen"></b-img>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item" v-if="pagination.current_page > 1">
+                            <a class="page-link" href="#"
+                                @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
+                        </li>
+                        <li class="page-item" v-for="page in pagesNumber" :key="page"
+                            :class="[page == isActived ? 'active' : '']">
+                            <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)"
+                                v-text="page"></a>
+                        </li>
+                        <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                            <a class="page-link" href="#"
+                                @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            <!-- Fin ejemplo de tabla Listado -->
+        </div>
+        <!-- Fin ejemplo de tabla Listado -->
         </div>
         <!-- MODAL LISTADO DE MARCAS -->
 

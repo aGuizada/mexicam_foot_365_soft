@@ -1,136 +1,134 @@
 <template>
     <main class="main">
 
-        <div class="container-fluid vw-100 vh-100 p-0">
-            <!-- Ejemplo de tabla Listado -->
-            <div class="card">
-                <div class="card-header">
-                    <i class="fa fa-align-justify"></i> Apertura/Cierre de Caja
-                    <button type="button" @click="abrirModal('caja', 'registrar')" class="btn btn-secondary">
-                        <i class="icon-plus"></i>&nbsp;Abrir Caja
-                    </button>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
+        <div class="container-fluid py-3"></div>
+        <!-- Ejemplo de tabla Listado -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-align-justify"></i> Apertura/Cierre de Caja
+                <button type="button" @click="abrirModal('caja', 'registrar')" class="btn btn-secondary">
+                    <i class="icon-plus"></i>&nbsp;Abrir Caja
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
 
-                        <table class="table table-bordered table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th>N°</th>
-                                    <th>Fecha Apertura</th>
-                                    <th>Fecha Cierre</th>
-                                    <th>Saldo Inicial</th>
+                    <table class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Fecha Apertura</th>
+                                <th>Fecha Cierre</th>
+                                <th>Saldo Inicial</th>
 
-                                    <th>Ventas Contado</th>
-                                    <th>Saldo Faltante</th>
-                                    <th>Saldo Sobrante</th>
-                                    <th>Total Ingresos Ventas</th>
-                                    <th>Total Egresos Compras</th>
-                                    <th>Depósitos Extras</th>
-                                    <th>Salidas Extras</th>
-                                    <th>Saldo Caja</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
+                                <th>Ventas Contado</th>
+                                <th>Saldo Faltante</th>
+                                <th>Saldo Sobrante</th>
+                                <th>Total Ingresos Ventas</th>
+                                <th>Total Egresos Compras</th>
+                                <th>Depósitos Extras</th>
+                                <th>Salidas Extras</th>
+                                <th>Saldo Caja</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(caja, index) in arrayCaja" :key="caja.id">
-                                    <td v-text="index + 1"></td>
-                                    <td v-text="caja.fechaApertura" width="90"></td>
-                                    <td v-text="caja.fechaCierre"></td>
-                                    <td v-text="caja.saldoInicial"></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(caja, index) in arrayCaja" :key="caja.id">
+                                <td v-text="index + 1"></td>
+                                <td v-text="caja.fechaApertura" width="90"></td>
+                                <td v-text="caja.fechaCierre"></td>
+                                <td v-text="caja.saldoInicial"></td>
 
-                                    <td v-text="caja.ventasContado"></td>
-                                    <td v-text="caja.saldoFaltante"></td>
-                                    <td v-text="caja.saldoSobrante"></td>
-                                    <td>{{ parseFloat(caja.ventasContado) + parseFloat(caja.ventasCredito) }}</td>
-                                    <td>{{ parseFloat(caja.comprasContado) + parseFloat(caja.comprasCredito) }}</td>
-                                    <td v-text="caja.depositos"></td>
-                                    <td v-text="caja.salidas"></td>
-                                    <td v-text="caja.saldoCaja"></td>
-                                    <td>
-                                        <div v-if="caja.estado">
-                                            <span class="badge badge-success">ABIERTO</span>
-                                        </div>
-                                        <div v-else>
-                                            <span class="badge badge-danger">CERRADO</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <template v-if=caja.estado>
-                                            <template v-if="!mostrarBotonesSecundarios">
-                                                <button type="button"
-                                                    @click="abrirModal2('cajaDepositar', 'depositar', caja)"
-                                                    class="btn btn-primary btn-sm">
-                                                    <i class="icon-plus"></i>
-                                                </button> &nbsp;
+                                <td v-text="caja.ventasContado"></td>
+                                <td v-text="caja.saldoFaltante"></td>
+                                <td v-text="caja.saldoSobrante"></td>
+                                <td>{{ parseFloat(caja.ventasContado) + parseFloat(caja.ventasCredito) }}</td>
+                                <td>{{ parseFloat(caja.comprasContado) + parseFloat(caja.comprasCredito) }}</td>
+                                <td v-text="caja.depositos"></td>
+                                <td v-text="caja.salidas"></td>
+                                <td v-text="caja.saldoCaja"></td>
+                                <td>
+                                    <div v-if="caja.estado">
+                                        <span class="badge badge-success">ABIERTO</span>
+                                    </div>
+                                    <div v-else>
+                                        <span class="badge badge-danger">CERRADO</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <template v-if=caja.estado>
+                                        <template v-if="!mostrarBotonesSecundarios">
+                                            <button type="button"
+                                                @click="abrirModal2('cajaDepositar', 'depositar', caja)"
+                                                class="btn btn-primary btn-sm">
+                                                <i class="icon-plus"></i>
+                                            </button> &nbsp;
 
-                                                <button type="button"
-                                                    @click="abrirModal3('cajaRetirar', 'retirar', caja)"
-                                                    class="btn btn-danger btn-sm">
-                                                    <i class="icon-minus"></i>
-                                                </button> &nbsp;
+                                            <button type="button" @click="abrirModal3('cajaRetirar', 'retirar', caja)"
+                                                class="btn btn-danger btn-sm">
+                                                <i class="icon-minus"></i>
+                                            </button> &nbsp;
 
-                                                <button type="button" @click="abrirModal4('cajaVer', 'ver', caja.id)"
-                                                    class="btn btn-warning btn-sm">
-                                                    <i class="icon-eye"></i>
-                                                </button> &nbsp;
+                                            <button type="button" @click="abrirModal4('cajaVer', 'ver', caja.id)"
+                                                class="btn btn-warning btn-sm">
+                                                <i class="icon-eye"></i>
+                                            </button> &nbsp;
 
-                                                <button type="button"
-                                                    @click="abrirModal5('arqueoCaja', 'contar', caja.id)"
-                                                    class="btn btn-success btn-sm">
-                                                    <i class="icon-calculator"></i>
-                                                </button> &nbsp;
+                                            <button type="button" @click="abrirModal5('arqueoCaja', 'contar', caja.id)"
+                                                class="btn btn-success btn-sm">
+                                                <i class="icon-calculator"></i>
+                                            </button> &nbsp;
 
-                                            </template>
-
-                                            <template v-else>
-                                                <button type="button" @click="abrirModal4('cajaVer', 'ver', caja.id)"
-                                                    class="btn btn-warning btn-sm">
-                                                    <i class="icon-eye"></i>
-                                                </button> &nbsp;
-
-                                                <button type="button" class="btn btn-danger btn-sm"
-                                                    @click="cerrarCaja(caja.id)">
-                                                    <i class="icon-lock"></i>
-                                                </button>
-                                            </template>
                                         </template>
 
                                         <template v-else>
-                                            <button type="button" @click="reporte(caja.fechaCierre)"
-                                                class="btn btn-success btn-sm">
-                                                <i class="icon-printer"></i>
+                                            <button type="button" @click="abrirModal4('cajaVer', 'ver', caja.id)"
+                                                class="btn btn-warning btn-sm">
+                                                <i class="icon-eye"></i>
+                                            </button> &nbsp;
+
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                @click="cerrarCaja(caja.id)">
+                                                <i class="icon-lock"></i>
                                             </button>
                                         </template>
+                                    </template>
 
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                    <template v-else>
+                                        <button type="button" @click="reporte(caja.fechaCierre)"
+                                            class="btn btn-success btn-sm">
+                                            <i class="icon-printer"></i>
+                                        </button>
+                                    </template>
 
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item" v-if="pagination.current_page > 1">
-                                <a class="page-link" href="#"
-                                    @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
-                            </li>
-                            <li class="page-item" v-for="page in pagesNumber" :key="page"
-                                :class="[page == isActived ? 'active' : '']">
-                                <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)"
-                                    v-text="page"></a>
-                            </li>
-                            <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                <a class="page-link" href="#"
-                                    @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
-                            </li>
-                        </ul>
-                    </nav>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item" v-if="pagination.current_page > 1">
+                            <a class="page-link" href="#"
+                                @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
+                        </li>
+                        <li class="page-item" v-for="page in pagesNumber" :key="page"
+                            :class="[page == isActived ? 'active' : '']">
+                            <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)"
+                                v-text="page"></a>
+                        </li>
+                        <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                            <a class="page-link" href="#"
+                                @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            <!-- Fin ejemplo de tabla Listado -->
+        </div>
+        <!-- Fin ejemplo de tabla Listado -->
         </div>
         <!--Inicio del modal aperturar caja-->
         <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal }" role="dialog" aria-labelledby="myModalLabel"

@@ -1,101 +1,100 @@
 <template>
   <main class="main">
-    <div class="container-fluid vw-100 vh-100 p-0">
-      <!-- Ejemplo de tabla Listado -->
-      <div class="card">
-        <div class="card-header">
-          <i class="fa fa-align-justify"></i> Sucursales
-          <button type="button" @click="abrirModal('sucursal', 'registrar')" class="btn btn-secondary">
-            <i class="icon-plus"></i>&nbsp;Nuevo
-          </button>
-        </div>
-        <div class="card-body">
-          <div class="form-group row">
-            <div class="col-md-6">
-              <div class="input-group">
-                <select class="form-control col-md-3" v-model="criterio">
-                  <option value="nombre">Nombres</option>
-                  <option value="direccion">Dirección</option>
-                  <option value="correo">Correo</option>
-                  <option value="telefono">Teléfono</option>
-                  <option value="departamento">Departamento</option>
-                </select>
-                <input type="text" v-model="buscar" @keyup.enter="listarSucursal(1, buscar, criterio)"
-                  class="form-control" placeholder="Texto a buscar">
-                <button type="submit" @click="listarSucursal(1, buscar, criterio)" class="btn btn-primary"><i
-                    class="fa fa-search"></i> Buscar</button>
-              </div>
+    <div class="container-fluid py-3"></div>
+    <!-- Ejemplo de tabla Listado -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> Sucursales
+        <button type="button" @click="abrirModal('sucursal', 'registrar')" class="btn btn-secondary">
+          <i class="icon-plus"></i>&nbsp;Nuevo
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="form-group row">
+          <div class="col-md-6">
+            <div class="input-group">
+              <select class="form-control col-md-3" v-model="criterio">
+                <option value="nombre">Nombres</option>
+                <option value="direccion">Dirección</option>
+                <option value="correo">Correo</option>
+                <option value="telefono">Teléfono</option>
+                <option value="departamento">Departamento</option>
+              </select>
+              <input type="text" v-model="buscar" @keyup.enter="listarSucursal(1, buscar, criterio)"
+                class="form-control" placeholder="Texto a buscar">
+              <button type="submit" @click="listarSucursal(1, buscar, criterio)" class="btn btn-primary"><i
+                  class="fa fa-search"></i> Buscar</button>
             </div>
           </div>
-          <div class="table-responsive">
-            <table class="table table-bordered table-striped table-sm">
-              <thead>
-                <tr>
-                  <th>Acciones</th>
-                  <th>Empresa</th>
-                  <th>Nombre sucursal</th>
-                  <th>Dirección</th>
-                  <th>Correo</th>
-                  <th>Teléfono</th>
-                  <th>Departamento</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="sucursal in arraySucursal" :key="sucursal.id">
-                  <td>
-                    <button type="button" @click="abrirModal('sucursal', 'actualizar', sucursal)"
-                      class="btn btn-warning btn-sm">
-                      <i class="icon-pencil"></i>
-                    </button> &nbsp;
-                    <template v-if="sucursal.condicion">
-                      <button type="button" class="btn btn-danger btn-sm" @click="desactivarSucursal(sucursal.id)">
-                        <i class="icon-trash"></i>
-                      </button>
-                    </template>
-                    <template v-else>
-                      <button type="button" class="btn btn-info btn-sm" @click="activarSucursal(sucursal.id)">
-                        <i class="icon-check"></i>
-                      </button>
-                    </template>
-                  </td>
-                  <td v-text="sucursal.nombre_empresa"></td>
-                  <td v-text="sucursal.nombre"></td>
-                  <td v-text="sucursal.direccion"></td>
-                  <td v-text="sucursal.correo"></td>
-                  <td v-text="sucursal.telefono"></td>
-                  <td v-text="sucursal.departamento"></td>
-                  <td>
-                    <div v-if="sucursal.condicion">
-                      <span class="badge badge-success">Activo</span>
-                    </div>
-                    <div v-else>
-                      <span class="badge badge-danger">Desactivado</span>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <nav>
-            <ul class="pagination justify-content-center">
-              <li class="page-item" v-if="pagination.current_page > 1">
-                <a class="page-link" href="#"
-                  @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Anterior</a>
-              </li>
-              <li class="page-item" v-for="page in pagesNumber" :key="page"
-                :class="[page == isActived ? 'active' : '']">
-                <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)" v-text="page"></a>
-              </li>
-              <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                <a class="page-link" href="#"
-                  @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Siguiente</a>
-              </li>
-            </ul>
-          </nav>
         </div>
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped table-sm">
+            <thead>
+              <tr>
+                <th>Acciones</th>
+                <th>Empresa</th>
+                <th>Nombre sucursal</th>
+                <th>Dirección</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Departamento</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="sucursal in arraySucursal" :key="sucursal.id">
+                <td>
+                  <button type="button" @click="abrirModal('sucursal', 'actualizar', sucursal)"
+                    class="btn btn-warning btn-sm">
+                    <i class="icon-pencil"></i>
+                  </button> &nbsp;
+                  <template v-if="sucursal.condicion">
+                    <button type="button" class="btn btn-danger btn-sm" @click="desactivarSucursal(sucursal.id)">
+                      <i class="icon-trash"></i>
+                    </button>
+                  </template>
+                  <template v-else>
+                    <button type="button" class="btn btn-info btn-sm" @click="activarSucursal(sucursal.id)">
+                      <i class="icon-check"></i>
+                    </button>
+                  </template>
+                </td>
+                <td v-text="sucursal.nombre_empresa"></td>
+                <td v-text="sucursal.nombre"></td>
+                <td v-text="sucursal.direccion"></td>
+                <td v-text="sucursal.correo"></td>
+                <td v-text="sucursal.telefono"></td>
+                <td v-text="sucursal.departamento"></td>
+                <td>
+                  <div v-if="sucursal.condicion">
+                    <span class="badge badge-success">Activo</span>
+                  </div>
+                  <div v-else>
+                    <span class="badge badge-danger">Desactivado</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <nav>
+          <ul class="pagination justify-content-center">
+            <li class="page-item" v-if="pagination.current_page > 1">
+              <a class="page-link" href="#"
+                @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Anterior</a>
+            </li>
+            <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
+              <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)" v-text="page"></a>
+            </li>
+            <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+              <a class="page-link" href="#"
+                @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Siguiente</a>
+            </li>
+          </ul>
+        </nav>
       </div>
-      <!-- Fin ejemplo de tabla Listado -->
+    </div>
+    <!-- Fin ejemplo de tabla Listado -->
     </div>
     <!-- Inicio del modal agregar/actualizar -->
     <div class="modal fade" tabindex="-1" :class="{ 'mostrar': modal }" role="dialog" aria-labelledby="myModalLabel"

@@ -152,10 +152,12 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group mb-3">
-                                    <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Tipo de
+                                    <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Tipo
+                                            de
                                             Pago</strong></label>
                                     <p class="text-dark mb-0" v-if="tipoPago === 'qr'">Pago por QR</p>
-                                    <p class="text-dark mb-0" v-else-if="tipoPago === 'efectivo'">Pago en efectivo</p>
+                                    <p class="text-dark mb-0" v-else-if="tipoPago === 'efectivo'">Pago en efectivo
+                                    </p>
                                     <p class="text-dark mb-0" v-else>Tipo de pago no especificado</p>
                                 </div>
                             </div>
@@ -201,6 +203,7 @@
                 </div>
             </template>
             <!--Fin ver ingreso-->
+        </div>
         </div>
         <!-- Fin ejemplo de tabla Listado -->
     </main>
@@ -744,6 +747,16 @@ export default {
 }
 </script>
 <style>
+.vw-100 {
+    width: 100vw;
+    /* vw = viewport width */
+}
+
+.vh-100 {
+    height: 100vh;
+    /* vh = viewport height */
+}
+
 /* Fuentes */
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
 

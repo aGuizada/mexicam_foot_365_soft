@@ -1,206 +1,210 @@
 <template>
     <main class="main  text-white">
-        <div class="container-fluid py-3"></div>
-        <!-- Ejemplo de tabla Listado -->
-        <div class="card">
-            <div class="card-header">
-                <i class="fa fa-align-justify"></i> Ventas
+        <div class="container-fluid vw-100 vh-100 p-0">
+            <!-- Ejemplo de tabla Listado -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> Ventas
 
-            </div>
-            <!-- Listado-->
-            <template v-if="listado == 1">
-                <div class="card-body">
-                    <div class="form-group row">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <select class="form-control col-md-3" v-model="criterio">
-                                    <option value="" disabled selected>Seleccione</option>
-                                    <option value="tipo_comprobante">Tipo Comprobante</option>
-                                    <option value="num_comprobante">Número Comprobante</option>
-                                    <option value="fecha_hora">Fecha-Hora</option>
-                                    <option value="usuario">Usuario</option>
-                                </select>
-                                <input type="text" v-model="buscar" @keyup="listarVenta(1, buscar, criterio)"
-                                    class="form-control" placeholder="Texto a buscar">
-                                <!--button type="submit" @click="listarVenta(1, buscar, criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button-->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table v-if="esAdministrador || arrayVenta.length > 0"
-                            class="table table-bordered table-striped table-sm custom-table">
-                            <thead>
-                                <tr>
-                                    <th>Opciones</th>
-                                    <th>Usuario</th>
-                                    <th>Cliente</th>
-                                    <th>Tipo Comprobante</th>
-                                    <th>Número Comprobante</th>
-                                    <th>Fecha Hora</th>
-                                    <th>Total</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tr v-if="!esAdministrador && arrayVenta.length === 0">
-                                <td colspan="8" class="text-center">No hay ventas realizadas por usted.</td>
-                            </tr>
-                            <tbody>
-                                <tr v-for="(venta) in arrayVenta" :key="venta.id">
-                                    <td>
-                                        <button type="button" @click="verVenta(venta.id)"
-                                            class="btn btn-success btn-sm">
-                                            <i class="icon-eye"></i>
-                                        </button> &nbsp;
-
-                                        <template v-if="venta.estado == 'Registrado' && idrol !== 2">
-                                            <button type="button" class="btn btn-danger btn-sm"
-                                                @click="desactivarVenta(venta.id)">
-                                                <i class="icon-trash"></i>
-                                            </button>
-                                        </template>
-
-                                        <button type="button" @click="imprimirTicket(venta.id)"
-                                            class="btn btn-info btn-sm">
-                                            Imprimir Ticket
-                                        </button>
-                                    </td>
-
-                                    <td v-text="venta.usuario"></td>
-                                    <td v-text="venta.cliente"></td>
-                                    <td v-text="venta.tipo_comprobante"></td>
-                                    <td v-text="venta.num_comprobante"></td>
-                                    <td v-text="venta.fecha_hora"></td>
-                                    <td v-text="venta.total"></td>
-                                    <td v-text="venta.estado"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div v-else>No hay ventas disponibles.</div>
-                    </div>
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item" v-if="pagination.current_page > 1">
-                                <a class="page-link" href="#"
-                                    @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
-                            </li>
-                            <li class="page-item" v-for="page in pagesNumber" :key="page"
-                                :class="[page == isActived ? 'active' : '']">
-                                <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)"
-                                    v-text="page"></a>
-                            </li>
-                            <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                <a class="page-link" href="#"
-                                    @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
-                            </li>
-                        </ul>
-                    </nav>
                 </div>
-            </template>
-            <!--Fin Listado-->
-            <!-- Detalle-->
-
-
-            <!-- Fin Detalle-->
-            <!--Ver ingreso-->
-            <template v-else-if="listado == 2">
-                <div class="card-body">
-                    <div class="row border rounded mx-auto my-4 p-3"
-                        style="max-width: 800px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-                        <div class="row border rounded mx-auto my-4 p-3 bg-white "
-                            style="box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);">
-                            <div class=" col-md-4">
-                                <div class="form-group mb-3">
-                                    <label
-                                        class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Categoría</strong></label>
-                                    <p class="text-danger font-weight-bold mb-0" v-text="categoria"></p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group mb-3">
-                                    <label
-                                        class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Cliente</strong></label>
-                                    <p class="text-dark mb-0" v-text="cliente"></p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group mb-3">
-                                    <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Tipo
-                                            Comprobante</strong></label>
-                                    <p class="text-dark mb-0" v-text="tipo_comprobante"></p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group mb-3">
-                                    <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Número
-                                            Comprobante</strong></label>
-                                    <p class="text-dark mb-0" v-text="num_comprobante"></p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group mb-3">
-                                    <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Número
-                                            Mesa</strong></label>
-                                    <p class="text-dark mb-0" v-text="mesa"></p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group mb-3">
-                                    <label
-                                        class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Observaciones</strong></label>
-                                    <p class="text-dark mb-0" v-text="observacion"></p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group mb-3">
-                                    <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Tipo de
-                                            Pago</strong></label>
-                                    <p class="text-dark mb-0" v-if="tipoPago === 'qr'">Pago por QR</p>
-                                    <p class="text-dark mb-0" v-else-if="tipoPago === 'efectivo'">Pago en efectivo</p>
-                                    <p class="text-dark mb-0" v-else>Tipo de pago no especificado</p>
+                <!-- Listado-->
+                <template v-if="listado == 1">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <select class="form-control col-md-3" v-model="criterio">
+                                        <option value="" disabled selected>Seleccione</option>
+                                        <option value="tipo_comprobante">Tipo Comprobante</option>
+                                        <option value="num_comprobante">Número Comprobante</option>
+                                        <option value="fecha_hora">Fecha-Hora</option>
+                                        <option value="usuario">Usuario</option>
+                                    </select>
+                                    <input type="text" v-model="buscar" @keyup="listarVenta(1, buscar, criterio)"
+                                        class="form-control" placeholder="Texto a buscar">
+                                    <!--button type="submit" @click="listarVenta(1, buscar, criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button-->
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row border rounded mx-auto my-4 p-3" style="max-width: 900px;">
-                        <div class="table-responsive col-md-12">
-                            <table class="table table-borderless table-hover">
-                                <thead class="bg-primary text-white">
+                        <div class="table-responsive">
+                            <table v-if="esAdministrador || arrayVenta.length > 0"
+                                class="table table-bordered table-striped table-sm custom-table">
+                                <thead>
                                     <tr>
-                                        <th>Artículo</th>
-                                        <th>Precio</th>
-                                        <th>Cantidad</th>
-                                        <th>Subtotal</th>
+                                        <th>Opciones</th>
+                                        <th>Usuario</th>
+                                        <th>Cliente</th>
+                                        <th>Tipo Comprobante</th>
+                                        <th>Número Comprobante</th>
+                                        <th>Fecha Hora</th>
+                                        <th>Total</th>
+                                        <th>Estado</th>
                                     </tr>
                                 </thead>
-                                <tbody v-if="arrayDetalle.length">
-                                    <tr v-for="detalle in arrayDetalle" :key="detalle.id">
-                                        <td v-text="detalle.articulo"></td>
-                                        <td v-text="detalle.precio"></td>
-                                        <td v-text="detalle.cantidad"></td>
-                                        <td>{{ detalle.precio * detalle.cantidad }}</td>
-                                    </tr>
+                                <tr v-if="!esAdministrador && arrayVenta.length === 0">
+                                    <td colspan="8" class="text-center">No hay ventas realizadas por usted.</td>
+                                </tr>
+                                <tbody>
+                                    <tr v-for="(venta) in arrayVenta" :key="venta.id">
+                                        <td>
+                                            <button type="button" @click="verVenta(venta.id)"
+                                                class="btn btn-success btn-sm">
+                                                <i class="icon-eye"></i>
+                                            </button> &nbsp;
 
-                                    <tr class="bg-success text-white font-weight-bold">
-                                        <td colspan="3" class="text-right">Total</td>
-                                        <td>$ {{ total }}</td>
-                                    </tr>
-                                </tbody>
-                                <tbody v-else>
-                                    <tr>
-                                        <td colspan="4" class="text-center">No hay artículos agregados</td>
+                                            <template v-if="venta.estado == 'Registrado' && idrol !== 2">
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                    @click="desactivarVenta(venta.id)">
+                                                    <i class="icon-trash"></i>
+                                                </button>
+                                            </template>
+
+                                            <button type="button" @click="imprimirTicket(venta.id)"
+                                                class="btn btn-info btn-sm">
+                                                Imprimir Ticket
+                                            </button>
+                                        </td>
+
+                                        <td v-text="venta.usuario"></td>
+                                        <td v-text="venta.cliente"></td>
+                                        <td v-text="venta.tipo_comprobante"></td>
+                                        <td v-text="venta.num_comprobante"></td>
+                                        <td v-text="venta.fecha_hora"></td>
+                                        <td v-text="venta.total"></td>
+                                        <td v-text="venta.estado"></td>
                                     </tr>
                                 </tbody>
                             </table>
+                            <div v-else>No hay ventas disponibles.</div>
+                        </div>
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item" v-if="pagination.current_page > 1">
+                                    <a class="page-link" href="#"
+                                        @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
+                                </li>
+                                <li class="page-item" v-for="page in pagesNumber" :key="page"
+                                    :class="[page == isActived ? 'active' : '']">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)"
+                                        v-text="page"></a>
+                                </li>
+                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                                    <a class="page-link" href="#"
+                                        @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </template>
+                <!--Fin Listado-->
+                <!-- Detalle-->
+
+
+                <!-- Fin Detalle-->
+                <!--Ver ingreso-->
+                <template v-else-if="listado == 2">
+                    <div class="card-body">
+                        <div class="row border rounded mx-auto my-4 p-3"
+                            style="max-width: 800px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                            <div class="row border rounded mx-auto my-4 p-3 bg-white "
+                                style="box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);">
+                                <div class=" col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label
+                                            class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Categoría</strong></label>
+                                        <p class="text-danger font-weight-bold mb-0" v-text="categoria"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label
+                                            class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Cliente</strong></label>
+                                        <p class="text-dark mb-0" v-text="cliente"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Tipo
+                                                Comprobante</strong></label>
+                                        <p class="text-dark mb-0" v-text="tipo_comprobante"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Número
+                                                Comprobante</strong></label>
+                                        <p class="text-dark mb-0" v-text="num_comprobante"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Número
+                                                Mesa</strong></label>
+                                        <p class="text-dark mb-0" v-text="mesa"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label
+                                            class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Observaciones</strong></label>
+                                        <p class="text-dark mb-0" v-text="observacion"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label class="text-uppercase text-black-90 font-weight-bold mb-1"><strong>Tipo
+                                                de
+                                                Pago</strong></label>
+                                        <p class="text-dark mb-0" v-if="tipoPago === 'qr'">Pago por QR</p>
+                                        <p class="text-dark mb-0" v-else-if="tipoPago === 'efectivo'">Pago en efectivo
+                                        </p>
+                                        <p class="text-dark mb-0" v-else>Tipo de pago no especificado</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row border rounded mx-auto my-4 p-3" style="max-width: 900px;">
+                            <div class="table-responsive col-md-12">
+                                <table class="table table-borderless table-hover">
+                                    <thead class="bg-primary text-white">
+                                        <tr>
+                                            <th>Artículo</th>
+                                            <th>Precio</th>
+                                            <th>Cantidad</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody v-if="arrayDetalle.length">
+                                        <tr v-for="detalle in arrayDetalle" :key="detalle.id">
+                                            <td v-text="detalle.articulo"></td>
+                                            <td v-text="detalle.precio"></td>
+                                            <td v-text="detalle.cantidad"></td>
+                                            <td>{{ detalle.precio * detalle.cantidad }}</td>
+                                        </tr>
+
+                                        <tr class="bg-success text-white font-weight-bold">
+                                            <td colspan="3" class="text-right">Total</td>
+                                            <td>$ {{ total }}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody v-else>
+                                        <tr>
+                                            <td colspan="4" class="text-center">No hay artículos agregados</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <button type="button" @click="ocultarDetalle()"
+                                    class="btn btn-secondary">Cerrar</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <div class="col-md-12">
-                            <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
-            </template>
-            <!--Fin ver ingreso-->
+                </template>
+                <!--Fin ver ingreso-->
+            </div>
         </div>
         <!-- Fin ejemplo de tabla Listado -->
     </main>
